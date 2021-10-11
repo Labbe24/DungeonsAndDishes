@@ -6,7 +6,7 @@ public class DungeonGenerator {
 
     private Random random = new Random();
 
-    public DungeonRoomMeta[][] createDungeonMap(int numberOfDungeonTunnels,int numberOfTunnels, int tunnelLength){
+    public DungeonRoomMeta[][] createDungeonMap(int numberOfDungeonTunnels,int numberOfTunnels, int tunnelLength, String[] roomNames){
         int dimensions = 20;
         int startRow = 9;
         int startColumn = 9;
@@ -14,7 +14,6 @@ public class DungeonGenerator {
 
         // create dimensions x dimensions 2D-array
         DungeonRoomMeta[][] dungeonMap = create2DArray(dimensions);
-        String[] roomNames = {"T","O","L"};
 
         for(int i = 0; i < numberOfDungeonTunnels; i++)
         {
@@ -60,7 +59,7 @@ public class DungeonGenerator {
             }
             else
             {
-                randomDirection = getNextDirection(dungeonMap, directions, lastDirection, currentRow, currentColumn, dimensions);
+                randomDirection = getNextDirection(directions, lastDirection);
                 if(randomDirection == null) return dungeonMap; // null -> no possible directions
             }
 
@@ -143,41 +142,13 @@ public class DungeonGenerator {
         return numberOfRooms;
     }
 
-    private int[] getNextDirection(DungeonRoomMeta[][] dungeonMap, int[][] directions, int [] lastDirection, int currentRow, int currentColumn, int dimensions){
-        int [] randomDirection = {0, 0};
-        int possibleDirections = 0;
-        int [] possibleDirection = {0 ,0};
-        for (int[] direction : directions) {
-            if(!((currentRow == 0 && randomDirection[0] == -1) ||
-                    (currentColumn == 0 && randomDirection[1] == -1) ||
-                    (currentRow == dimensions - 1 && randomDirection[0] == 1) ||
-                    (currentColumn == dimensions - 1 && randomDirection[1] == 1)))
-            {
-                if(dungeonMap[currentRow + direction[0]][currentColumn + direction[1]] == null){
-                    possibleDirections++;
-                    possibleDirection = direction;
-                }
-            }
-        }
+    private int[] getNextDirection(int[][] directions, int [] lastDirection){
+        int[] randomDirection;
+        do{
+            randomDirection = directions[random.nextInt(directions.length)];
+        } while((randomDirection[0] == -lastDirection[0] && randomDirection[1] == -lastDirection[1])
+                || (randomDirection[0] == lastDirection[0] && randomDirection[1] == lastDirection[1]));
 
-        // if zero possible directions return
-        if(possibleDirections == 0)
-        {
-            return null;
-        }
-        // if one possible direction set direction to last direction
-        else if(possibleDirections == 1)
-        {
-            randomDirection = possibleDirection;
-        }
-        // else set a random directions
-        else
-        {
-            do{
-                randomDirection = directions[random.nextInt(directions.length)];
-            } while((randomDirection[0] == -lastDirection[0] && randomDirection[1] == -lastDirection[1])
-                    || (randomDirection[0] == lastDirection[0] && randomDirection[1] == lastDirection[1]));
-        }
         return randomDirection;
     }
 
