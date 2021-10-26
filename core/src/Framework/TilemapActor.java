@@ -1,7 +1,5 @@
 package Framework;
 
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -10,18 +8,20 @@ import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.objects.TiledMapTileMapObject;
 import com.badlogic.gdx.maps.tiled.renderers.OrthoCachedTiledMapRenderer;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
  *  Loads a Tiled map file (*.tmx), extends Actor to automatically render.
  */ 
-public class TilemapActor extends Actor
-{
+public class TilemapActor extends Actor implements RoomRenderer {
     // window dimensions
     public static int windowWidth  = 1920;
     public static int windowHeight = 1080;
@@ -33,7 +33,7 @@ public class TilemapActor extends Actor
     /**
      *  Initialize Tilemap created with the Tiled Map Editor.
      */
-    public TilemapActor(String filename, Stage theStage)
+    public TilemapActor(String filename)
     {
         // set up tile map, renderer, and camera
         tiledMap = new TmxMapLoader().load(filename);
@@ -52,7 +52,6 @@ public class TilemapActor extends Actor
         tiledCamera.update();
 
         // by adding object to Stage, can be drawn automatically
-        theStage.addActor(this);
 
         // in theory, a solid boundary should be placed around the edge of the screen, 
         //  but just in case, this map can be used to set boundaries
@@ -153,5 +152,15 @@ public class TilemapActor extends Actor
         batch.end();
         tiledMapRenderer.render();        
         batch.begin();
+    }
+
+    @Override
+    public void setRoom(Stage stage) {
+        stage.addActor(this);
+    }
+
+    @Override
+    public void removeRoom(Stage stage) {
+        this.remove();
     }
 }

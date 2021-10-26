@@ -16,8 +16,10 @@ public class LevelScreen extends BaseScreen
     }
     public void initialize() 
     {
-        map = new TilemapActor("rooms/start_room.tmx",mainStage);
         character = new Character(0,0, mainStage);
+        map=new TilemapActor("rooms/start_room.tmx");
+        map.setRoom(mainStage);
+
     }
 
     public void update(float dt)
@@ -34,5 +36,9 @@ public class LevelScreen extends BaseScreen
         if(Gdx.input.isKeyPressed(Input.Keys.S)){
             character.accelerateAtAngle(270);
         }
+        //if isKeyPressed(e)
+            //check if interactible nearby
+            //if interactible is door
+            //call map.DoorEntered(door.getProperty("direction"))
     }
 }
