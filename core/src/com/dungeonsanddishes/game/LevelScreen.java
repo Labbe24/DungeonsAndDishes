@@ -2,23 +2,28 @@ package com.dungeonsanddishes.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.maps.MapObject;
+
+import java.util.ArrayList;
 
 import Framework.BaseScreen;
-import Framework.TilemapActor;
+import Framework.RoomTilemap;
 
 public class LevelScreen extends BaseScreen
 {
     Character character;
-    TilemapActor map;
+    RoomTilemap map;
 
     public boolean scrolled(float a, float b){
         return true;
     }
     public void initialize() 
     {
-        character = new Character(0,0, mainStage);
-        map=new TilemapActor("rooms/start_room.tmx");
+        map=new RoomTilemap("rooms/start_room.tmx");
         map.setRoom(mainStage);
+        character = new Character(0,0, mainStage);
+        ArrayList<MapObject> spawn_point = map.getRectangleList("spawn_point");
+        character.centerAtPosition((float)spawn_point.get(0).getProperties().get("x"),(float)spawn_point.get(0).getProperties().get("y"));
 
     }
 

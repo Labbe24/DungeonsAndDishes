@@ -1,10 +1,10 @@
 package com.dungeonsanddishes.game;
 
-import Framework.TilemapActor;
+import Framework.RoomTilemap;
 
 public class StartRoom extends DungeonRoom{
     StartRoom(){
         super();
-        map_layout=new TilemapActor("rooms/start_room.tmx");
+        map_layout=new RoomTilemap("rooms/start_room.tmx");
     }
 }

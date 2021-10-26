@@ -13,22 +13,23 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.objects.TiledMapTileMapObject;
 import com.badlogic.gdx.maps.tiled.renderers.OrthoCachedTiledMapRenderer;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *  Loads a Tiled map file (*.tmx), extends Actor to automatically render.
  */ 
-public class TilemapActor extends Actor implements RoomRenderer {
+public class TilemapActor extends Actor{
     // window dimensions
     public static int windowWidth  = 1920;
     public static int windowHeight = 1080;
    
-    private TiledMap tiledMap;
-    private OrthographicCamera tiledCamera;
-    private OrthoCachedTiledMapRenderer tiledMapRenderer;
+    protected TiledMap tiledMap;
+    protected OrthographicCamera tiledCamera;
+    protected OrthoCachedTiledMapRenderer tiledMapRenderer;
 
     /**
      *  Initialize Tilemap created with the Tiled Map Editor.
@@ -66,17 +67,17 @@ public class TilemapActor extends Actor implements RoomRenderer {
     public ArrayList<MapObject> getRectangleList(String propertyName)
     {
         ArrayList<MapObject> list = new ArrayList<MapObject>();
-
+        Logger.getGlobal().log(Level.WARNING,"In Get Rectangle list");
         for ( MapLayer layer : tiledMap.getLayers() )
         {
+            Logger.getGlobal().log(Level.WARNING,"In layer:"+layer.getName());
             for ( MapObject obj : layer.getObjects() )
             {
                 if ( !(obj instanceof RectangleMapObject) )
-                    continue;
-
+                  continue;
                 MapProperties props = obj.getProperties();
 
-                if ( props.containsKey("name") && props.get("name").equals(propertyName) )
+                if ( obj.getName().equals(propertyName) )
                     list.add(obj);
             }
         }
@@ -108,7 +109,7 @@ public class TilemapActor extends Actor implements RoomRenderer {
                 TiledMapTile t = tmtmo.getTile();
                 MapProperties defaultProps = t.getProperties();
 
-                if ( defaultProps.containsKey("name") && defaultProps.get("name").equals(propertyName) )
+                if ( defaultProps.containsKey("Name") && defaultProps.get("Name").equals(propertyName) )
                     list.add(obj);
 
                 // get list of default property keys
@@ -154,13 +155,4 @@ public class TilemapActor extends Actor implements RoomRenderer {
         batch.begin();
     }
 
-    @Override
-    public void setRoom(Stage stage) {
-        stage.addActor(this);
-    }
-
-    @Override
-    public void removeRoom(Stage stage) {
-        this.remove();
-    }
 }
