@@ -7,6 +7,9 @@
  <tile id="1">
   <image width="32" height="32" source="kitchen_tiles/light_floor.png"/>
  </tile>
+  <tile id="4">
+   <image width="32" height="32" source="kitchen_tiles/walls/wall_bottom_up.png"/>
+  </tile>
  <tile id="6">
   <image width="32" height="32" source="../tilesets/kitchen_tiles/walls/wall_top_down.png"/>
  </tile>
