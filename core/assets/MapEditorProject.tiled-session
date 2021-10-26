@@ -18,6 +18,7 @@
     "openFiles": [
     ],
     "project": "MapEditorProject.tiled-project",
+    "property.type": "bool",
     "recentFiles": [
     ]
 }
