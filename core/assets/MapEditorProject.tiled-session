@@ -1,0 +1,23 @@
+{
+    "activeFile": "",
+    "expandedProjectPaths": [
+        "/Users/Joachim/DungeonsAndDishes/Maps",
+        "/Users/Joachim/Desktop/rooms",
+        "/Users/Joachim/DungeonsAndDishes/Tilesets",
+        "/Users/Joachim/Desktop/Tilesets",
+        "/Users/Joachim/DungeonsAndDishes/rooms"
+    ],
+    "fileStates": {
+        "rooms/tilesets/KitchenObjects.tsx": {
+            "dynamicWrapping": true
+        },
+        "rooms/tilesets/floor.tsx": {
+            "dynamicWrapping": true
+        }
+    },
+    "openFiles": [
+    ],
+    "project": "MapEditorProject.tiled-project",
+    "recentFiles": [
+    ]
+}
