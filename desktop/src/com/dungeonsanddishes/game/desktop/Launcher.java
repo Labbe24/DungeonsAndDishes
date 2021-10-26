@@ -9,6 +9,6 @@ public class Launcher
     public static void main (String[] args)
     {
         Game dungeonsAndDishes = new CustomGame();
-        LwjglApplication launcher = new LwjglApplication( dungeonsAndDishes, "Dungeons & Dishes", 800, 600 );
+        LwjglApplication launcher = new LwjglApplication( dungeonsAndDishes, "Dungeons & Dishes", 1920, 1080 );
     }
 }

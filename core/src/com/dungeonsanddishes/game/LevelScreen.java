@@ -2,9 +2,7 @@ package com.dungeonsanddishes.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 
-import Framework.BaseActor;
 import Framework.BaseScreen;
 import Framework.TilemapActor;
 
@@ -18,8 +16,8 @@ public class LevelScreen extends BaseScreen
     }
     public void initialize() 
     {
-        character = new Character(0,0, mainStage);
         map = new TilemapActor("rooms/start_room.tmx",mainStage);
+        character = new Character(0,0, mainStage);
     }
 
     public void update(float dt)

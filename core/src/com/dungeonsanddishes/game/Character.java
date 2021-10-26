@@ -52,9 +52,9 @@ public class Character extends BaseActor {
 
 
         //set movement parameter values:
-        setAcceleration(400);
-        setMaxSpeed(100);
-        setDeceleration(400);
+        setAcceleration(700);
+        setMaxSpeed(300);
+        setDeceleration(700);
 
     }
     public void act(float dt){
