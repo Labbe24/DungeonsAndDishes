@@ -5,6 +5,11 @@ import java.util.Random;
 public class DungeonGenerator {
 
     private Random random = new Random();
+    //private RoomRepo roomRepo_;
+
+    //public DungeonGenerator(RoomRepo roomRepo){
+        //roomRepo_ = roomRepo;
+    //}
 
     public DungeonRoomMeta[][] createDungeonMap(int numberOfDungeonTunnels,int numberOfTunnels, int tunnelLength, String[] roomNames){
         int dimensions = 20;
