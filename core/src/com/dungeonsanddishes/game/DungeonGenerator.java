@@ -5,6 +5,11 @@ import java.util.Random;
 public class DungeonGenerator {
 
     private Random random = new Random();
+    //private RoomRepo roomRepo_;
+
+    //public DungeonGenerator(RoomRepo roomRepo){
+        //roomRepo_ = roomRepo;
+    //}
 
     private boolean[][] create2DArray(int dimensions){
         boolean [][] arr = new boolean[dimensions][dimensions];
@@ -68,7 +73,7 @@ public class DungeonGenerator {
                 }
             }
 
-            // if randomLength was set to zero, don't update variables
+            // don't update variables
             if(tunnelLength > 0)
             {
                 lastDirection = randomDirection;
