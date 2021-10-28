@@ -17,7 +17,7 @@ public class Character extends BaseActor {
 
     public Character(float x, float y, Stage s) {
         super(x, y, s);
-        this.loadTexture("chef_idle/chef_up_idle.png");
+        this.loadTexture("chef_idle/chef_idle_up.png");
 
 
         //Set animations:
@@ -37,11 +37,13 @@ public class Character extends BaseActor {
         West = new Animation(0.2f,animation_array,Animation.PlayMode.LOOP);
 
         animation_array.clear();
-        animation_array.add(new TextureRegion(new Texture("chef_idle/chef_down_idle.png")));
+        animation_array.add(new TextureRegion(new Texture("chef_walk/chef_walk_down1.png")));
+        animation_array.add(new TextureRegion(new Texture("chef_walk/chef_walk_down2.png")));
         South= new Animation(0.2f,animation_array,Animation.PlayMode.LOOP);
 
         animation_array.clear();
-        animation_array.add(new TextureRegion(new Texture("chef_idle/chef_up_idle.png")));
+        animation_array.add(new TextureRegion(new Texture("chef_walk/chef_walk_up1.png")));
+        animation_array.add(new TextureRegion(new Texture("chef_walk/chef_walk_up2.png")));
         North= new Animation(0.2f,animation_array,Animation.PlayMode.LOOP);
 
         setAnimation(South);
@@ -50,9 +52,9 @@ public class Character extends BaseActor {
 
 
         //set movement parameter values:
-        setAcceleration(400);
-        setMaxSpeed(100);
-        setDeceleration(400);
+        setAcceleration(10000);
+        setMaxSpeed(300);
+        setDeceleration(10000);
 
     }
     public void act(float dt){
