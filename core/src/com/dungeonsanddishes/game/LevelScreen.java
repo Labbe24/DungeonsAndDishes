@@ -37,16 +37,16 @@ public class LevelScreen extends BaseScreen
 
     public void update(float dt)
     {
-       if(Gdx.input.isKeyPressed(Input.Keys.A | Input.Keys.LEFT)){
+       if(Gdx.input.isKeyPressed(Input.Keys.A) || Gdx.input.isKeyPressed(Input.Keys.LEFT)){
            character.accelerateAtAngle(180);
        }
-       if(Gdx.input.isKeyPressed(Input.Keys.D | Input.Keys.RIGHT)){
+       if(Gdx.input.isKeyPressed(Input.Keys.D) || Gdx.input.isKeyPressed(Input.Keys.RIGHT)){
            character.accelerateAtAngle(0);
        }
-       if(Gdx.input.isKeyPressed(Input.Keys.W | Input.Keys.UP)){
+       if(Gdx.input.isKeyPressed(Input.Keys.W) || Gdx.input.isKeyPressed(Input.Keys.UP)){
             character.accelerateAtAngle(90);
        }
-       if(Gdx.input.isKeyPressed(Input.Keys.S | Input.Keys.DOWN)){
+       if(Gdx.input.isKeyPressed(Input.Keys.S) || Gdx.input.isKeyPressed(Input.Keys.DOWN)){
            character.accelerateAtAngle(270);
        }
         //if isKeyPressed(e)
