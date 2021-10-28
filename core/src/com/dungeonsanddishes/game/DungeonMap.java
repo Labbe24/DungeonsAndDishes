@@ -9,6 +9,6 @@ public class DungeonMap {
     }
 
     public void createDungeon(){
-        dungeon = dungeonGenerator.createDungeonMap(4, 3, 3, new String[]{"Room1", "Room2", "Room3"});
+        dungeon = dungeonGenerator.createDungeonMap(4, 3, 3, new String[]{"Room1", "Room2", "Room3", "Room4"});
     }
 }
