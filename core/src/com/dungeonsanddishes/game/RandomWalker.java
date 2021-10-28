@@ -2,34 +2,53 @@ package com.dungeonsanddishes.game;
 
 import java.util.Random;
 
-public class DungeonGenerator {
+public class RandomWalker implements IDungeonGenerator {
 
     private Random random = new Random();
+    private int [][] directions = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
     //private RoomRepo roomRepo_;
 
-    //public DungeonGenerator(RoomRepo roomRepo){
+    //public RandomWalker(RoomRepo roomRepo){
         //roomRepo_ = roomRepo;
     //}
 
-    public DungeonRoomMeta[][] createDungeonMap(int numberOfDungeonTunnels,
-                                                int numberOfTunnels,
+    /**
+     *
+     * @param numberOfDungeons --.
+     * @param numberOfDungeonTunnels --.
+     * @param tunnelLength --.
+     * @param roomNames --.
+     */
+    public DungeonRoomMeta[][] createDungeonMap(int numberOfDungeons,
+                                                int numberOfDungeonTunnels,
                                                 int tunnelLength,
                                                 String[] roomNames){
         int dimensions = 20;
         int startRow = 9;
         int startColumn = 9;
-        int [][] startDirections = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
 
         // create dimensions x dimensions 2D-array
         DungeonRoomMeta[][] dungeonMap = create2DArray(dimensions);
 
-        for(int i = 0; i < numberOfDungeonTunnels; i++)
+        for(int i = 0; i < numberOfDungeons; i++)
         {
-            dungeonMap = createDungeonTunnel(dungeonMap, roomNames[i], dimensions, startDirections[i], numberOfTunnels, tunnelLength, startRow, startColumn);
+            dungeonMap = createDungeonTunnel(dungeonMap, roomNames[i], dimensions, directions[i], numberOfDungeonTunnels, tunnelLength, startRow, startColumn);
         }
 
         return dungeonMap;
     }
+
+    /**
+     *
+     * @param dungeonMap --.
+     * @param roomType --.
+     * @param dimensions --.
+     * @param startDirection --.
+     * @param numberOfTunnels --.
+     * @param tunnelLength --.
+     * @param startRow --.
+     * @param startColumn --.
+     */
 
     private DungeonRoomMeta[][] createDungeonTunnel(DungeonRoomMeta [][] dungeonMap,
                                                     String roomType,
@@ -51,7 +70,6 @@ public class DungeonGenerator {
             dungeonMap[currentRow][currentColumn] = new DungeonRoomMeta(false, new DungeonRoom("S"));
         }
 
-        int [][] directions = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
         int [] lastDirection = {0, 0};
         int [] randomDirection = {0, 0};
 

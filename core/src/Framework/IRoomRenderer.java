@@ -5,7 +5,7 @@ import com.dungeonsanddishes.game.DoorDirections;
 
 import java.util.ArrayList;
 
-public interface RoomRenderer {
+public interface IRoomRenderer {
     /**
      *
      * @param stage room is added to this stage.

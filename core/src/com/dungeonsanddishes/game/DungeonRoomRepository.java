@@ -24,6 +24,7 @@ public class DungeonRoomRepository {
         Collections.shuffle(_tunnel_rooms, new Random(seed));
 
     }
+
     public DungeonRoom getTunnelRoom(){
         if(_tunnel_rooms.isEmpty()){
             //throw
@@ -32,6 +33,7 @@ public class DungeonRoomRepository {
         _tunnel_rooms.remove(0);
         return ret;
     }
+
     public DungeonRoom getEndRoom(){
         if(_end_rooms.isEmpty()){
             //throw

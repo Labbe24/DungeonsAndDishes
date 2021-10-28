@@ -5,7 +5,7 @@ import com.dungeonsanddishes.game.DoorDirections;
 
 import java.util.ArrayList;
 
-public class RoomTilemap extends TilemapActor implements RoomRenderer{
+public class RoomTilemap extends TilemapActor implements IRoomRenderer{
     /**
      * Initialize Tilemap created with the Tiled Map Editor.
      *
