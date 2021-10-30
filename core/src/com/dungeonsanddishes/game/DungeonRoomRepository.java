@@ -12,12 +12,15 @@ public class DungeonRoomRepository {
         _end_rooms = new ArrayList<DungeonRoom>();
         _tunnel_rooms = new ArrayList<DungeonRoom>();
 
-        switch (seed % tunnel_room_type_count) {
+/*        switch (seed % tunnel_room_type_count) {
             case 1:
                 //create room type 1
                 _tunnel_rooms.add(new StartRoom());
             default:
                 //throw?
+        }*/
+        for(int i=0;i<50;i++){
+            _tunnel_rooms.add(new StartRoom());
         }
         _end_rooms.add(new StartRoom());//with parameters for room?
         _end_rooms.add(new StartRoom());//with parameters for room?
