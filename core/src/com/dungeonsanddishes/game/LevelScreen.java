@@ -18,13 +18,14 @@ public class LevelScreen extends BaseScreen
     public boolean scrolled(float a, float b){
         return true;
     }
+
     /**
      *
      * setup the structure of the dungeon and initialize start room and character
      */
     public void initialize() 
     {
-        dungeonMap = new DungeonMap(new RandomWalker());
+        dungeonMap = new DungeonMap(new RandomWalker(new DungeonRoomRepository(1, 7)));
         dungeonMap.createDungeon();
 
         map = new RoomTilemap("rooms/start_room.tmx");
