@@ -70,7 +70,7 @@ public class RandomWalker implements IDungeonGenerator {
         // set start room, if not set
         if(dungeonMap[currentRow][currentColumn] == null)
         {
-            dungeonMap[currentRow][currentColumn] = new DungeonRoomMeta(false, new DungeonRoom(null),
+            dungeonMap[currentRow][currentColumn] = new DungeonRoomMeta(false, roomRepo_.getStartRoom(),
                     new DungeonRoomMeta[] {
                             dungeonMap[currentRow + 1][currentColumn],
                             dungeonMap[currentRow - 1][currentColumn ],
@@ -124,7 +124,8 @@ public class RandomWalker implements IDungeonGenerator {
                     // first room is already set
                     if(dungeonMap[currentRow][currentColumn] == null)
                     {
-                        dungeonMap[currentRow][currentColumn] = new DungeonRoomMeta(false, new DungeonRoom(null),
+                        DungeonRoom room = tunnelCounter + 1 >= numberOfTunnels ? roomRepo_.getEndRoom() : roomRepo_.getTunnelRoom();
+                        dungeonMap[currentRow][currentColumn] = new DungeonRoomMeta(false, room,
                                 new DungeonRoomMeta[]
                                 {
                                         dungeonMap[currentRow - lastDirection[0]][currentColumn - lastDirection[1]],
