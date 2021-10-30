@@ -66,4 +66,7 @@ public abstract class BaseGame extends Game
     {
         game.setScreen(s);
     }
+    public static BaseScreen getActiveScreen(){
+        return (BaseScreen)game.getScreen();
+    }
 }

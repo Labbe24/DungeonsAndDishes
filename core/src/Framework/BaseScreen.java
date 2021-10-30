@@ -29,6 +29,9 @@ public abstract class BaseScreen implements Screen, InputProcessor
 
         initialize();
     }
+    public Stage getMainStage(){
+        return mainStage;
+    }
 
     public abstract void initialize();
 
