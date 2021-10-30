@@ -1,5 +1,7 @@
 package com.dungeonsanddishes.game;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 
 import Framework.RoomTilemap;
@@ -78,6 +80,7 @@ public class RandomWalker implements IDungeonGenerator {
                             dungeonMap[currentRow ][currentColumn - 1]
                     },
                     "Start");
+            dungeonMap[currentRow][currentColumn].dungeonRoom.map_layout.setDoors(new ArrayList<DoorDirections>(Arrays.asList(DoorDirections.NORTH, DoorDirections.SOUTH, DoorDirections.WEST, DoorDirections.EAST)));
         }
 
         while(tunnelCounter < numberOfTunnels)
@@ -125,6 +128,36 @@ public class RandomWalker implements IDungeonGenerator {
                     if(dungeonMap[currentRow][currentColumn] == null)
                     {
                         DungeonRoom room = tunnelCounter + 1 >= numberOfTunnels ? roomRepo_.getEndRoom() : roomRepo_.getTunnelRoom();
+
+                        ArrayList<DoorDirections> doorDirections = new ArrayList<DoorDirections>();
+                        if(lastDirection[0] == 1){
+                            doorDirections.add(DoorDirections.WEST);
+                        }
+                        else if(lastDirection[0] == -1){
+                            doorDirections.add(DoorDirections.EAST);
+                        }
+                        else if(lastDirection[1] == 1){
+                            doorDirections.add(DoorDirections.SOUTH);
+                        }
+                        else if(lastDirection[1] == -1){
+                            doorDirections.add(DoorDirections.NORTH);
+                        }
+
+                        if(randomDirection[0] == 1){
+                            doorDirections.add(DoorDirections.EAST);
+                        }
+                        else if(randomDirection[0] == -1){
+                            doorDirections.add(DoorDirections.WEST);
+                        }
+                        else if(randomDirection[1] == 1){
+                            doorDirections.add(DoorDirections.NORTH);
+                        }
+                        else if(randomDirection[1] == -1){
+                            doorDirections.add(DoorDirections.SOUTH);
+                        }
+
+                        room.map_layout.setDoors(doorDirections);
+
                         dungeonMap[currentRow][currentColumn] = new DungeonRoomMeta(false, room,
                                 new DungeonRoomMeta[]
                                 {
