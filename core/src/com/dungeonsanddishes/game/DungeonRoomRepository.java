@@ -21,8 +21,8 @@ public class DungeonRoomRepository {
         }*/
         for(int i=0;i<50;i++){
             _tunnel_rooms.add(new StartRoom());
+            _end_rooms.add(new StartRoom());//with parameters for room?
         }
-        _end_rooms.add(new StartRoom());//with parameters for room?
         _end_rooms.add(new StartRoom());//with parameters for room?
         _end_rooms.add(new StartRoom());//with parameters for room?
         _end_rooms.add(new StartRoom());//with parameters for room?

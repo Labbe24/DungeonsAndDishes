@@ -25,7 +25,7 @@ public class LevelScreen extends BaseScreen
      */
     public void initialize() 
     {
-        dungeonMap = new DungeonMap(new RandomWalker(new DungeonRoomRepository(1, 7)));
+        dungeonMap = new DungeonMap(new RandomWalker(new DungeonRoomRepository(1, 7)),mainStage );
         dungeonMap.createDungeon();
         DungeonRoomMeta room = dungeonMap.getCurrentRoom();
         map=(RoomTilemap) room.dungeonRoom.map_layout;
@@ -52,7 +52,7 @@ public class LevelScreen extends BaseScreen
            character.accelerateAtAngle(270);
        }
         if (Gdx.input.isKeyPressed(Input.Keys.E)) {
-            dungeonMap.currentRoom.dungeonRoom.
+            //dungeonMap.currentRoom.dungeonRoom.map_layout.getDoors();
         }
     }
             //check if interactible nearby
