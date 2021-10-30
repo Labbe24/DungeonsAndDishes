@@ -51,9 +51,11 @@ public class LevelScreen extends BaseScreen
        if(Gdx.input.isKeyPressed(Input.Keys.S) || Gdx.input.isKeyPressed(Input.Keys.DOWN)){
            character.accelerateAtAngle(270);
        }
-        //if isKeyPressed(e)
+        if (Gdx.input.isKeyPressed(Input.Keys.E)) {
+            dungeonMap.currentRoom.dungeonRoom.
+        }
+    }
             //check if interactible nearby
             //if interactible is door
             //call map.DoorEntered(door.getProperty("direction"))
-    }
 }

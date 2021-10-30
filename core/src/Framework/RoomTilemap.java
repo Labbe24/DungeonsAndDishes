@@ -2,6 +2,7 @@ package Framework;
 
 import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.dungeonsanddishes.game.Door;
 import com.dungeonsanddishes.game.DoorDirections;
 import com.dungeonsanddishes.game.DoorEast;
 import com.dungeonsanddishes.game.DoorNorth;
@@ -17,6 +18,7 @@ public class RoomTilemap extends TilemapActor implements IRoomRenderer{
      * @param filename
      */
     Stage mainStage;
+    protected ArrayList<Door> _doors;
     public RoomTilemap(String filename) {
         super(filename);
     }
@@ -25,6 +27,9 @@ public class RoomTilemap extends TilemapActor implements IRoomRenderer{
     }
 
     public void removeRoom(Stage stage) {
+        for(Door door: _doors){
+            door.remove();
+        }
         this.remove();
     }
 
@@ -37,21 +42,21 @@ public class RoomTilemap extends TilemapActor implements IRoomRenderer{
                 case EAST:
                     //get east door
                      door_props=getRectangleList("door_spawn_east").get(0).getProperties();
-                    new DoorEast((float)door_props.get("x"),(float)door_props.get("y"),mainStage);
+                    _doors.add(new DoorEast((float)door_props.get("x"),(float)door_props.get("y"),mainStage));
                     break;
                 case WEST:
                     //get west door
                     door_props =getRectangleList("door_spawn_west").get(0).getProperties();
-                    new DoorWest((float)door_props.get("x"),(float)door_props.get("y"),mainStage);
+                    _doors.add(new DoorWest((float)door_props.get("x"),(float)door_props.get("y"),mainStage));
                     break;
                 case NORTH:
                     door_props =getRectangleList("door_spawn_north").get(0).getProperties();
-                    new DoorNorth((float)door_props.get("x"),(float)door_props.get("y"),mainStage);
+                    _doors.add(new DoorNorth((float)door_props.get("x"),(float)door_props.get("y"),mainStage));
                     //get north door
                     break;
                 case SOUTH:
                     door_props =getRectangleList("door_spawn_south").get(0).getProperties();
-                    new DoorSouth((float)door_props.get("x"),(float)door_props.get("y"),mainStage);
+                    _doors.add(new DoorSouth((float)door_props.get("x"),(float)door_props.get("y"),mainStage));
                     //get south door
                     break;
                 default:
