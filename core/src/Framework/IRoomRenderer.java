@@ -1,6 +1,7 @@
 package Framework;
 
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.dungeonsanddishes.game.Door;
 import com.dungeonsanddishes.game.DoorDirections;
 
 import java.util.ArrayList;
@@ -23,6 +24,7 @@ public interface IRoomRenderer {
      * @param doors list of doors to set in the room
      */
     public void setDoors(ArrayList<DoorDirections> doors);
+    public ArrayList<Door> getDoors();
 
 
 }

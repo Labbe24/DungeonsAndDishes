@@ -65,6 +65,7 @@ public class RandomWalker implements IDungeonGenerator {
         int tunnelCounter = 0;
         int currentRow = startRow;
         int currentColumn = startColumn;
+        int [] entryDirection = {0,0};
         int [] lastDirection = {0, 0};
         int [] randomDirection = {0, 0};
 
@@ -92,9 +93,12 @@ public class RandomWalker implements IDungeonGenerator {
             if(tunnelCounter == 0)
             {
                 randomDirection = startDirection;
+                lastDirection = startDirection;
+                entryDirection = startDirection;
             }
             else
             {
+                entryDirection=randomDirection;
                 randomDirection = getNextDirection(directions, lastDirection);
                 if(randomDirection == null) return dungeonMap; // null -> no possible directions
             }
@@ -106,6 +110,8 @@ public class RandomWalker implements IDungeonGenerator {
             while(tunnelLengthCount < tunnelLength)
             {
                 // stop if random walker is going beyond array
+                //What to do about end room????!?!?!?!?!?!?!
+                //Maybe set last created room to be a tunnel end before breaking?
                 if((currentRow == 0 && randomDirection[0] == -1) ||
                         (currentColumn == 0 && randomDirection[1] == -1) ||
                         (currentRow == dimensions - 1 && randomDirection[0] == 1) ||
@@ -127,35 +133,40 @@ public class RandomWalker implements IDungeonGenerator {
                     // first room is already set
                     if(dungeonMap[currentRow][currentColumn] == null)
                     {
-                        DungeonRoom room = tunnelCounter + 1 >= numberOfTunnels ? roomRepo_.getEndRoom() : roomRepo_.getTunnelRoom();
+                        DungeonRoom room = tunnelCounter + 1 >= numberOfTunnels && tunnelLengthCount+1>=tunnelLength? roomRepo_.getEndRoom() : roomRepo_.getTunnelRoom(); //smelly
 
                         ArrayList<DoorDirections> doorDirections = new ArrayList<DoorDirections>();
-                        if(lastDirection[0] == 1){
+                        if(entryDirection[0] == 1){
                             doorDirections.add(DoorDirections.WEST);
                         }
-                        else if(lastDirection[0] == -1){
+                        else if(entryDirection[0] == -1){
                             doorDirections.add(DoorDirections.EAST);
                         }
-                        else if(lastDirection[1] == 1){
+                        else if(entryDirection[1] == 1){
                             doorDirections.add(DoorDirections.SOUTH);
                         }
-                        else if(lastDirection[1] == -1){
+                        else if(entryDirection[1] == -1){
                             doorDirections.add(DoorDirections.NORTH);
                         }
 
-                        if(randomDirection[0] == 1){
-                            doorDirections.add(DoorDirections.EAST);
-                        }
-                        else if(randomDirection[0] == -1){
-                            doorDirections.add(DoorDirections.WEST);
-                        }
-                        else if(randomDirection[1] == 1){
-                            doorDirections.add(DoorDirections.NORTH);
-                        }
-                        else if(randomDirection[1] == -1){
-                            doorDirections.add(DoorDirections.SOUTH);
-                        }
+                        //Not for tunnel ends
+                        if(tunnelCounter+1<numberOfTunnels||tunnelLengthCount+1<tunnelLength)
+                        {
+                            if(randomDirection[0] == 1){
+                                doorDirections.add(DoorDirections.EAST);
+                            }
+                            else if(randomDirection[0] == -1){
+                                doorDirections.add(DoorDirections.WEST);
+                            }
+                            else if(randomDirection[1] == 1){
+                                doorDirections.add(DoorDirections.NORTH);
+                            }
+                            else if(randomDirection[1] == -1){
+                                doorDirections.add(DoorDirections.SOUTH);
+                            }
 
+                        }
+                        entryDirection=randomDirection;
                         room.map_layout.setDoors(doorDirections);
 
                         dungeonMap[currentRow][currentColumn] = new DungeonRoomMeta(false, room,

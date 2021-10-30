@@ -8,8 +8,8 @@ import com.dungeonsanddishes.game.DoorEast;
 import com.dungeonsanddishes.game.DoorNorth;
 import com.dungeonsanddishes.game.DoorSouth;
 import com.dungeonsanddishes.game.DoorWest;
-
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 public class RoomTilemap extends TilemapActor implements IRoomRenderer{
     /**
@@ -21,12 +21,15 @@ public class RoomTilemap extends TilemapActor implements IRoomRenderer{
     protected ArrayList<Door> _doors;
     public RoomTilemap(String filename) {
         super(filename);
+        _doors = new ArrayList<Door>();
     }
     public void setRoom(Stage stage) {
+        stage.addActor(this);
         for(Door door: _doors){
+
+            Logger.getGlobal().info("Adding door at:"+door.getDirection().getString());
             stage.addActor(door);
         }
-        stage.addActor(this);
     }
 
     public void removeRoom(Stage stage) {
@@ -45,21 +48,21 @@ public class RoomTilemap extends TilemapActor implements IRoomRenderer{
                 case EAST:
                     //get east door
                      door_props=getRectangleList("door_spawn_east").get(0).getProperties();
-                    _doors.add(new DoorEast((float)door_props.get("x"),(float)door_props.get("y"),mainStage));
+                    _doors.add(new DoorEast((float)door_props.get("x"),(float)door_props.get("y")));
                     break;
                 case WEST:
                     //get west door
                     door_props =getRectangleList("door_spawn_west").get(0).getProperties();
-                    _doors.add(new DoorWest((float)door_props.get("x"),(float)door_props.get("y"),mainStage));
+                    _doors.add(new DoorWest((float)door_props.get("x"),(float)door_props.get("y")));
                     break;
                 case NORTH:
                     door_props =getRectangleList("door_spawn_north").get(0).getProperties();
-                    _doors.add(new DoorNorth((float)door_props.get("x"),(float)door_props.get("y"),mainStage));
+                    _doors.add(new DoorNorth((float)door_props.get("x"),(float)door_props.get("y")));
                     //get north door
                     break;
                 case SOUTH:
                     door_props =getRectangleList("door_spawn_south").get(0).getProperties();
-                    _doors.add(new DoorSouth((float)door_props.get("x"),(float)door_props.get("y"),mainStage));
+                    _doors.add(new DoorSouth((float)door_props.get("x"),(float)door_props.get("y")));
                     //get south door
                     break;
                 default:
@@ -69,6 +72,11 @@ public class RoomTilemap extends TilemapActor implements IRoomRenderer{
         for(Door door:_doors){
             door.remove();
         }
+    }
+
+    @Override
+    public ArrayList<Door> getDoors() {
+        return _doors;
     }
 
 }

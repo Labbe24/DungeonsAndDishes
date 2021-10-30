@@ -1,31 +1,26 @@
 package Framework;
 
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.utils.Array; 
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 import com.badlogic.gdx.graphics.g2d.Batch;
-
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.MathUtils;
-
-import com.badlogic.gdx.math.Polygon;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Intersector.MinimumTranslationVector;
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Polygon;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Group;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 import java.util.ArrayList;
-import com.badlogic.gdx.math.Rectangle;
-
-import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.utils.viewport.Viewport;
-import com.badlogic.gdx.scenes.scene2d.Group;
 
 /**
  * Extends functionality of the LibGDX Actor class.
@@ -51,7 +46,28 @@ public class BaseActor extends Group
 
     // stores size of game world for all actors
     private static Rectangle worldBounds;
+    //BaseActor constructor not adding actor to any stage
+    public  BaseActor(float x,float y){
+        // call constructor from Actor class
+        super();
 
+        // perform additional initialization tasks
+        setPosition(x,y);
+
+        // initialize animation data
+        animation = null;
+        elapsedTime = 0;
+        animationPaused = false;
+
+        // initialize physics data
+        velocityVec = new Vector2(0,0);
+        accelerationVec = new Vector2(0,0);
+        acceleration = 0;
+        maxSpeed = 1000;
+        deceleration = 0;
+
+        boundaryPolygon = null;
+    }
     public BaseActor(float x, float y, Stage s)
     {
         // call constructor from Actor class
