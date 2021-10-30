@@ -19,7 +19,6 @@ public class Character extends BaseActor {
         super(x, y, s);
         this.loadTexture("chef_idle/chef_idle_up.png");
 
-
         //Set animations:
         Array<TextureRegion> animation_array= new Array<TextureRegion>();
         animation_array.add(new TextureRegion(new Texture("chef_walk/chef_walk_right1.png")));
@@ -39,24 +38,22 @@ public class Character extends BaseActor {
         animation_array.clear();
         animation_array.add(new TextureRegion(new Texture("chef_walk/chef_walk_down1.png")));
         animation_array.add(new TextureRegion(new Texture("chef_walk/chef_walk_down2.png")));
-        South= new Animation(0.2f,animation_array,Animation.PlayMode.LOOP);
+        South = new Animation(0.2f,animation_array,Animation.PlayMode.LOOP);
 
         animation_array.clear();
         animation_array.add(new TextureRegion(new Texture("chef_walk/chef_walk_up1.png")));
         animation_array.add(new TextureRegion(new Texture("chef_walk/chef_walk_up2.png")));
-        North= new Animation(0.2f,animation_array,Animation.PlayMode.LOOP);
+        North = new Animation(0.2f,animation_array,Animation.PlayMode.LOOP);
 
         setAnimation(South);
-        CharAngle=270;
-
-
+        CharAngle = 270;
 
         //set movement parameter values:
         setAcceleration(10000);
         setMaxSpeed(300);
         setDeceleration(10000);
-
     }
+
     public void act(float dt){
         super.act(dt);
         applyPhysics(dt);
@@ -88,10 +85,6 @@ public class Character extends BaseActor {
                 CharAngle = 270;
                 setAnimation(South);
             }
-
         }
     }
-
-
-
 }

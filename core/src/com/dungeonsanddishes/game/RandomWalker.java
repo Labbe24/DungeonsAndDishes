@@ -2,15 +2,17 @@ package com.dungeonsanddishes.game;
 
 import java.util.Random;
 
+import Framework.RoomTilemap;
+
 public class RandomWalker implements IDungeonGenerator {
 
     private Random random = new Random();
     private int [][] directions = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
-    //private RoomRepo roomRepo_;
+    private DungeonRoomRepository roomRepo_;
 
-    //public RandomWalker(RoomRepo roomRepo){
-        //roomRepo_ = roomRepo;
-    //}
+    public RandomWalker(DungeonRoomRepository roomRepo){
+        roomRepo_ = roomRepo;
+    }
 
     /**
      *
@@ -60,18 +62,23 @@ public class RandomWalker implements IDungeonGenerator {
                                                     int startColumn)
     {
         int tunnelCounter = 0;
-        // place the random walker at a random cell
         int currentRow = startRow;
         int currentColumn = startColumn;
+        int [] lastDirection = {0, 0};
+        int [] randomDirection = {0, 0};
 
         // set start room, if not set
         if(dungeonMap[currentRow][currentColumn] == null)
         {
-            dungeonMap[currentRow][currentColumn] = new DungeonRoomMeta(false, new DungeonRoom("S"));
+            dungeonMap[currentRow][currentColumn] = new DungeonRoomMeta(false, roomRepo_.getStartRoom(),
+                    new DungeonRoomMeta[] {
+                            dungeonMap[currentRow + 1][currentColumn],
+                            dungeonMap[currentRow - 1][currentColumn ],
+                            dungeonMap[currentRow ][currentColumn + 1],
+                            dungeonMap[currentRow ][currentColumn - 1]
+                    },
+                    "Start");
         }
-
-        int [] lastDirection = {0, 0};
-        int [] randomDirection = {0, 0};
 
         while(tunnelCounter < numberOfTunnels)
         {
@@ -117,7 +124,15 @@ public class RandomWalker implements IDungeonGenerator {
                     // first room is already set
                     if(dungeonMap[currentRow][currentColumn] == null)
                     {
-                        dungeonMap[currentRow][currentColumn] = new DungeonRoomMeta(false, new DungeonRoom(roomType));
+                        DungeonRoom room = tunnelCounter + 1 >= numberOfTunnels ? roomRepo_.getEndRoom() : roomRepo_.getTunnelRoom();
+                        dungeonMap[currentRow][currentColumn] = new DungeonRoomMeta(false, room,
+                                new DungeonRoomMeta[]
+                                {
+                                        dungeonMap[currentRow - lastDirection[0]][currentColumn - lastDirection[1]],
+                                        dungeonMap[currentRow + randomDirection[0]][currentColumn + randomDirection[1]]
+                                },
+                                roomType);
+
                         tunnelLengthCount++;
                     }
 
@@ -160,7 +175,7 @@ public class RandomWalker implements IDungeonGenerator {
             for(int j = 0; j < dungeonMap.length; j++)
             {
                 if(dungeonMap[i][j] != null
-                        && dungeonMap[i][j].dungeonRoom.roomName == roomName){
+                        && dungeonMap[i][j].roomName == roomName){
                     numberOfRooms++;
                 }
             }
