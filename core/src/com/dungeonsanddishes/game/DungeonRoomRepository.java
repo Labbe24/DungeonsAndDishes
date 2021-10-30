@@ -15,14 +15,21 @@ public class DungeonRoomRepository {
         switch (seed % tunnel_room_type_count) {
             case 1:
                 //create room type 1
+                _tunnel_rooms.add(new StartRoom());
             default:
                 //throw?
         }
-        _end_rooms.add(new KitchenRoom());//with parameters for room?
-        _end_rooms.add(new MainIngredientRoom(seed));
+        _end_rooms.add(new StartRoom());//with parameters for room?
+        _end_rooms.add(new StartRoom());//with parameters for room?
+        _end_rooms.add(new StartRoom());//with parameters for room?
+        _end_rooms.add(new StartRoom());//with parameters for room?
+        //_end_rooms.add(new MainIngredientRoom(seed));
         Collections.shuffle(_end_rooms, new Random(seed));
         Collections.shuffle(_tunnel_rooms, new Random(seed));
 
+    }
+    public  DungeonRoom getStartRoom(){
+        return new StartRoom();//with parameters for room?
     }
 
     public DungeonRoom getTunnelRoom(){

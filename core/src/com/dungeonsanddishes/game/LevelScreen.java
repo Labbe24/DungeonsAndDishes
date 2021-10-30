@@ -27,9 +27,10 @@ public class LevelScreen extends BaseScreen
     {
         dungeonMap = new DungeonMap(new RandomWalker(new DungeonRoomRepository(1, 7)));
         dungeonMap.createDungeon();
-
-        map = new RoomTilemap("rooms/start_room.tmx");
-        map.setRoom(mainStage);
+        DungeonRoomMeta room = dungeonMap.getCurrentRoom();
+        map=(RoomTilemap) room.dungeonRoom.map_layout;
+        //map = new RoomTilemap("rooms/start_room.tmx");
+        //map.setRoom(mainStage);
 
         character = new Character(0,0, mainStage);
         ArrayList<MapObject> spawn_point = map.getRectangleList("spawn_point");
