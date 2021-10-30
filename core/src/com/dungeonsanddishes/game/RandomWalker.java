@@ -1,8 +1,7 @@
 package com.dungeonsanddishes.game;
 
 import java.util.Random;
-
-import Framework.RoomTilemap;
+import java.util.logging.Logger;
 
 public class RandomWalker implements IDungeonGenerator {
 
@@ -70,6 +69,7 @@ public class RandomWalker implements IDungeonGenerator {
         // set start room, if not set
         if(dungeonMap[currentRow][currentColumn] == null)
         {
+            Logger.getGlobal().info("Creating start room at: ["+currentRow+"]["+currentColumn+"]");
             dungeonMap[currentRow][currentColumn] = new DungeonRoomMeta(false, roomRepo_.getStartRoom(),
                     new DungeonRoomMeta[] {
                             dungeonMap[currentRow + 1][currentColumn],

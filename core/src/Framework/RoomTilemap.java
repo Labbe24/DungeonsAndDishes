@@ -23,6 +23,9 @@ public class RoomTilemap extends TilemapActor implements IRoomRenderer{
         super(filename);
     }
     public void setRoom(Stage stage) {
+        for(Door door: _doors){
+            stage.addActor(door);
+        }
         stage.addActor(this);
     }
 
@@ -62,6 +65,9 @@ public class RoomTilemap extends TilemapActor implements IRoomRenderer{
                 default:
                     break;
             }
+        }
+        for(Door door:_doors){
+            door.remove();
         }
     }
 
