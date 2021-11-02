@@ -1,14 +1,18 @@
 package com.dungeonsanddishes.game;
-class MainIngredientRoomImplementation{
+abstract class MainIngredientRoomImplementation extends IngredientRoomImplementation{
 
+    public abstract void update(float dt, Character character);
 }
 class RiceRoom extends MainIngredientRoomImplementation{
 
+    @Override
+    public void update(float dt, Character character) {
+
+    }
 }
 
 public class MainIngredientRoom extends IngredientRoom{
-    private int impl_count = 1;
-    private MainIngredientRoomImplementation _room_impl;
+    private static final int impl_count = 1;
     public MainIngredientRoom(int seed){
         switch (seed%impl_count){
             case 0:
@@ -17,4 +21,5 @@ public class MainIngredientRoom extends IngredientRoom{
                 //throw
         }
     }
+
 }

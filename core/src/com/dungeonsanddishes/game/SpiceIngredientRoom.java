@@ -1,4 +1,4 @@
 package com.dungeonsanddishes.game;
 
-public class SpiceIngredientRoom extends IngredientRoom{
+public abstract class SpiceIngredientRoom extends IngredientRoom{
 }

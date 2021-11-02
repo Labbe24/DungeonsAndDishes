@@ -7,4 +7,9 @@ public class StartRoom extends DungeonRoom{
         super();
         map_layout=new RoomTilemap("rooms/start_room.tmx");
     }
+
+    @Override
+    public void update(float dt, Character character) {
+
+    }
 }
