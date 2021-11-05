@@ -23,9 +23,9 @@ public class DungeonRoomRepository {
             _tunnel_rooms.add(new StartRoom());
             _end_rooms.add(new StartRoom());//with parameters for room?
         }
-        _end_rooms.add(new StartRoom());//with parameters for room?
-        _end_rooms.add(new StartRoom());//with parameters for room?
-        _end_rooms.add(new StartRoom());//with parameters for room?
+        _end_rooms.add(new MainIngredientRoom(seed));//with parameters for room?
+        _end_rooms.add(new MainIngredientRoom(seed));//with parameters for room?
+        _end_rooms.add(new MainIngredientRoom(seed));//with parameters for room?
         //_end_rooms.add(new MainIngredientRoom(seed));
         Collections.shuffle(_end_rooms, new Random(seed));
         Collections.shuffle(_tunnel_rooms, new Random(seed));
