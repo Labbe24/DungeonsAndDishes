@@ -1,8 +1,13 @@
 package com.dungeonsanddishes.game;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.dungeonsanddishes.game.RiceRoomLib.Puzzle;
 import com.dungeonsanddishes.game.RiceRoomLib.PuzzlePiece;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import Framework.IngredientRoomTilemap;
 
@@ -19,12 +24,34 @@ class RiceRoom extends MainIngredientRoomImplementation{
         //Create puzzle picture
         puzzle= new Puzzle(640,200);
         //Shuffle
+        puzzle.shuffle(seed);
     }
 
     @Override
     public void update(float dt, Character character) {
         //Check for completion
+        boolean complete= puzzle.IsComplete();
+        if(complete){
+            Logger.getGlobal().log(Level.INFO,"Puzzle Complete!!");
+        }
+
         //Check for interactions
+        boolean swapped = false;
+        if(Gdx.input.isKeyJustPressed(Input.Keys.E)&&(!complete)){
+            for(PuzzlePiece[] piece_arr : puzzle.getPieces()){
+                if(swapped){
+                    break;
+                }
+                for(PuzzlePiece piece : piece_arr){
+                    if(character.overlaps(piece)){
+                        if(puzzle.swap(piece,puzzle.getEmptyPiece())){
+                            swapped = true;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
     }
 
     @Override
