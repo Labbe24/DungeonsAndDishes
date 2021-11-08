@@ -2,6 +2,7 @@ package com.dungeonsanddishes.game.RiceRoomLib;
 
 
 import static java.lang.Integer.compareUnsigned;
+import static java.lang.Integer.parseInt;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -17,10 +18,19 @@ import Framework.BaseActor;
 public class Puzzle extends BaseActor {
     private int no_rows =4;
     private int no_columns=4;
+    private boolean is_complete=false;
+    private BaseActor picture;
     private PuzzlePiece pieces[][];
     public Puzzle(float x, float y) {
         super(x, y);
         this.loadTexture("RiceRoom/frame_4.png");
+        picture = new BaseActor(20,20);
+        picture.loadTexture("RiceRoom/temple.png");
+        picture.addAction(Actions.fadeOut(0.0f));
+        picture.scaleBy((600f/576f)-1);
+
+        this.addActor(picture);
+
         Texture texture = new Texture("RiceRoom/temple.png");
         int image_width= texture.getWidth();
         int image_height=texture.getHeight();
@@ -109,16 +119,24 @@ public class Puzzle extends BaseActor {
     }
 
     public boolean IsComplete(){
-        for(int i = 0 ;i<pieces.length;i++){
-            for(int j =0;j<pieces[0].length;j++){
-                if(pieces[i][j].getColumn()!=j||pieces[i][j].getRow()!=i){
-                    //not complete
-                    return false;
+        if(!is_complete)
+        {
+            for(int i = 0 ;i<pieces.length;i++){
+                for(int j =0;j<pieces[0].length;j++){
+                    if(pieces[i][j].getColumn()!=j||pieces[i][j].getRow()!=i){
+                        //not complete
+                        return false;
+                    }
                 }
             }
+            for(int i = 0 ;i<pieces.length;i++){
+                for(int j =0;j<pieces[0].length;j++){
+                    pieces[i][j].setOpacity(0);
+                }
+            }
+            picture.addAction(Actions.fadeIn(0.8f));
+
         }
-        this.loadTexture("RiceRoom/temple.png");
-        this.addAction(Actions.fadeIn(0.8f));
         return true;
     }
 
