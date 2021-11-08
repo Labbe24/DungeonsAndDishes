@@ -42,21 +42,25 @@
  <objectgroup id="5" name="door_spawn_points">
   <object id="11" name="door_spawn_north" x="895.748" y="93.0938" width="127.1" height="64.4912">
    <properties>
+    <property name="Direction" value="north"/>
     <property name="Interactable" type="bool" value="true"/>
    </properties>
   </object>
   <object id="12" name="door_spawn_west" x="159.727" y="450.59" width="62.908" height="125.892">
    <properties>
+    <property name="Direction" value="west"/>
     <property name="Interactable" type="bool" value="true"/>
    </properties>
   </object>
   <object id="14" name="door_spawn_south" x="896.539" y="894.352" width="127.1" height="64.4912">
    <properties>
+    <property name="Direction" value="south"/>
     <property name="Interactable" type="bool" value="true"/>
    </properties>
   </object>
   <object id="15" name="door_spawn_east" x="1693.36" y="446.404" width="62.908" height="125.892">
    <properties>
+    <property name="Direction" value="east"/>
     <property name="Interactable" type="bool" value="true"/>
    </properties>
   </object>
