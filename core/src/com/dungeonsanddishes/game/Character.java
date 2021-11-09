@@ -53,9 +53,7 @@ public class Character extends BaseActor {
         setMaxSpeed(300);
         setDeceleration(10000);
 
-        setWidth(64); // might need som tweaking so that slight overlap is allowed
-        setHeight(128);
-        setBoundaryPolygon(4);
+        setBoundaryRectangle();
     }
 
     public void act(float dt){

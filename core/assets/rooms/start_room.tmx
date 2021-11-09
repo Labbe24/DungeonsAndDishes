@@ -109,7 +109,7 @@
   <object id="5" name="map_border" x="188" y="123" width="1536" height="800"/>
   <object id="21" name="oven_border" x="460" y="200" width="105" height="105">
    <properties>
-    <property name="Collidable" type="bool" value="true"/>
+    <property name="Collidable" type="bool" value="false"/>
    </properties>
   </object>
  </objectgroup>
