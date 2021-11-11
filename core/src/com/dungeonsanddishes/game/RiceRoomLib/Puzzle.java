@@ -1,17 +1,10 @@
 package com.dungeonsanddishes.game.RiceRoomLib;
 
 
-import static java.lang.Integer.compareUnsigned;
-import static java.lang.Integer.parseInt;
-
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 
-import java.lang.*;
-import java.util.Arrays;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import Framework.BaseActor;
 
@@ -142,7 +135,6 @@ public class Puzzle extends BaseActor {
 
     public void shuffle(int seed) {
         for(int i =0; i <(seed % 30 + 50);i++){
-            Logger.getGlobal().log(Level.INFO,"Hi from shuffle loop, it="+i+" seed="+(seed+i));
             swap(getRandomAdjacent(getEmptyPiece(),seed+i/4),getEmptyPiece());
         }
 

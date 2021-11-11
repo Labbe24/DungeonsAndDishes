@@ -20,7 +20,7 @@ public class DungeonRoomRepository {
                 //throw?
         }*/
         for(int i=0;i<36;i++){
-            _tunnel_rooms.add(new MainIngredientRoom(seed));
+            _tunnel_rooms.add(new StartRoom());
         }
         _end_rooms.add(new MainIngredientRoom(seed));//with parameters for room?
         _end_rooms.add(new MainIngredientRoom(seed));//with parameters for room?
