@@ -151,6 +151,11 @@ public class BaseActor extends Group
         if (boundaryPolygon == null)
             setBoundaryRectangle();
     }
+    public void setTexture(String fileName){
+        Texture texture = new Texture( Gdx.files.internal(fileName) );
+        texture.setFilter( TextureFilter.Linear, TextureFilter.Linear );
+        setAnimation(new Animation<TextureRegion>(1,new TextureRegion(texture)));
+    }
 
     /**
      * Creates an animation from images stored in separate files.
