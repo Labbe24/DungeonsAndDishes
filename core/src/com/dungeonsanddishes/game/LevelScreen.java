@@ -40,7 +40,9 @@ public class LevelScreen extends BaseScreen
 
     public void update(float dt)
     {
-       character.movement.handleMovement();
+        if(character.movement != null) {
+            character.movement.handleMovement();
+        }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
 
