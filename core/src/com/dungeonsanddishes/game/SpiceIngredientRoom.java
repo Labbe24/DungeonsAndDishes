@@ -18,21 +18,24 @@ abstract class SpiceIngredientRoomImplementation extends IngredientRoomImplement
 
 class ChiliRoom extends SpiceIngredientRoomImplementation {
     private TextBox tb;
+    private Stage stage;
+    private Boolean gameOver = false;
 
     private Chili chili;
+    private Boolean chiliEaten = false;
+
+    private Array<Fire> fireList;
+
     private Milk milk;
     private int milkX, milkY;
     private Boolean milkAvailable = false;
     private float milkTimer = 0;
     private float MILK_TIME = 2f;
-    private Array<Fire> fireList;
-    private Stage stage;
-    private int milksToDrink = 5;
+    private int milksToDrink = 15;
     private int milksDrunk = 0;
-    private Boolean chiliEaten = false;
+
 
     public int mapX = 192, mapY = 128, mapWidth = 1536, mapHeight = 800;
-    private Boolean gameOver = false;
     private static final float MOVE_TIME = 0.1F;
     private static final int CHARACTER_MOVEMENT = 32;
     private float timer = MOVE_TIME;
@@ -42,8 +45,14 @@ class ChiliRoom extends SpiceIngredientRoomImplementation {
     private int firePartsAdded = 0;
 
     public ChiliRoom() {
-        int x = MathUtils.random(mapWidth / CHARACTER_MOVEMENT - 1) * CHARACTER_MOVEMENT;
-        int y = MathUtils.random(mapHeight / CHARACTER_MOVEMENT - 1) * CHARACTER_MOVEMENT;
+        int x;
+        int y;
+
+        do {
+            x = MathUtils.random(mapWidth / CHARACTER_MOVEMENT - 1) * CHARACTER_MOVEMENT;
+            y = MathUtils.random(mapHeight / CHARACTER_MOVEMENT - 1) * CHARACTER_MOVEMENT;
+        } while (x < mapX || y < mapY);
+
         chili = new Chili(x, y);
         fireList = new Array<Fire>();
         characterX = x;
@@ -74,6 +83,7 @@ class ChiliRoom extends SpiceIngredientRoomImplementation {
                     character.setX(characterX);
                     character.setY(characterY);
 
+                    checkFireCollision();
                     checkForNewMilk(MOVE_TIME);
                     updateFire();
 
@@ -244,6 +254,16 @@ class ChiliRoom extends SpiceIngredientRoomImplementation {
         }
     }
 
+    private void checkFireCollision() {
+        for(int i = 0; i < fireList.size; i++) {
+            if(fireList.get(i).getX() == characterX
+            && fireList.get(i).getY() == characterY) {
+                gameOver = true;
+                return;
+            }
+        }
+    }
+
     private void updateFire() {
         if(fireList.size > 0) {
             Fire firePart = fireList.removeIndex(0);
@@ -253,7 +273,7 @@ class ChiliRoom extends SpiceIngredientRoomImplementation {
     }
 
     private void addFire() {
-        Fire fire = new Fire(characterX, characterY);
+        Fire fire = new Fire(prevCharacterX, prevCharacterY);
         fireList.insert(0, fire);
         stage.addActor(fire);
     }
