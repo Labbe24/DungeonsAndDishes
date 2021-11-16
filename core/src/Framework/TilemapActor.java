@@ -1,7 +1,5 @@
 package Framework;
 
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -10,30 +8,34 @@ import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.objects.TiledMapTileMapObject;
 import com.badlogic.gdx.maps.tiled.renderers.OrthoCachedTiledMapRenderer;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *  Loads a Tiled map file (*.tmx), extends Actor to automatically render.
  */ 
-public class TilemapActor extends Actor
-{
+public class TilemapActor extends Actor{
     // window dimensions
     public static int windowWidth  = 1920;
     public static int windowHeight = 1080;
    
-    private TiledMap tiledMap;
-    private OrthographicCamera tiledCamera;
-    private OrthoCachedTiledMapRenderer tiledMapRenderer;
+    protected TiledMap tiledMap;
+    protected OrthographicCamera tiledCamera;
+    protected OrthoCachedTiledMapRenderer tiledMapRenderer;
 
     /**
      *  Initialize Tilemap created with the Tiled Map Editor.
      */
-    public TilemapActor(String filename, Stage theStage)
+    public TilemapActor(String filename)
     {
         // set up tile map, renderer, and camera
         tiledMap = new TmxMapLoader().load(filename);
@@ -52,7 +54,6 @@ public class TilemapActor extends Actor
         tiledCamera.update();
 
         // by adding object to Stage, can be drawn automatically
-        theStage.addActor(this);
 
         // in theory, a solid boundary should be placed around the edge of the screen, 
         //  but just in case, this map can be used to set boundaries
@@ -67,18 +68,45 @@ public class TilemapActor extends Actor
     public ArrayList<MapObject> getRectangleList(String propertyName)
     {
         ArrayList<MapObject> list = new ArrayList<MapObject>();
-
+        Logger.getGlobal().log(Level.WARNING,"In Get Rectangle list");
         for ( MapLayer layer : tiledMap.getLayers() )
         {
+            Logger.getGlobal().log(Level.WARNING,"In layer:"+layer.getName());
+            for ( MapObject obj : layer.getObjects() )
+            {
+                if ( !(obj instanceof RectangleMapObject) )
+                  continue;
+                MapProperties props = obj.getProperties();
+
+                if ( obj.getName().equals(propertyName) )
+                    list.add(obj);
+            }
+        }
+        return list;
+    }
+
+    /**
+     *  Search the map layers for Rectangle Objects that contain a CUSTOM property (key) with associated value propertyName.
+     *  Typically used to store non-actor information such as SpawnPoint locations or dimensions of Solid objects.
+     *  Retrieve data as object, then cast to desired type: for example, float w = (float)obj.getProperties().get("width").
+     */
+    public ArrayList<MapObject> getCustomRectangleList(String customPropertyName)
+    {
+        ArrayList<MapObject> list = new ArrayList<MapObject>();
+        Logger.getGlobal().log(Level.WARNING,"In Get Rectangle list");
+        for ( MapLayer layer : tiledMap.getLayers() )
+        {
+            Logger.getGlobal().log(Level.WARNING,"In layer:"+layer.getName());
             for ( MapObject obj : layer.getObjects() )
             {
                 if ( !(obj instanceof RectangleMapObject) )
                     continue;
-
                 MapProperties props = obj.getProperties();
 
-                if ( props.containsKey("name") && props.get("name").equals(propertyName) )
+                Object objTemp = props.get(customPropertyName);
+                if (objTemp != null) {
                     list.add(obj);
+                }
             }
         }
         return list;
@@ -109,7 +137,7 @@ public class TilemapActor extends Actor
                 TiledMapTile t = tmtmo.getTile();
                 MapProperties defaultProps = t.getProperties();
 
-                if ( defaultProps.containsKey("name") && defaultProps.get("name").equals(propertyName) )
+                if ( defaultProps.containsKey("Name") && defaultProps.get("Name").equals(propertyName) )
                     list.add(obj);
 
                 // get list of default property keys
@@ -154,4 +182,5 @@ public class TilemapActor extends Actor
         tiledMapRenderer.render();        
         batch.begin();
     }
+
 }

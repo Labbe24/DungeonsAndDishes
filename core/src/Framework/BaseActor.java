@@ -1,30 +1,28 @@
 package Framework;
 
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
-
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.MathUtils;
-
-import com.badlogic.gdx.math.Polygon;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Intersector.MinimumTranslationVector;
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Polygon;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Group;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 import java.util.ArrayList;
-import com.badlogic.gdx.math.Rectangle;
-
-import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.utils.viewport.Viewport;
-import com.badlogic.gdx.scenes.scene2d.Group;
 
 /**
  * Extends functionality of the LibGDX Actor class.
@@ -50,7 +48,28 @@ public class BaseActor extends Group
 
     // stores size of game world for all actors
     private static Rectangle worldBounds;
+    //BaseActor constructor not adding actor to any stage
+    public  BaseActor(float x,float y){
+        // call constructor from Actor class
+        super();
 
+        // perform additional initialization tasks
+        setPosition(x,y);
+
+        // initialize animation data
+        animation = null;
+        elapsedTime = 0;
+        animationPaused = false;
+
+        // initialize physics data
+        velocityVec = new Vector2(0,0);
+        accelerationVec = new Vector2(0,0);
+        acceleration = 0;
+        maxSpeed = 1000;
+        deceleration = 0;
+
+        boundaryPolygon = null;
+    }
     public BaseActor(float x, float y, Stage s)
     {
         // call constructor from Actor class
@@ -498,6 +517,37 @@ public class BaseActor extends Group
         this.moveBy( mtv.normal.x * mtv.depth, mtv.normal.y * mtv.depth );
         return mtv.normal;
     }
+    /**
+     *  Implement a "solid"-like behavior:
+     *  But for Reactangle input.
+     *  @param other Rectangle to check for overlap
+     *  @return direction vector by which actor was translated, null if no overlap
+     */
+
+    public Vector2 preventOverlapWithObject(Rectangle other)
+    {
+        float w = other.getWidth();
+        float h = other.getHeight();
+        float[] vertices = {0,0, w,0, w,h, 0,h};
+        Polygon tempPoly = new Polygon(vertices);
+        tempPoly.setPosition(other.getX(), other.getY());
+
+        Polygon poly2 = tempPoly;
+        Polygon poly1 = this.getBoundaryPolygon();
+
+        // initial test to improve performance
+        if ( !poly1.getBoundingRectangle().overlaps(poly2.getBoundingRectangle()) )
+            return null;
+
+        MinimumTranslationVector mtv = new MinimumTranslationVector();
+        boolean polygonOverlap = Intersector.overlapConvexPolygons(poly1, poly2, mtv);
+
+        if ( !polygonOverlap )
+            return null;
+
+        this.moveBy( mtv.normal.x * mtv.depth, mtv.normal.y * mtv.depth );
+        return mtv.normal;
+    }
 
     /**
      *  Determine if this BaseActor is near other BaseActor (according to collision polygons).
@@ -557,14 +607,18 @@ public class BaseActor extends Group
      */
     public void boundToWorld()
     {
-        if (getX() < 0)
-            setX(0);
-        if (getX() + getWidth() > worldBounds.width)    
-            setX(worldBounds.width - getWidth());
-        if (getY() < 0)
-            setY(0);
-        if (getY() + getHeight() > worldBounds.height)
-            setY(worldBounds.height - getHeight());
+        // Hard coded coordinate corrections since these never change, normally always 0,0(following screen border).
+        float xCorrection = 185;
+        float yCorrection = 145;
+
+        if (getX() < xCorrection)
+            setX(xCorrection);
+        if ((getX() + getWidth()) > (worldBounds.width + xCorrection))
+            setX((worldBounds.width + xCorrection) - getWidth());
+        if (getY() < yCorrection)
+            setY(yCorrection);
+        if ((getY() + getHeight()) > (worldBounds.height + yCorrection))
+            setY((worldBounds.height + yCorrection) - getHeight());
     }
 
     /**
