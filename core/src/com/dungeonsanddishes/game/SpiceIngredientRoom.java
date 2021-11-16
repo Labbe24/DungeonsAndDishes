@@ -67,12 +67,15 @@ class ChiliRoom extends SpiceIngredientRoomImplementation {
 
                 if(timer <= 0) {
                     timer = MOVE_TIME;
-                    checkForNewMilk(MOVE_TIME);
+
                     moveCharacter(character);
                     checkForMapBoundaries();
-                    updateFire();
+
                     character.setX(characterX);
                     character.setY(characterY);
+
+                    checkForNewMilk(MOVE_TIME);
+                    updateFire();
 
                     if(firePartsAdded < milksToDrink) {
                         addFire();
@@ -91,11 +94,12 @@ class ChiliRoom extends SpiceIngredientRoomImplementation {
                 }
             }
         }
-        // if character collides with chili
-        // remove chili
-        // check win-conditions
-        // -- if win, let the player know and set character movement to default
-        // -- if no win, spawn new milk
+
+        if(gameOver) {
+            removeFire();
+            removeMilk();
+            character.setMovementStragety(new BasicMovement(character));
+        }
     }
 
     @Override
@@ -169,15 +173,31 @@ class ChiliRoom extends SpiceIngredientRoomImplementation {
 
     private void queryInput() {
         if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+            if(characterDirection == RIGHT) {
+                gameOver = true;
+                return;
+            }
             characterDirection = LEFT;
         }
         if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+            if(characterDirection == LEFT) {
+                gameOver = true;
+                return;
+            }
             characterDirection = RIGHT;
         }
         if(Gdx.input.isKeyPressed(Input.Keys.UP)) {
+            if(characterDirection == DOWN) {
+                gameOver = true;
+                return;
+            }
             characterDirection = UP;
         }
         if(Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+            if(characterDirection == UP) {
+                gameOver = true;
+                return;
+            }
             characterDirection = DOWN;
         }
     }
@@ -218,6 +238,12 @@ class ChiliRoom extends SpiceIngredientRoomImplementation {
         }
     }
 
+    private void removeMilk() {
+        if(milk != null) {
+            milk.remove();
+        }
+    }
+
     private void updateFire() {
         if(fireList.size > 0) {
             Fire firePart = fireList.removeIndex(0);
@@ -230,6 +256,14 @@ class ChiliRoom extends SpiceIngredientRoomImplementation {
         Fire fire = new Fire(characterX, characterY);
         fireList.insert(0, fire);
         stage.addActor(fire);
+    }
+
+    private void removeFire() {
+        Fire firePart;
+        for(int i = 0; i < fireList.size; i++) {
+            firePart = fireList.removeIndex(i);
+            firePart.remove();
+        }
     }
 }
 
