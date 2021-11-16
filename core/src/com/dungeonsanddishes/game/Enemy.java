@@ -8,73 +8,73 @@ import com.badlogic.gdx.utils.Array;
 
 import Framework.BaseActor;
 
-public class Character extends BaseActor {
-    Animation North;
-    Animation South;
-    Animation East;
-    Animation West;
+public class Enemy extends BaseActor {
+    Animation<TextureRegion> North;
+    Animation<TextureRegion> South;
+    Animation<TextureRegion> East;
+    Animation<TextureRegion> West;
     int CharAngle;
 
-    public IMovement movement;
-
-    public Character(float x, float y, Stage s) {
+    public Enemy(float x, float y, Stage s) {
         super(x, y, s);
-        this.loadTexture("chef_idle/chef_idle_up.png");
 
-        //Set animations:
-        Array<TextureRegion> animation_array= new Array<TextureRegion>();
+    this.loadTexture("chef_idle/chef_idle_up.png");
+
+
+    //Set animations:
+    Array<TextureRegion> animation_array= new Array<>();
         animation_array.add(new TextureRegion(new Texture("chef_walk/chef_walk_right1.png")));
         animation_array.add(new TextureRegion(new Texture("chef_walk/chef_walk_right2.png")));
 
-        East = new Animation(0.2f,animation_array,Animation.PlayMode.LOOP);
+    East = new Animation<>(0.2f,animation_array, Animation.PlayMode.LOOP);
 
         animation_array.clear();
         animation_array.add(new TextureRegion(new Texture("chef_walk/chef_walk_right1.png")));
         animation_array.add(new TextureRegion(new Texture("chef_walk/chef_walk_right2.png")));
         for( TextureRegion anim :animation_array){
-            anim.flip(true,false);
-        }
+        anim.flip(true,false);
+    }
 
-        West = new Animation(0.2f,animation_array,Animation.PlayMode.LOOP);
+    West = new Animation<>(0.2f,animation_array,Animation.PlayMode.LOOP);
 
         animation_array.clear();
         animation_array.add(new TextureRegion(new Texture("chef_walk/chef_walk_down1.png")));
         animation_array.add(new TextureRegion(new Texture("chef_walk/chef_walk_down2.png")));
-        South = new Animation(0.2f,animation_array,Animation.PlayMode.LOOP);
+    South= new Animation<>(0.2f,animation_array,Animation.PlayMode.LOOP);
 
         animation_array.clear();
         animation_array.add(new TextureRegion(new Texture("chef_walk/chef_walk_up1.png")));
         animation_array.add(new TextureRegion(new Texture("chef_walk/chef_walk_up2.png")));
-        North = new Animation(0.2f,animation_array,Animation.PlayMode.LOOP);
+    North= new Animation<>(0.2f,animation_array,Animation.PlayMode.LOOP);
 
-        setAnimation(South);
-        CharAngle = 270;
+    setAnimation(South);
+    CharAngle=270;
 
-        //set movement parameter values:
-        setAcceleration(10000);
-        setMaxSpeed(300);
-        setDeceleration(10000);
 
-        setBoundaryRectangle();
+
+    //set movement parameter values:
+    setAcceleration(10000);
+    setMaxSpeed(100);
+    setDeceleration(10000);
+
     }
 
-    public void act(float dt){
+    @Override
+    public void act(float dt) {
         super.act(dt);
         applyPhysics(dt);
-        // set direction animation
         float angle = getMotionAngle();
 
-        if(isMoving()==false){
+        if (!isMoving()) {
             setAnimationPaused(true);
-        }
-        else{
+        } else {
             setAnimationPaused(false);
-            if(angle >= 45 && angle <= 135)
+            if (angle >= 45 && angle <= 135)
             {
                 CharAngle = 90;
                 setAnimation(North);
             }
-            else if(angle > 135 && angle < 225)
+            else if (angle > 135 && angle < 225)
             {
                 CharAngle = 180;
                 setAnimation(West);
@@ -90,9 +90,5 @@ public class Character extends BaseActor {
                 setAnimation(South);
             }
         }
-    }
-
-    public void setMovementStragety(IMovement movement){
-        this.movement = movement;
     }
 }
