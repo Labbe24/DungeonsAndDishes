@@ -50,6 +50,7 @@ public class LevelScreen extends BaseScreen
         //map.setRoom(mainStage);
 
         character = new Character(0,0, mainStage);
+        character.setMovementStragety(new BasicMovement(character));
         ArrayList<MapObject> spawn_point = map.getRectangleList("spawn_point");
         character.centerAtPosition((float)spawn_point.get(0).getProperties().get("x"),(float)spawn_point.get(0).getProperties().get("y"));
         character.setWorldBounds(1550, 765); // Hardcoded since they never change.
@@ -58,26 +59,10 @@ public class LevelScreen extends BaseScreen
 
     public void update(float dt)
     {
-       character.boundToWorld();
+        if(character.movement != null) {
+            character.movement.handleMovement();
+        }
 
-       for (MapObject obj:map.getCustomRectangleList("Collidable")){
-           if ((boolean)obj.getProperties().get("Collidable")) {
-               character.preventOverlapWithObject( convertMapObjectToRectangle(obj));
-           }
-       }
-
-       if(Gdx.input.isKeyPressed(Input.Keys.A) || Gdx.input.isKeyPressed(Input.Keys.LEFT)){
-           character.accelerateAtAngle(180);
-       }
-       if(Gdx.input.isKeyPressed(Input.Keys.D) || Gdx.input.isKeyPressed(Input.Keys.RIGHT)){
-           character.accelerateAtAngle(0);
-       }
-       if(Gdx.input.isKeyPressed(Input.Keys.W) || Gdx.input.isKeyPressed(Input.Keys.UP)){
-            character.accelerateAtAngle(90);
-       }
-       if(Gdx.input.isKeyPressed(Input.Keys.S) || Gdx.input.isKeyPressed(Input.Keys.DOWN)){
-           character.accelerateAtAngle(270);
-       }
         if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
 
             for(Door door:dungeonMap.currentRoom.dungeonRoom.map_layout.getDoors()){

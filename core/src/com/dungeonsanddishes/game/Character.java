@@ -15,6 +15,8 @@ public class Character extends BaseActor {
     Animation West;
     int CharAngle;
 
+    public IMovement movement;
+
     public Character(float x, float y, Stage s) {
         super(x, y, s);
         this.loadTexture("chef_idle/chef_idle_up.png");
@@ -67,12 +69,12 @@ public class Character extends BaseActor {
         }
         else{
             setAnimationPaused(false);
-            if (angle >= 45 && angle <= 135)
+            if(angle >= 45 && angle <= 135)
             {
                 CharAngle = 90;
                 setAnimation(North);
             }
-            else if (angle > 135 && angle < 225)
+            else if(angle > 135 && angle < 225)
             {
                 CharAngle = 180;
                 setAnimation(West);
@@ -88,5 +90,9 @@ public class Character extends BaseActor {
                 setAnimation(South);
             }
         }
+    }
+
+    public void setMovementStragety(IMovement movement){
+        this.movement = movement;
     }
 }

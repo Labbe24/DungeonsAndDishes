@@ -19,13 +19,14 @@ public class DungeonRoomRepository {
             default:
                 //throw?
         }*/
-        for(int i=0;i<36;i++){
-            _tunnel_rooms.add(new StartRoom());
+        for(int i=0;i<50;i++){
+            _tunnel_rooms.add(new SpiceIngredientRoom());
+            _end_rooms.add(new SpiceIngredientRoom());//with parameters for room?
         }
-        _end_rooms.add(new MainIngredientRoom(seed));//with parameters for room?
-        _end_rooms.add(new MainIngredientRoom(seed));//with parameters for room?
-        _end_rooms.add(new MainIngredientRoom(seed));//with parameters for room?
-        _end_rooms.add(new MainIngredientRoom(seed));
+        _end_rooms.add(new SpiceIngredientRoom());//with parameters for room?
+        _end_rooms.add(new SpiceIngredientRoom());//with parameters for room?
+        _end_rooms.add(new SpiceIngredientRoom());//with parameters for room?
+        //_end_rooms.add(new MainIngredientRoom(seed));
         Collections.shuffle(_end_rooms, new Random(seed));
         Collections.shuffle(_tunnel_rooms, new Random(seed));
 
