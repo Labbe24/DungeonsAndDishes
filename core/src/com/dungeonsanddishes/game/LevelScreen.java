@@ -14,7 +14,11 @@ public class LevelScreen extends BaseScreen
     Character character;
     RoomTilemap map;
     DungeonMap dungeonMap;
-
+    CustomGame game;
+    public LevelScreen(CustomGame game){
+        super();
+        this.game=game;
+    }
     public boolean scrolled(float a, float b){
         return true;
     }
