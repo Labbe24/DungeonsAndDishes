@@ -103,6 +103,9 @@ public class Character extends BaseActor {
         }
 
     }
+    public void setMovementStragety(IMovement movement){
+        this.movement = movement;
+    }
 }
 
 class CharacterHealth extends Health {
@@ -195,9 +198,5 @@ class CharacterHealth extends Health {
             }
         }
         updateHeartStates();
-    }
-
-    public void setMovementStragety(IMovement movement){
-        this.movement = movement;
     }
 }
