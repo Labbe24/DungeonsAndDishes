@@ -1,8 +1,11 @@
 package com.dungeonsanddishes.game;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 
 import Framework.BaseScreen;
@@ -15,7 +18,11 @@ public class MainMenuScreen extends BaseScreen {
     }
     @Override
     public void initialize() {
-        TextButton playButton = new TextButton("Play!", new Skin());
+        Skin skin = new Skin(Gdx.files.internal("golden-spiral/skin/golden-ui-skin.json"));
+        Table menuTable = new Table(skin);
+        menuTable.setFillParent(true);
+        TextButton playButton = new TextButton("Play!",skin );
+        menuTable.add(playButton);
         playButton.addListener(new EventListener() {
             @Override
             public boolean handle(Event event) {
@@ -23,6 +30,7 @@ public class MainMenuScreen extends BaseScreen {
                 return true;
             }
         });
+        this.uiStage.addActor(menuTable);
     }
 
     @Override
