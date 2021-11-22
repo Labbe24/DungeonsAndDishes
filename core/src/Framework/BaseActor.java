@@ -506,6 +506,37 @@ public class BaseActor extends Group
         this.moveBy( mtv.normal.x * mtv.depth, mtv.normal.y * mtv.depth );
         return mtv.normal;
     }
+    /**
+     *  Implement a "solid"-like behavior:
+     *  But for Reactangle input.
+     *  @param other Rectangle to check for overlap
+     *  @return direction vector by which actor was translated, null if no overlap
+     */
+
+    public Vector2 preventOverlapWithObject(Rectangle other)
+    {
+        float w = other.getWidth();
+        float h = other.getHeight();
+        float[] vertices = {0,0, w,0, w,h, 0,h};
+        Polygon tempPoly = new Polygon(vertices);
+        tempPoly.setPosition(other.getX(), other.getY());
+
+        Polygon poly2 = tempPoly;
+        Polygon poly1 = this.getBoundaryPolygon();
+
+        // initial test to improve performance
+        if ( !poly1.getBoundingRectangle().overlaps(poly2.getBoundingRectangle()) )
+            return null;
+
+        MinimumTranslationVector mtv = new MinimumTranslationVector();
+        boolean polygonOverlap = Intersector.overlapConvexPolygons(poly1, poly2, mtv);
+
+        if ( !polygonOverlap )
+            return null;
+
+        this.moveBy( mtv.normal.x * mtv.depth, mtv.normal.y * mtv.depth );
+        return mtv.normal;
+    }
 
     /**
      *  Determine if this BaseActor is near other BaseActor (according to collision polygons).
@@ -565,14 +596,18 @@ public class BaseActor extends Group
      */
     public void boundToWorld()
     {
-        if (getX() < 0)
-            setX(0);
-        if (getX() + getWidth() > worldBounds.width)    
-            setX(worldBounds.width - getWidth());
-        if (getY() < 0)
-            setY(0);
-        if (getY() + getHeight() > worldBounds.height)
-            setY(worldBounds.height - getHeight());
+        // Hard coded coordinate corrections since these never change, normally always 0,0(following screen border).
+        float xCorrection = 185;
+        float yCorrection = 145;
+
+        if (getX() < xCorrection)
+            setX(xCorrection);
+        if ((getX() + getWidth()) > (worldBounds.width + xCorrection))
+            setX((worldBounds.width + xCorrection) - getWidth());
+        if (getY() < yCorrection)
+            setY(yCorrection);
+        if ((getY() + getHeight()) > (worldBounds.height + yCorrection))
+            setY((worldBounds.height + yCorrection) - getHeight());
     }
 
     /**

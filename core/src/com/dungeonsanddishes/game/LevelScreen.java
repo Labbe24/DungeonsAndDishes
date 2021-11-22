@@ -3,6 +3,8 @@ package com.dungeonsanddishes.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.maps.MapObject;
+import com.badlogic.gdx.maps.MapProperties;
+import com.badlogic.gdx.math.Rectangle;
 
 import java.util.ArrayList;
 
@@ -15,10 +17,13 @@ public class LevelScreen extends BaseScreen
     RoomTilemap map;
     DungeonMap dungeonMap;
     CustomGame game;
+    ArrayList<Rectangle> collisionRectangles;
+
     public LevelScreen(CustomGame game){
         super();
         this.game=game;
     }
+
     public boolean scrolled(float a, float b){
         return true;
     }
@@ -39,10 +44,19 @@ public class LevelScreen extends BaseScreen
         character = new Character(0,0, mainStage);
         ArrayList<MapObject> spawn_point = map.getRectangleList("spawn_point");
         character.centerAtPosition((float)spawn_point.get(0).getProperties().get("x"),(float)spawn_point.get(0).getProperties().get("y"));
+        character.setWorldBounds(1550, 765); // Hardcoded since they never change.
     }
 
     public void update(float dt)
     {
+       character.boundToWorld();
+
+       for (MapObject obj:map.getCustomRectangleList("Collidable")){
+           if ((boolean)obj.getProperties().get("Collidable")) {
+               character.preventOverlapWithObject( convertMapObjectToRectangle(obj));
+           }
+       }
+
        if(Gdx.input.isKeyPressed(Input.Keys.A) || Gdx.input.isKeyPressed(Input.Keys.LEFT)){
            character.accelerateAtAngle(180);
        }
@@ -70,4 +84,10 @@ public class LevelScreen extends BaseScreen
             //check if interactible nearby
             //if interactible is door
             //call map.DoorEntered(door.getProperty("direction"))
+
+
+    public Rectangle convertMapObjectToRectangle(MapObject obj) {
+        MapProperties props = obj.getProperties();
+        return new Rectangle( (float)props.get("x"), (float)props.get("y"), ((float)props.get("width")), ((float)props.get("height")));
+    }
 }

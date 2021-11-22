@@ -52,6 +52,8 @@ public class Character extends BaseActor {
         setAcceleration(10000);
         setMaxSpeed(300);
         setDeceleration(10000);
+
+        setBoundaryRectangle();
     }
 
     public void act(float dt){
