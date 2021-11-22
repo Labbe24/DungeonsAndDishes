@@ -1,6 +1,8 @@
 package Framework;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -36,7 +38,7 @@ public class BaseActor extends Group
     private float elapsedTime;
     private boolean animationPaused;
 
-    private Vector2 velocityVec;
+    private final Vector2 velocityVec;
     private Vector2 accelerationVec;
     private float acceleration;
     private float maxSpeed;
@@ -364,12 +366,21 @@ public class BaseActor extends Group
             new Vector2(acceleration, 0).setAngle(angle) );
     }
 
+    public void setAccelerationVec(Vector2 accelerationVec) {
+        this.accelerationVec = accelerationVec;
+    }
+
     /**
      *  Update accelerate vector by current rotation angle and value stored in acceleration field.
      *  Acceleration is applied by <code>applyPhysics</code> method.
      *  @see #acceleration
      *  @see #applyPhysics
      */
+
+    public void setDestination(Vector2 vector){
+        this.moveBy(vector.x, vector.y);
+    }
+
     public void accelerateForward()
     {
         accelerateAtAngle( getRotation() );
