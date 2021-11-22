@@ -14,10 +14,23 @@ public class Character extends BaseActor {
     Animation East;
     Animation West;
     int CharAngle;
+    Coordinate itemCoordsNorth;
+    Coordinate itemCoordsSouth;
+    Coordinate itemCoordsEast;
+    Coordinate itemCoordsWest;
+    Coordinate mainItemCoords;
+
 
     public Character(float x, float y, Stage s) {
         super(x, y, s);
         this.loadTexture("chef_idle/chef_idle_up.png");
+        mainItemCoords = new Coordinate(x,y);
+
+        //Set Item coordinates:
+        itemCoordsNorth = new Coordinate(61,73);
+        itemCoordsSouth = new Coordinate(8,68);
+        itemCoordsEast = new Coordinate(39,55);
+        itemCoordsWest = new Coordinate(40,63);
 
         //Set animations:
         Array<TextureRegion> animation_array= new Array<TextureRegion>();
@@ -47,6 +60,7 @@ public class Character extends BaseActor {
 
         setAnimation(South);
         CharAngle = 270;
+        setMainItemCoords(itemCoordsSouth);
 
         //set movement parameter values:
         setAcceleration(10000);
@@ -71,22 +85,38 @@ public class Character extends BaseActor {
             {
                 CharAngle = 90;
                 setAnimation(North);
+                setMainItemCoords(itemCoordsNorth);
             }
             else if (angle > 135 && angle < 225)
             {
                 CharAngle = 180;
                 setAnimation(West);
+                setMainItemCoords(itemCoordsWest);
             }
             else if(angle >=315 || angle <=45)
             {
                 CharAngle = 0;
                 setAnimation(East);
+                setMainItemCoords(itemCoordsEast);
             }
             else
             {
                 CharAngle = 270;
                 setAnimation(South);
+                setMainItemCoords(itemCoordsSouth);
             }
         }
+    }
+
+    public void setMainItemCoords(Coordinate coords) {
+        mainItemCoords = coords;
+    }
+
+    public Coordinate getMainItemCoords() {
+        return mainItemCoords;
+    }
+
+    public int getCharAngle() {
+        return CharAngle;
     }
 }
