@@ -26,7 +26,7 @@ import java.util.logging.Logger;
 public class TilemapActor extends Actor{
     // window dimensions
     public static int windowWidth  = 1920;
-    public static int windowHeight = 1080;
+    public static int windowHeight = 1056;//1080;
    
     protected TiledMap tiledMap;
     protected OrthographicCamera tiledCamera;
@@ -93,10 +93,10 @@ public class TilemapActor extends Actor{
     public ArrayList<MapObject> getCustomRectangleList(String customPropertyName)
     {
         ArrayList<MapObject> list = new ArrayList<MapObject>();
-        Logger.getGlobal().log(Level.WARNING,"In Get Rectangle list");
+        //Logger.getGlobal().log(Level.WARNING,"In Get Rectangle list");
         for ( MapLayer layer : tiledMap.getLayers() )
         {
-            Logger.getGlobal().log(Level.WARNING,"In layer:"+layer.getName());
+            //Logger.getGlobal().log(Level.,"In layer:"+layer.getName());
             for ( MapObject obj : layer.getObjects() )
             {
                 if ( !(obj instanceof RectangleMapObject) )

@@ -38,7 +38,7 @@ public class LevelScreen extends BaseScreen
         character = new Character(0,0, mainStage);
         ArrayList<MapObject> spawn_point = map.getRectangleList("spawn_point");
         character.centerAtPosition((float)spawn_point.get(0).getProperties().get("x"),(float)spawn_point.get(0).getProperties().get("y"));
-        character.setWorldBounds(1550, 765); // Hardcoded since they never change.
+        character.setWorldBounds(1536, 778); // Hardcoded since they never change.
     }
 
     public void update(float dt)

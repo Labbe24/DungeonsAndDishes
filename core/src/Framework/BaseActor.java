@@ -597,8 +597,8 @@ public class BaseActor extends Group
     public void boundToWorld()
     {
         // Hard coded coordinate corrections since these never change, normally always 0,0(following screen border).
-        float xCorrection = 185;
-        float yCorrection = 145;
+        float xCorrection = 192;
+        float yCorrection = 138;
 
         if (getX() < xCorrection)
             setX(xCorrection);
