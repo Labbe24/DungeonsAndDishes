@@ -120,6 +120,8 @@ public class Character extends BaseActor {
 
     public int getCharAngle() {
         return CharAngle;
+    }
+    
     public void setMovementStragety(IMovement movement){
         this.movement = movement;
     }
