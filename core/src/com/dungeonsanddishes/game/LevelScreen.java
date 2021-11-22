@@ -100,6 +100,8 @@ public class LevelScreen extends BaseScreen
         else{
             //game over
             Logger.getGlobal().log(Level.WARNING,"GAME OVER!!!!");
+            this.dispose();
+            game.setScreen( new GameOverScreen(this.game));
         }
     }
             //check if interactible nearby
