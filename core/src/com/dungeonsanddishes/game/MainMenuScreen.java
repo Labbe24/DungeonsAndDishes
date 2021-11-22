@@ -27,6 +27,7 @@ public class MainMenuScreen extends BaseScreen {
             @Override
             public boolean handle(Event event) {
                 game.setScreen(new LevelScreen(game));
+                MainMenuScreen.this.dispose();
                 return true;
             }
         });
