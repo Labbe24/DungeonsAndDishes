@@ -18,9 +18,13 @@ public class LevelScreen extends BaseScreen
     RoomTilemap map;
     DungeonMap dungeonMap;
     ArrayList<Rectangle> collisionRectangles;
-
     private Music music;
 
+    CustomGame game;
+    public LevelScreen(CustomGame game){
+        super();
+        this.game=game;
+    }
     public boolean scrolled(float a, float b){
         return true;
     }
