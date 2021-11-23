@@ -2,6 +2,7 @@ package com.dungeonsanddishes.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.math.Rectangle;
@@ -20,12 +21,13 @@ public class LevelScreen extends BaseScreen
     DungeonMap dungeonMap;
     CustomGame game;
     ArrayList<Rectangle> collisionRectangles;
+    private Music music;
 
+    CustomGame game;
     public LevelScreen(CustomGame game){
         super();
         this.game=game;
     }
-
     public boolean scrolled(float a, float b){
         return true;
     }
@@ -36,6 +38,7 @@ public class LevelScreen extends BaseScreen
      */
     public void initialize() 
     {
+        this.music = Gdx.audio.newMusic(Gdx.files.internal("sounds/war.wav"));
         dungeonMap = new DungeonMap(new RandomWalker(new DungeonRoomRepository(1, 7)),mainStage );
         dungeonMap.createDungeon();
         DungeonRoomMeta room = dungeonMap.getCurrentRoom();
@@ -48,6 +51,10 @@ public class LevelScreen extends BaseScreen
         ArrayList<MapObject> spawn_point = map.getRectangleList("spawn_point");
         character.centerAtPosition((float)spawn_point.get(0).getProperties().get("x"),(float)spawn_point.get(0).getProperties().get("y"));
         character.setWorldBounds(1550, 765); // Hardcoded since they never change.
+        this.music.setVolume(0.1f);
+        this.music.setLooping(true);
+        this.music.play();
+
     }
 
     public void update(float dt)
