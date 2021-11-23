@@ -66,8 +66,6 @@ public class Character extends BaseActor {
         setDeceleration(10000);
 
         setBoundaryRectangle();
-
-
     }
     public Character(float x, float y, Stage s, int health){
         this(x,y,s);

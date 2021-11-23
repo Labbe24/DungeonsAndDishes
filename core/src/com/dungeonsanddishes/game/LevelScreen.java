@@ -19,6 +19,7 @@ public class LevelScreen extends BaseScreen
     Character character;
     RoomTilemap map;
     DungeonMap dungeonMap;
+    CustomGame game;
     ArrayList<Rectangle> collisionRectangles;
     private Music music;
 
