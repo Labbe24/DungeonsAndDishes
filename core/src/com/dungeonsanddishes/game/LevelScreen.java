@@ -23,7 +23,6 @@ public class LevelScreen extends BaseScreen
     ArrayList<Rectangle> collisionRectangles;
     private Music music;
 
-    CustomGame game;
     public LevelScreen(CustomGame game){
         super();
         this.game=game;
@@ -50,10 +49,11 @@ public class LevelScreen extends BaseScreen
         character.displayHealth(uiStage,30,1000);
         ArrayList<MapObject> spawn_point = map.getRectangleList("spawn_point");
         character.centerAtPosition((float)spawn_point.get(0).getProperties().get("x"),(float)spawn_point.get(0).getProperties().get("y"));
-        character.setWorldBounds(1550, 765); // Hardcoded since they never change.
-        this.music.setVolume(0.1f);
-        this.music.setLooping(true);
-        this.music.play();
+        character.setWorldBounds(Gdx.graphics.getWidth() - 350, Gdx.graphics.getHeight() - 200); // Hardcoded since they never change.
+        music.setVolume(0.1f);
+        music.setLooping(true);
+        music.play();
+
 
     }
 

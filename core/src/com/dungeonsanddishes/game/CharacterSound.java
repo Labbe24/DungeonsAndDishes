@@ -1,6 +1,7 @@
 package com.dungeonsanddishes.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 
 
@@ -8,25 +9,23 @@ import com.badlogic.gdx.audio.Sound;
 public class CharacterSound {
 
     private float volume;
-    private Sound walk;
-    private Sound hurt;
-    private Sound hit;
+    private Music walk;
+    private Music hurt;
+    private Music hit;
     private Sound talk;
-    private Pair[] dict;
+    private Music[] musics;
 
     public CharacterSound() {
         // walk = Gdx.audio.newSound(Gdx.files.internal(""));
         // walkId = walk.play();
-        hurt = Gdx.audio.newSound(Gdx.files.internal("sounds/notification.wav"));
-        long hurtId = hurt.play();
+        hurt = Gdx.audio.newMusic(Gdx.files.internal("sounds/mission-complete.wav"));
         // hit = Gdx.audio.newSound(Gdx.files.internal("/sounds/hit-enemy.wav"))
         // hitId = hit.play();
         // talk = Gdx.audio.newSound(Gdx.files.internal("/sounds/character-talking.wav"));
         // talkId = talk.play();
+        musics = new Music[1];
 
-        dict = new Pair[1];
-
-        dict[0] = new Pair(hurtId, hurt);
+        musics[0] = hurt;
 
     }
 
@@ -35,8 +34,8 @@ public class CharacterSound {
     }
 
     public void setVolume(float number) {
-        for (Pair<Long, Sound> pair: dict) {
-            pair.GetValue().setVolume(pair.GetKey(), number);
+        for (Music music: musics) {
+            music.setVolume(number);
         }
     }
 
@@ -45,7 +44,7 @@ public class CharacterSound {
     }
 
     public void Hurt() {
-        hurt.play();
+        Play(hurt);
     }
 
     public void Hit() {
@@ -54,6 +53,12 @@ public class CharacterSound {
 
     public void Talk() {
         talk.play();
+    }
+
+    private void Play(Music music) {
+        if (!music.isPlaying()) {
+            music.play();
+        }
     }
 
     public void dispose() {
