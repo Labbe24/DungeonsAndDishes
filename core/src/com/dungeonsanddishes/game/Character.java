@@ -1,5 +1,8 @@
 package com.dungeonsanddishes.game;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -16,10 +19,13 @@ public class Character extends BaseActor {
     int CharAngle;
 
     public IMovement movement;
+    private CharacterSound sound;
+
 
     public Character(float x, float y, Stage s) {
         super(x, y, s);
         this.loadTexture("chef_idle/chef_idle_up.png");
+        this.sound = new CharacterSound();
 
         //Set animations:
         Array<TextureRegion> animation_array= new Array<TextureRegion>();
@@ -56,6 +62,8 @@ public class Character extends BaseActor {
         setDeceleration(10000);
 
         setBoundaryRectangle();
+
+
     }
 
     public void act(float dt){
@@ -69,6 +77,7 @@ public class Character extends BaseActor {
         }
         else{
             setAnimationPaused(false);
+            this.sound.Hurt();
             if(angle >= 45 && angle <= 135)
             {
                 CharAngle = 90;
