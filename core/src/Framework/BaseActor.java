@@ -19,7 +19,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import java.util.ArrayList;
@@ -143,6 +142,7 @@ public class BaseActor extends Group
      */
     public void setAnimation(Animation<TextureRegion> anim)
     {
+        elapsedTime=0f;
         animation = anim;
         TextureRegion tr = animation.getKeyFrame(0);
         float w = tr.getRegionWidth();
@@ -157,6 +157,31 @@ public class BaseActor extends Group
         Texture texture = new Texture( Gdx.files.internal(fileName) );
         texture.setFilter( TextureFilter.Linear, TextureFilter.Linear );
         setAnimation(new Animation<TextureRegion>(1,new TextureRegion(texture)));
+    }
+    public Animation<TextureRegion> setAnimationFromFiles(String[] fileNames, float frameDuration, boolean loop)
+    {
+        int fileCount = fileNames.length;
+        Array<TextureRegion> textureArray = new Array<TextureRegion>();
+
+        for (int n = 0; n < fileCount; n++)
+        {
+            String fileName = fileNames[n];
+            Texture texture = new Texture( Gdx.files.internal(fileName) );
+            texture.setFilter( TextureFilter.Linear, TextureFilter.Linear );
+            textureArray.add( new TextureRegion( texture ) );
+        }
+
+        Animation<TextureRegion> anim = new Animation<TextureRegion>(frameDuration, textureArray);
+
+        if (loop)
+            anim.setPlayMode(Animation.PlayMode.LOOP);
+        else
+            anim.setPlayMode(Animation.PlayMode.NORMAL);
+
+        setAnimation(anim);
+
+        return anim;
+
     }
 
     /**
@@ -496,6 +521,29 @@ public class BaseActor extends Group
 
         return Intersector.overlapConvexPolygons( poly1, poly2 );
     }
+    public boolean overlaps(Rectangle other)
+    {
+        float w = other.getWidth();
+        float h = other.getHeight();
+        float[] vertices = {0,0, w,0, w,h, 0,h};
+        Polygon tempPoly = new Polygon(vertices);
+        tempPoly.setPosition(other.getX(), other.getY());
+
+        Polygon poly2 = tempPoly;
+        Polygon poly1 = this.getBoundaryPolygon();
+
+        // initial test to improve performance
+        if ( !poly1.getBoundingRectangle().overlaps(poly2.getBoundingRectangle()) )
+            return false;
+
+        MinimumTranslationVector mtv = new MinimumTranslationVector();
+        boolean polygonOverlap = Intersector.overlapConvexPolygons(poly1, poly2, mtv);
+
+        if ( !polygonOverlap )
+            return false;
+
+        return true;
+    }
 
     public boolean overlapsRectangle(Rectangle other)
     {
@@ -603,7 +651,7 @@ public class BaseActor extends Group
      */
     public static void setWorldBounds(float width, float height)
     {
-        worldBounds = new Rectangle( 0,0, width, height );
+        worldBounds = new Rectangle( 185,145, width, height );
     }   
 
     /**
@@ -693,7 +741,6 @@ public class BaseActor extends Group
 
         return list;
     }
-
     /**
      *  Returns number of instances of a given class (that extends BaseActor).
      *  @param className name of a class that extends the BaseActor class

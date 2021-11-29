@@ -1,5 +1,6 @@
 package com.dungeonsanddishes.game;
 
+import static Framework.TilemapActor.convertMapObjectToRectangle;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Music;
@@ -79,7 +80,7 @@ public class LevelScreen extends BaseScreen
 
     public void update(float dt)
     {
-        if(!character.health_bar.isDead()){
+        if(!character.isDead()){
             character.boundToWorld();
             if (!knife.hasActions()) {
                 for (MapObject obj:map.getCustomRectangleList("Collidable")){
