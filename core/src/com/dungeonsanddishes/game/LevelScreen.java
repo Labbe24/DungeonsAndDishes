@@ -56,7 +56,4 @@ public class LevelScreen extends BaseScreen
 
         dungeonMap.getCurrentRoom().dungeonRoom.update(dt,character);
     }
-            //check if interactible nearby
-            //if interactible is door
-            //call map.DoorEntered(door.getProperty("direction"))
 }

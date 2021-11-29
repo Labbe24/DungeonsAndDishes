@@ -2,7 +2,6 @@ package com.dungeonsanddishes.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
@@ -17,7 +16,6 @@ abstract class SpiceIngredientRoomImplementation extends IngredientRoomImplement
 }
 
 class ChiliRoom extends SpiceIngredientRoomImplementation {
-    private TextBox tb;
     private Stage stage;
     private Boolean gameOver = false;
 
@@ -62,6 +60,10 @@ class ChiliRoom extends SpiceIngredientRoomImplementation {
     @Override
     public void update(float dt, Character character) {
         if(!chiliEaten && character.overlaps(chili)) {
+            ChiliStoryScreen screen = new ChiliStoryScreen();
+            screen.setNextScreen(CustomGame.getActiveScreen());
+            CustomGame.setActiveScreen(screen);
+
             chili.remove();
             character.setMovementStragety(null);
             chiliEaten = true;
