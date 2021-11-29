@@ -22,6 +22,8 @@ public class Character extends BaseActor {
     Animation East;
     Animation West;
     int CharAngle;
+    private float dmgDelay=0.3f;
+    private float timeSinceDmgTaken=0;
     Coordinate itemCoordsNorth;
     Coordinate itemCoordsSouth;
     Coordinate itemCoordsEast;
@@ -99,11 +101,19 @@ public class Character extends BaseActor {
         this(x,y,s);
         health_bar = new CharacterHealth(health);
     }
-    public CharacterHealth health_bar;
+    private CharacterHealth health_bar;
+    public void takeDamage(int dmg){
+        Logger.getGlobal().log(Level.INFO ,"TakeDamage, time since dmg: "+timeSinceDmgTaken);
+        if(timeSinceDmgTaken>=dmgDelay){
+            timeSinceDmgTaken=0;
+            health_bar.takeDamage(dmg);
+        }
+    }
     public void displayHealth(Stage s,float x,float y){
         health_bar.displayHealthBar(s,x,y);
     }
-    public void act(float dt) {
+    public void act(float dt){
+        timeSinceDmgTaken+=dt;
         super.act(dt);
         applyPhysics(dt);
         // set direction animation
@@ -160,6 +170,10 @@ public class Character extends BaseActor {
     
     public void setMovementStragety(IMovement movement){
         this.movement = movement;
+    }
+
+    public boolean isDead() {
+        return health_bar.isDead();
     }
 }
 
