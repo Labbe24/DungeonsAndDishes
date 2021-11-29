@@ -7,8 +7,8 @@ import java.awt.Point;
 import Framework.BaseActor;
 
 public class Seeker {
-    private final BaseActor _character;
-    private final BaseActor _enemy;
+    protected final BaseActor _character;
+    protected final BaseActor _enemy;
     private final float _detectRange;
 
     public Seeker(BaseActor character, BaseActor enemy, float detectRange) {
@@ -30,7 +30,7 @@ public class Seeker {
         _enemy.setAccelerationVec(new Vector2(c_point.x - e_point.x, c_point.y - e_point.y));
     }
 
-    private static float distance(Point a, Point b) {
+    protected static float distance(Point a, Point b) {
         return (float) Math.sqrt((b.y - a.y) * (b.y - a.y) + (b.x - a.x) * (b.x - a.x));
     }
 }
