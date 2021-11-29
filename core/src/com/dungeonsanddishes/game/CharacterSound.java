@@ -12,21 +12,25 @@ public class CharacterSound {
     private Music walk;
     private Music hurt;
     private Music hit;
-    private Sound talk;
-    private Music[] musics;
+    private Music talk;
+    private Music[] all;
 
     public CharacterSound() {
-        // walk = Gdx.audio.newSound(Gdx.files.internal(""));
-        // walkId = walk.play();
+
+        walk = Gdx.audio.newMusic(Gdx.files.internal("sounds/walk.ogg"));
+        hurt = Gdx.audio.newMusic(Gdx.files.internal("sounds/hit-by-enemy.ogg"));
+        hit = Gdx.audio.newMusic(Gdx.files.internal("sounds/mission-complete.wav"));
+        talk = Gdx.audio.newMusic(Gdx.files.internal("sounds/mission-complete.wav"));
         hurt = Gdx.audio.newMusic(Gdx.files.internal("sounds/mission-complete.wav"));
-        // hit = Gdx.audio.newSound(Gdx.files.internal("/sounds/hit-enemy.wav"))
-        // hitId = hit.play();
-        // talk = Gdx.audio.newSound(Gdx.files.internal("/sounds/character-talking.wav"));
-        // talkId = talk.play();
-        musics = new Music[1];
 
-        musics[0] = hurt;
+        all = new Music[4];
 
+        all[0] = walk;
+        all[1] = hurt;
+        all[2] = hit;
+        all[3] = talk;
+
+        init();
     }
 
     public float getVolume() {
@@ -34,25 +38,27 @@ public class CharacterSound {
     }
 
     public void setVolume(float number) {
-        for (Music music: musics) {
+        for (Music music: all) {
             music.setVolume(number);
         }
     }
 
-    public void Walk() {
-        walk.play();
-    }
+    public void StartWalk() { Play(walk); }
 
-    public void Hurt() {
+    public void StopWalk() { Stop(walk); }
+
+    public void StartHurt() {
         Play(hurt);
     }
 
+    public void StopHurt() { Stop(hurt); }
+
     public void Hit() {
-        hit.play();
+        Play(hit);
     }
 
     public void Talk() {
-        talk.play();
+        Play(talk);
     }
 
     private void Play(Music music) {
@@ -61,10 +67,20 @@ public class CharacterSound {
         }
     }
 
+    private void Stop(Music music) {
+        if (music.isPlaying()) {
+            music.stop();
+        }
+    }
+
     public void dispose() {
         walk.dispose();
         hurt.dispose();
         hit.dispose();
         talk.dispose();
+    }
+
+    private void init() {
+        setVolume(0.8f);
     }
 }

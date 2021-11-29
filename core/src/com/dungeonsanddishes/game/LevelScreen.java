@@ -50,7 +50,7 @@ public class LevelScreen extends BaseScreen
         ArrayList<MapObject> spawn_point = map.getRectangleList("spawn_point");
         character.centerAtPosition((float)spawn_point.get(0).getProperties().get("x"),(float)spawn_point.get(0).getProperties().get("y"));
         character.setWorldBounds(Gdx.graphics.getWidth() - 350, Gdx.graphics.getHeight() - 200); // Hardcoded since they never change.
-        music.setVolume(0.1f);
+        music.setVolume(0.05f);
         music.setLooping(true);
         music.play();
 

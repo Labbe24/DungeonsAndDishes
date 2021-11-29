@@ -83,10 +83,11 @@ public class Character extends BaseActor {
 
         if(isMoving()==false){
             setAnimationPaused(true);
+            this.sound.StopWalk();
         }
         else{
             setAnimationPaused(false);
-            this.sound.Hurt();
+            this.sound.StartWalk();
             if(angle >= 45 && angle <= 135)
             {
                 CharAngle = 90;
@@ -119,6 +120,7 @@ class CharacterHealth extends Health {
 
     //visual heart class
     enum HeartContainerState{ FULL,HALF,EMPTY};
+
     class HeartContainer extends BaseActor {
         protected HeartContainerState state;
         public HeartContainer(float x, float y) {
