@@ -1,5 +1,6 @@
 package com.dungeonsanddishes.game;
 
+import static Framework.TilemapActor.convertMapObjectToRectangle;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Music;
@@ -59,7 +60,7 @@ public class LevelScreen extends BaseScreen
 
     public void update(float dt)
     {
-        if(!character.health_bar.isDead()){
+        if(!character.isDead()){
             character.boundToWorld();
 
             for (MapObject obj:map.getCustomRectangleList("Collidable")){
@@ -79,12 +80,6 @@ public class LevelScreen extends BaseScreen
             }
             if(Gdx.input.isKeyPressed(Input.Keys.S) || Gdx.input.isKeyPressed(Input.Keys.DOWN)){
                 character.accelerateAtAngle(270);
-            }
-            if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
-                character.health_bar.takeDamage(1);
-            }
-            if (Gdx.input.isKeyJustPressed(Input.Keys.H)){
-                character.health_bar.heal(1);
             }
             if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
 
@@ -108,10 +103,4 @@ public class LevelScreen extends BaseScreen
             //check if interactible nearby
             //if interactible is door
             //call map.DoorEntered(door.getProperty("direction"))
-
-
-    public Rectangle convertMapObjectToRectangle(MapObject obj) {
-        MapProperties props = obj.getProperties();
-        return new Rectangle( (float)props.get("x"), (float)props.get("y"), ((float)props.get("width")), ((float)props.get("height")));
-    }
 }

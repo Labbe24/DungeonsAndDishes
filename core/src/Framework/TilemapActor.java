@@ -108,6 +108,10 @@ public class TilemapActor extends Actor{
         return list;
     }
 
+    static public Rectangle convertMapObjectToRectangle(MapObject obj) {
+        MapProperties props = obj.getProperties();
+        return new Rectangle( (float)props.get("x"), (float)props.get("y"), ((float)props.get("width")), ((float)props.get("height")));
+    }
     /**
      *  Search the map layers for Tile Objects (tile-like elements of object layers)
      *  that contain a property (key) called "name" with associated value propertyName.
