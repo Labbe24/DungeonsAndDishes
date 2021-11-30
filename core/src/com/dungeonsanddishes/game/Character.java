@@ -3,6 +3,7 @@ package com.dungeonsanddishes.game;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 
@@ -19,6 +20,11 @@ public class Character extends BaseActor {
     Coordinate itemCoordsEast;
     Coordinate itemCoordsWest;
     Coordinate mainItemCoords;
+    Rectangle attackBoxNorth;
+    Rectangle attackBoxSouth;
+    Rectangle attackBoxEast;
+    Rectangle attackBoxWest;
+    Rectangle attackBox;
 
 
     public IMovement movement;
@@ -27,12 +33,19 @@ public class Character extends BaseActor {
         super(x, y, s);
         this.loadTexture("chef_idle/chef_idle_up.png");
         mainItemCoords = new Coordinate(x,y);
+        //attackBox = new Rectangle(0,0,64,64);
 
         //Set Item coordinates:
         itemCoordsNorth = new Coordinate(61,73);
         itemCoordsSouth = new Coordinate(8,68);
         itemCoordsEast = new Coordinate(39,55);
         itemCoordsWest = new Coordinate(40,63);
+
+        //Set Attack Boxes:
+        attackBoxNorth = new Rectangle(32, 128, 64, 32);
+        attackBoxSouth = new Rectangle(32, -32, 64, 64);
+        attackBoxEast = new Rectangle(64, 64, 32, 64);
+        attackBoxWest = new Rectangle(-32, 64, 64, 64);
 
         //Set animations:
         Array<TextureRegion> animation_array= new Array<TextureRegion>();
@@ -63,6 +76,7 @@ public class Character extends BaseActor {
         setAnimation(South);
         CharAngle = 270;
         setMainItemCoords(itemCoordsSouth);
+        setAttackBox(attackBoxSouth);
 
         //set movement parameter values:
         setAcceleration(10000);
@@ -88,34 +102,46 @@ public class Character extends BaseActor {
                 CharAngle = 90;
                 setAnimation(North);
                 setMainItemCoords(itemCoordsNorth);
+                setAttackBox(attackBoxNorth);
             }
             else if(angle > 135 && angle < 225)
             {
                 CharAngle = 180;
                 setAnimation(West);
                 setMainItemCoords(itemCoordsWest);
+                setAttackBox(attackBoxWest);
             }
             else if(angle >=315 || angle <=45)
             {
                 CharAngle = 0;
                 setAnimation(East);
                 setMainItemCoords(itemCoordsEast);
+                setAttackBox(attackBoxEast);
             }
             else
             {
                 CharAngle = 270;
                 setAnimation(South);
                 setMainItemCoords(itemCoordsSouth);
+                setAttackBox(attackBoxSouth);
             }
         }
     }
 
-    public void setMainItemCoords(Coordinate coords) {
+    private void setMainItemCoords(Coordinate coords) {
         mainItemCoords = coords;
+    }
+    public void setAttackBox(Rectangle rectangle) {
+       //rectangle.x = getX() + rectangle.x;
+       //rectangle.y = getY() + rectangle.y;
+        attackBox = rectangle;
     }
 
     public Coordinate getMainItemCoords() {
         return mainItemCoords;
+    }
+    public Rectangle getAttackBox() {
+        return attackBox;
     }
 
     public int getCharAngle() {

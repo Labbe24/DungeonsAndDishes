@@ -492,6 +492,24 @@ public class BaseActor extends Group
         return Intersector.overlapConvexPolygons( poly1, poly2 );
     }
 
+    public boolean overlapsRectangle(Rectangle other)
+    {
+        float w = other.getWidth();
+        float h = other.getHeight();
+        float[] vertices = {0,0, w,0, w,h, 0,h};
+        Polygon tempPoly = new Polygon(vertices);
+        tempPoly.setPosition(other.getX(), other.getY());
+
+        Polygon poly1 = this.getBoundaryPolygon();
+        Polygon poly2 = tempPoly;
+
+        // initial test to improve performance
+        if ( !poly1.getBoundingRectangle().overlaps(poly2.getBoundingRectangle()) )
+            return false;
+
+        return Intersector.overlapConvexPolygons( poly1, poly2 );
+    }
+
     /**
      *  Implement a "solid"-like behavior:
      *  when there is overlap, move this BaseActor away from other BaseActor

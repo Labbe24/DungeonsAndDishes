@@ -5,20 +5,24 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 
 import java.util.ArrayList;
 
+
 import Framework.BaseScreen;
 import Framework.RoomTilemap;
+
 
 public class LevelScreen extends BaseScreen
 {
     Character character;
+    //Enemy devil, devil2, devil3;
+    //ArrayList<Enemy> enemies;
     RoomTilemap map;
     DungeonMap dungeonMap;
     Item knife;
+
 
     public boolean scrolled(float a, float b){
         return true;
@@ -39,6 +43,15 @@ public class LevelScreen extends BaseScreen
 
         character = new Character(0,0, mainStage);
         knife = new Item(0,0,mainStage); // Must be initialized after char to be drawn over
+
+       /* devil = new Enemy(300, 400, mainStage);
+        devil2 = new Enemy(1200, 200, mainStage);
+        devil3 = new Enemy(550, 500, mainStage);
+        enemies = new ArrayList<Enemy>();
+        enemies.add(devil);
+        enemies.add(devil2);
+        enemies.add(devil3);*/
+
         ArrayList<MapObject> spawn_point = map.getRectangleList("spawn_point");
         character.centerAtPosition((float)spawn_point.get(0).getProperties().get("x"),(float)spawn_point.get(0).getProperties().get("y"));
 
@@ -81,8 +94,15 @@ public class LevelScreen extends BaseScreen
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
             swingKnife();
-        }
+            /*Rectangle rect = character.getAttackBox();
+            Rectangle hitbox = new Rectangle(rect.getX() + character.getX(), rect.getY() + character.getY(), rect.width, rect.height);
 
+            for(Enemy x : enemies) {
+                if (x.overlapsRectangle(hitbox)) {
+                    x.remove();
+                }
+            }*/
+        }
         dungeonMap.getCurrentRoom().dungeonRoom.update(dt,character);
     }
             //check if interactible nearby
