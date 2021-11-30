@@ -85,6 +85,11 @@ public class SushiBoss extends Boss{
         sushiMovement=new SushiMovement(character,this,2000);
     }
 
+    @Override
+    public void takeDamage(int dmg) {
+
+    }
+
     public void act(float dt){
         super.act(dt);
         remainingActionTime-=dt;
