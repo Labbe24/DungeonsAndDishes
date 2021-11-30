@@ -44,7 +44,6 @@ class SushiMovement extends Seeker{
         _enemy.setSpeed(speed);
         if(movementAxis==MovementAxis.X)
         {
-            Logger.getGlobal().log(Level.INFO, "moving in x direction");
             if(_character.getX()>_enemy.getX()){
                 _enemy.setMotionAngle(0);
             }
