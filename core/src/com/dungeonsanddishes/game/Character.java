@@ -103,47 +103,40 @@ public class Character extends BaseActor {
     public void displayHealth(Stage s,float x,float y){
         health_bar.displayHealthBar(s,x,y);
     }
-    public void act(float dt){
+    public void act(float dt) {
         super.act(dt);
         applyPhysics(dt);
         // set direction animation
         float angle = getMotionAngle();
 
-        if(isMoving()==false){
+        if (isMoving() == false) {
             setAnimationPaused(true);
-        }
-        else{
+        } else {
             setAnimationPaused(false);
             this.sound.Hurt();
-            if(angle >= 45 && angle <= 135)
-            {
+            if (angle >= 45 && angle <= 135) {
                 CharAngle = 90;
                 setAnimation(North);
                 setMainItemCoords(itemCoordsNorth);
                 setAttackBox(attackBoxNorth);
-            }
-            else if(angle > 135 && angle < 225)
-            {
+            } else if (angle > 135 && angle < 225) {
                 CharAngle = 180;
                 setAnimation(West);
                 setMainItemCoords(itemCoordsWest);
                 setAttackBox(attackBoxWest);
-            }
-            else if(angle >=315 || angle <=45)
-            {
+            } else if (angle >= 315 || angle <= 45) {
                 CharAngle = 0;
                 setAnimation(East);
                 setMainItemCoords(itemCoordsEast);
                 setAttackBox(attackBoxEast);
-            }
-            else
-            {
+            } else {
                 CharAngle = 270;
                 setAnimation(South);
                 setMainItemCoords(itemCoordsSouth);
                 setAttackBox(attackBoxSouth);
             }
         }
+    }
 
     private void setMainItemCoords(Coordinate coords) {
         mainItemCoords = coords;

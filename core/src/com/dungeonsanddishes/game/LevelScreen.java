@@ -73,102 +73,71 @@ public class LevelScreen extends BaseScreen
         enemies.add(devil2);
         enemies.add(devil3);*/
 
-        ArrayList<MapObject> spawn_point = map.getRectangleList("spawn_point");
-        character.centerAtPosition((float)spawn_point.get(0).getProperties().get("x"),(float)spawn_point.get(0).getProperties().get("y"));
+        //ArrayList<MapObject> spawn_point = map.getRectangleList("spawn_point");
+        //character.centerAtPosition((float)spawn_point.get(0).getProperties().get("x"),(float)spawn_point.get(0).getProperties().get("y"));
 
-        character.setWorldBounds(1536, 778); // Hardcoded since they never change.
+        //character.setWorldBounds(1536, 778); // Hardcoded since they never change.
     }
 
     public void update(float dt)
     {
         if(!character.health_bar.isDead()){
             character.boundToWorld();
-
-            for (MapObject obj:map.getCustomRectangleList("Collidable")){
-                if ((boolean)obj.getProperties().get("Collidable")) {
-                    character.preventOverlapWithObject( convertMapObjectToRectangle(obj));
+            if (!knife.hasActions()) {
+                for (MapObject obj:map.getCustomRectangleList("Collidable")){
+                    if ((boolean)obj.getProperties().get("Collidable")) {
+                        character.preventOverlapWithObject( convertMapObjectToRectangle(obj));
+                    }
                 }
-            }
 
-            if(Gdx.input.isKeyPressed(Input.Keys.A) || Gdx.input.isKeyPressed(Input.Keys.LEFT)){
-                character.accelerateAtAngle(180);
-            }
-            if(Gdx.input.isKeyPressed(Input.Keys.D) || Gdx.input.isKeyPressed(Input.Keys.RIGHT)){
-                character.accelerateAtAngle(0);
-            }
-            if(Gdx.input.isKeyPressed(Input.Keys.W) || Gdx.input.isKeyPressed(Input.Keys.UP)){
-                character.accelerateAtAngle(90);
-            }
-            if(Gdx.input.isKeyPressed(Input.Keys.S) || Gdx.input.isKeyPressed(Input.Keys.DOWN)){
-                character.accelerateAtAngle(270);
-            }
-            if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
-                character.health_bar.takeDamage(1);
-            }
-            if (Gdx.input.isKeyJustPressed(Input.Keys.H)){
-                character.health_bar.heal(1);
-            }
-            if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
+                if(Gdx.input.isKeyPressed(Input.Keys.A) || Gdx.input.isKeyPressed(Input.Keys.LEFT)){
+                    character.accelerateAtAngle(180);
+                }
+                if(Gdx.input.isKeyPressed(Input.Keys.D) || Gdx.input.isKeyPressed(Input.Keys.RIGHT)){
+                    character.accelerateAtAngle(0);
+                }
+                if(Gdx.input.isKeyPressed(Input.Keys.W) || Gdx.input.isKeyPressed(Input.Keys.UP)){
+                    character.accelerateAtAngle(90);
+                }
+                if(Gdx.input.isKeyPressed(Input.Keys.S) || Gdx.input.isKeyPressed(Input.Keys.DOWN)){
+                    character.accelerateAtAngle(270);
+                }
+                if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
+                    character.health_bar.takeDamage(1);
+                }
+                if (Gdx.input.isKeyJustPressed(Input.Keys.H)){
+                    character.health_bar.heal(1);
+                }
+                if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
 
-                for(Door door:dungeonMap.currentRoom.dungeonRoom.map_layout.getDoors()){
-                    if(character.isWithinDistance(20,door)){
-                        dungeonMap.doorEntered(door.getDirection(),character);
-                        break;
+                    for(Door door:dungeonMap.currentRoom.dungeonRoom.map_layout.getDoors()){
+                        if(character.isWithinDistance(20,door)){
+                            dungeonMap.doorEntered(door.getDirection(),character);
+                            break;
+                        }
                     }
                 }
             }
+            knife.centerAtActorMainItem(character);
 
-            dungeonMap.getCurrentRoom().dungeonRoom.update(dt,character);
-        }
-        else{
-            //game over
-            Logger.getGlobal().log(Level.WARNING,"GAME OVER!!!!");
-            this.dispose();
-            game.setScreen( new GameOverScreen(this.game));
-        }
-        if (!knife.hasActions()) {
-           character.boundToWorld();
-           for (MapObject obj:map.getCustomRectangleList("Collidable")){
-               if ((boolean)obj.getProperties().get("Collidable")) {
-                   character.preventOverlapWithObject( convertMapObjectToRectangle(obj));
-               }
-           }
 
-           if(Gdx.input.isKeyPressed(Input.Keys.A) || Gdx.input.isKeyPressed(Input.Keys.LEFT)){
-               character.accelerateAtAngle(180);
-           }
-           if(Gdx.input.isKeyPressed(Input.Keys.D) || Gdx.input.isKeyPressed(Input.Keys.RIGHT)){
-               character.accelerateAtAngle(0);
-           }
-           if(Gdx.input.isKeyPressed(Input.Keys.W) || Gdx.input.isKeyPressed(Input.Keys.UP)){
-               character.accelerateAtAngle(90);
-           }
-           if(Gdx.input.isKeyPressed(Input.Keys.S) || Gdx.input.isKeyPressed(Input.Keys.DOWN)){
-               character.accelerateAtAngle(270);
-           }
-           if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
-
-               for(Door door:dungeonMap.currentRoom.dungeonRoom.map_layout.getDoors()){
-                   if(character.isWithinDistance(20,door)){
-                       dungeonMap.doorEntered(door.getDirection(),character);
-                       break;
-                   }
-               }
-           }
-           knife.centerAtActorMainItem(character);
-       }
-
-        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
-            swingKnife();
+            if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+                swingKnife();
             /*Rectangle rect = character.getAttackBox();
             Rectangle hitbox = new Rectangle(rect.getX() + character.getX(), rect.getY() + character.getY(), rect.width, rect.height);
 
             for(Enemy x : enemies) {
                 if (x.overlapsRectangle(hitbox)) {
                     x.remove();
-                }
-            }*/
+                }*/
+            }
+        } else{
+            //game over
+            Logger.getGlobal().log(Level.WARNING,"GAME OVER!!!!");
+            this.dispose();
+            game.setScreen( new GameOverScreen(this.game));
         }
+
         dungeonMap.getCurrentRoom().dungeonRoom.update(dt,character);
     }
             //check if interactible nearby
