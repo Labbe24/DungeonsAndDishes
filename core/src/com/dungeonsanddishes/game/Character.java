@@ -11,8 +11,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import Framework.BaseActor;
 
@@ -103,7 +101,6 @@ public class Character extends BaseActor {
     }
     private CharacterHealth health_bar;
     public void takeDamage(int dmg){
-        Logger.getGlobal().log(Level.INFO ,"TakeDamage, time since dmg: "+timeSinceDmgTaken);
         if(timeSinceDmgTaken>=dmgDelay){
             timeSinceDmgTaken=0;
             health_bar.takeDamage(dmg);
@@ -225,7 +222,6 @@ class CharacterHealth extends Health {
     }
     public void updateHeartStates(){
         for(int i=0;i<max_hp/2+max_hp%2;i++){
-            Logger.getGlobal().log(Level.INFO, "hi from update iteration: "+i);
             //problem if i=0
             if((i+1)*2<=lives){
                 heartContainers.get(i).setState(HeartContainerState.FULL);
