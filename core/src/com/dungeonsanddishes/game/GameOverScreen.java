@@ -22,6 +22,8 @@ public class GameOverScreen extends BaseScreen {
         Table uiTable = new Table(skin);
         uiTable.setFillParent(true);
         uiTable.add(new Label("Game Over!!!",skin));
+        uiTable.row();
+        uiTable.add(new Label("You Idiot Sandwich",skin));
         uiStage.addActor(uiTable);
 
     }
