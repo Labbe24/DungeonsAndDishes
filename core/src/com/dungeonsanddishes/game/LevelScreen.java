@@ -61,8 +61,6 @@ public class LevelScreen extends BaseScreen
         music.setLooping(true);
         music.play();
 
-
-        character = new Character(0,0, mainStage);
         knife = new Item(0,0,mainStage); // Must be initialized after char to be drawn over
 
        /* devil = new Enemy(300, 400, mainStage);
@@ -102,9 +100,9 @@ public class LevelScreen extends BaseScreen
                 if(Gdx.input.isKeyPressed(Input.Keys.S) || Gdx.input.isKeyPressed(Input.Keys.DOWN)){
                     character.accelerateAtAngle(270);
                 }
-                if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
+                /*if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
                     character.health_bar.takeDamage(1);
-                }
+                }*/
                 if (Gdx.input.isKeyJustPressed(Input.Keys.H)){
                     character.health_bar.heal(1);
                 }
