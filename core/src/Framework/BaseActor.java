@@ -1,8 +1,6 @@
 package Framework;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -19,6 +17,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import java.util.ArrayList;
@@ -142,7 +141,6 @@ public class BaseActor extends Group
      */
     public void setAnimation(Animation<TextureRegion> anim)
     {
-        elapsedTime=0f;
         animation = anim;
         TextureRegion tr = animation.getKeyFrame(0);
         float w = tr.getRegionWidth();
@@ -175,8 +173,10 @@ public class BaseActor extends Group
 
         if (loop)
             anim.setPlayMode(Animation.PlayMode.LOOP);
-        else
+        else{
+            elapsedTime=0f;
             anim.setPlayMode(Animation.PlayMode.NORMAL);
+        }
 
         setAnimation(anim);
 
@@ -364,7 +364,7 @@ public class BaseActor extends Group
      */
     public void setMotionAngle(float angle)
     {
-        velocityVec.setAngle(angle);
+        velocityVec.setAngleDeg(angle);
     }
 
     /**
@@ -375,7 +375,7 @@ public class BaseActor extends Group
      */
     public float getMotionAngle()
     {
-        return velocityVec.angle();
+        return velocityVec.angleDeg();
     }
 
     /**
@@ -388,7 +388,7 @@ public class BaseActor extends Group
     public void accelerateAtAngle(float angle)
     {
         accelerationVec.add( 
-            new Vector2(acceleration, 0).setAngle(angle) );
+            new Vector2(acceleration, 0).setAngleDeg(angle) );
     }
 
     public void setAccelerationVec(Vector2 accelerationVec) {

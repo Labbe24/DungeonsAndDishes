@@ -3,9 +3,7 @@ package com.dungeonsanddishes.game;
 import static java.lang.Math.abs;
 
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 
-import java.awt.Point;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,23 +20,22 @@ class SushiMovement extends Seeker{
     public SushiMovement(BaseActor character, BaseActor enemy, float detectRange) {
         super(character, enemy, detectRange);
     }
-    public float distanceToPlayer(){
-        Point c_point =  new Point((int) _character.getX(), (int) _character.getY());
-        Point e_point = new Point((int) _enemy.getX(), (int) _enemy.getY());
-        return distance(c_point,e_point);
-    }
     public float playerAngle(){
-        Point c_point =  new Point((int) _character.getX(), (int) _character.getY());
-        Point e_point = new Point((int) _enemy.getX(), (int) _enemy.getY());
-        Vector2 vec = new Vector2(c_point.x - e_point.x, c_point.y - e_point.y);
-        return vec.angleDeg();
+        Vector2 char_vec = new Vector2(_character.getX(),_character.getY());
+        Vector2 enemy_vec = new Vector2(_enemy.getX(),_enemy.getY());
+
+        Vector2 vec = char_vec.sub(enemy_vec);
+        float angle = vec.angleDeg();
+        Logger.getGlobal().log(Level.INFO, "rolling at angle: "+angle+"Char vec is : "+char_vec.x+","+char_vec.y+" Enemy vec is: "+enemy_vec.x+","+enemy_vec.y);
+        return angle;
     }
 
     public void setMovementAxis(MovementAxis movementAxis) {
         this.movementAxis = movementAxis;
     }
-    public void roll(float rotation){
-        _enemy.setMotionAngle(rotation-90);
+    public void roll(){
+        float angle= playerAngle();
+        _enemy.setMotionAngle(angle);
         _enemy.setSpeed(600);
     }
     @Override
@@ -138,7 +135,6 @@ public class SushiBoss extends Boss{
     private void shoot(int seed){
         String[] files = new String[]{"sushi_boss/sushi_shoot1.png","sushi_boss/sushi_idle1.png"};
         this.setAnimationFromFiles(files,0.3f,false);
-        float dist_to_player = sushiMovement.distanceToPlayer();
         float angle_to_shoot = sushiMovement.playerAngle();
         new RiceProjectile(this.getX(),this.getY(),this.getStage(),(int)angle_to_shoot,400,1);
     }
@@ -146,8 +142,7 @@ public class SushiBoss extends Boss{
         //set animation
         setTexture("sushi_boss/sushi_roll1.png");
         //calculate angle
-        Logger.getGlobal().log(Level.INFO, "Rotating by: "+abs(sushiMovement.playerAngle()-getRotation())+" current is: "+getRotation()+" Goal is: "+sushiMovement.playerAngle());
         rotateBy(abs(sushiMovement.playerAngle()-getRotation())+90);
-        sushiMovement.roll(getRotation());
+        sushiMovement.roll();
     }
 }
