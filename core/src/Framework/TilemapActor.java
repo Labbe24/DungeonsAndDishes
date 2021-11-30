@@ -68,10 +68,8 @@ public class TilemapActor extends Actor{
     public ArrayList<MapObject> getRectangleList(String propertyName)
     {
         ArrayList<MapObject> list = new ArrayList<MapObject>();
-        Logger.getGlobal().log(Level.WARNING,"In Get Rectangle list");
         for ( MapLayer layer : tiledMap.getLayers() )
         {
-            Logger.getGlobal().log(Level.WARNING,"In layer:"+layer.getName());
             for ( MapObject obj : layer.getObjects() )
             {
                 if ( !(obj instanceof RectangleMapObject) )
@@ -93,10 +91,8 @@ public class TilemapActor extends Actor{
     public ArrayList<MapObject> getCustomRectangleList(String customPropertyName)
     {
         ArrayList<MapObject> list = new ArrayList<MapObject>();
-        //Logger.getGlobal().log(Level.WARNING,"In Get Rectangle list");
         for ( MapLayer layer : tiledMap.getLayers() )
         {
-            //Logger.getGlobal().log(Level.,"In layer:"+layer.getName());
             for ( MapObject obj : layer.getObjects() )
             {
                 if ( !(obj instanceof RectangleMapObject) )

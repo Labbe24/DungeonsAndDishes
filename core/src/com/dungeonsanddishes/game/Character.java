@@ -1,11 +1,18 @@
 package com.dungeonsanddishes.game;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
+
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import Framework.BaseActor;
 
@@ -28,10 +35,13 @@ public class Character extends BaseActor {
 
 
     public IMovement movement;
+    private CharacterSound sound;
+
 
     public Character(float x, float y, Stage s) {
         super(x, y, s);
         this.loadTexture("chef_idle/chef_idle_up.png");
+        this.sound = new CharacterSound();
         mainItemCoords = new Coordinate(x,y);
         //attackBox = new Rectangle(0,0,64,64);
 
@@ -85,7 +95,14 @@ public class Character extends BaseActor {
 
         setBoundaryRectangle();
     }
-
+    public Character(float x, float y, Stage s, int health){
+        this(x,y,s);
+        health_bar = new CharacterHealth(health);
+    }
+    public CharacterHealth health_bar;
+    public void displayHealth(Stage s,float x,float y){
+        health_bar.displayHealthBar(s,x,y);
+    }
     public void act(float dt){
         super.act(dt);
         applyPhysics(dt);
@@ -97,6 +114,7 @@ public class Character extends BaseActor {
         }
         else{
             setAnimationPaused(false);
+            this.sound.Hurt();
             if(angle >= 45 && angle <= 135)
             {
                 CharAngle = 90;
@@ -126,7 +144,6 @@ public class Character extends BaseActor {
                 setAttackBox(attackBoxSouth);
             }
         }
-    }
 
     private void setMainItemCoords(Coordinate coords) {
         mainItemCoords = coords;
@@ -150,5 +167,98 @@ public class Character extends BaseActor {
     
     public void setMovementStragety(IMovement movement){
         this.movement = movement;
+    }
+}
+
+class CharacterHealth extends Health {
+
+    //visual heart class
+    enum HeartContainerState{ FULL,HALF,EMPTY};
+    class HeartContainer extends BaseActor {
+        protected HeartContainerState state;
+        public HeartContainer(float x, float y) {
+            super(x, y);
+            this.scaleBy(2);
+            state=HeartContainerState.EMPTY;
+        }
+
+        public void setState(HeartContainerState state) {
+            this.state = state;
+        }
+
+        @Override
+         public void act(float dt){
+            switch (state){
+                case FULL:
+                    this.setTexture("hearts/full_heart.png");
+                    break;
+                case HALF:
+                    this.setTexture("hearts/half_heart.png");
+                    break;
+                case EMPTY:
+                    this.setTexture("hearts/empty_heart.png");
+                    break;
+                default:
+                    break;
+            }
+         }
+    }
+
+
+    //max hp
+    int max_hp;
+    protected float x;
+    protected float y;
+    //ArrayList of heartContainers
+    ArrayList<HeartContainer> heartContainers;
+    public CharacterHealth(int hp) {
+        super(hp);
+        heartContainers = new ArrayList<HeartContainer>();
+        max_hp=hp;
+    }
+    public void updateHeartStates(){
+        for(int i=0;i<max_hp/2+max_hp%2;i++){
+            Logger.getGlobal().log(Level.INFO, "hi from update iteration: "+i);
+            //problem if i=0
+            if((i+1)*2<=lives){
+                heartContainers.get(i).setState(HeartContainerState.FULL);
+            }
+            else if((i+1)*2==lives+1){
+                heartContainers.get(i).setState(HeartContainerState.HALF);
+            }
+            else{
+                heartContainers.get(i).setState(HeartContainerState.EMPTY);
+            }
+        }
+    }
+
+    @Override
+    public void takeDamage(int dmg) {
+        super.takeDamage(dmg);
+        this.updateHeartStates();
+    }
+
+    @Override
+    public void heal(int hp) {
+        super.heal(hp);
+        if(lives>max_hp)
+            lives=max_hp;
+        this.updateHeartStates();
+    }
+
+    public void displayHealthBar(Stage ui_stage, float x, float y){
+        this.x=x;
+        this.y=y;
+        for(int i=0;i<max_hp/2+max_hp%2;i++){
+            if(i>= heartContainers.size()){
+                //create new heart
+                heartContainers.add(new HeartContainer(x+i*40,y));
+            }
+            if(ui_stage!= heartContainers.get(i).getStage()){
+                //add to stage
+                ui_stage.addActor(heartContainers.get(i));
+            }
+        }
+        updateHeartStates();
     }
 }

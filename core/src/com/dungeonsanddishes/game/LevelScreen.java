@@ -2,12 +2,15 @@ package com.dungeonsanddishes.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 import Framework.BaseScreen;
@@ -21,9 +24,16 @@ public class LevelScreen extends BaseScreen
     //ArrayList<Enemy> enemies;
     RoomTilemap map;
     DungeonMap dungeonMap;
+    CustomGame game;
+    ArrayList<Rectangle> collisionRectangles;
+    private Music music;
     Item knife;
 
 
+    public LevelScreen(CustomGame game){
+        super();
+        this.game=game;
+    }
     public boolean scrolled(float a, float b){
         return true;
     }
@@ -34,12 +44,23 @@ public class LevelScreen extends BaseScreen
      */
     public void initialize() 
     {
+        this.music = Gdx.audio.newMusic(Gdx.files.internal("sounds/war.wav"));
         dungeonMap = new DungeonMap(new RandomWalker(new DungeonRoomRepository(1, 7)),mainStage );
         dungeonMap.createDungeon();
         DungeonRoomMeta room = dungeonMap.getCurrentRoom();
         map=(RoomTilemap) room.dungeonRoom.map_layout;
         //map = new RoomTilemap("rooms/start_room.tmx");
         //map.setRoom(mainStage);
+
+        character = new Character(0,0, mainStage,6);
+        character.displayHealth(uiStage,30,1000);
+        ArrayList<MapObject> spawn_point = map.getRectangleList("spawn_point");
+        character.centerAtPosition((float)spawn_point.get(0).getProperties().get("x"),(float)spawn_point.get(0).getProperties().get("y"));
+        character.setWorldBounds(Gdx.graphics.getWidth() - 350, Gdx.graphics.getHeight() - 200); // Hardcoded since they never change.
+        music.setVolume(0.1f);
+        music.setLooping(true);
+        music.play();
+
 
         character = new Character(0,0, mainStage);
         knife = new Item(0,0,mainStage); // Must be initialized after char to be drawn over
@@ -60,6 +81,51 @@ public class LevelScreen extends BaseScreen
 
     public void update(float dt)
     {
+        if(!character.health_bar.isDead()){
+            character.boundToWorld();
+
+            for (MapObject obj:map.getCustomRectangleList("Collidable")){
+                if ((boolean)obj.getProperties().get("Collidable")) {
+                    character.preventOverlapWithObject( convertMapObjectToRectangle(obj));
+                }
+            }
+
+            if(Gdx.input.isKeyPressed(Input.Keys.A) || Gdx.input.isKeyPressed(Input.Keys.LEFT)){
+                character.accelerateAtAngle(180);
+            }
+            if(Gdx.input.isKeyPressed(Input.Keys.D) || Gdx.input.isKeyPressed(Input.Keys.RIGHT)){
+                character.accelerateAtAngle(0);
+            }
+            if(Gdx.input.isKeyPressed(Input.Keys.W) || Gdx.input.isKeyPressed(Input.Keys.UP)){
+                character.accelerateAtAngle(90);
+            }
+            if(Gdx.input.isKeyPressed(Input.Keys.S) || Gdx.input.isKeyPressed(Input.Keys.DOWN)){
+                character.accelerateAtAngle(270);
+            }
+            if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
+                character.health_bar.takeDamage(1);
+            }
+            if (Gdx.input.isKeyJustPressed(Input.Keys.H)){
+                character.health_bar.heal(1);
+            }
+            if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
+
+                for(Door door:dungeonMap.currentRoom.dungeonRoom.map_layout.getDoors()){
+                    if(character.isWithinDistance(20,door)){
+                        dungeonMap.doorEntered(door.getDirection(),character);
+                        break;
+                    }
+                }
+            }
+
+            dungeonMap.getCurrentRoom().dungeonRoom.update(dt,character);
+        }
+        else{
+            //game over
+            Logger.getGlobal().log(Level.WARNING,"GAME OVER!!!!");
+            this.dispose();
+            game.setScreen( new GameOverScreen(this.game));
+        }
         if (!knife.hasActions()) {
            character.boundToWorld();
            for (MapObject obj:map.getCustomRectangleList("Collidable")){
