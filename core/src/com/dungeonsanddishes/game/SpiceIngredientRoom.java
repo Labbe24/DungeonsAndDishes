@@ -2,6 +2,7 @@ package com.dungeonsanddishes.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -18,6 +19,8 @@ abstract class SpiceIngredientRoomImplementation extends IngredientRoomImplement
 
 class ChiliRoom extends SpiceIngredientRoomImplementation {
     private TextBox tb;
+    private Music chiliSound;
+    private Music milkSound;
 
     private Chili chili;
     private Milk milk;
@@ -42,6 +45,7 @@ class ChiliRoom extends SpiceIngredientRoomImplementation {
     private int firePartsAdded = 0;
 
     public ChiliRoom() {
+        milkSound = Gdx.audio.newMusic(Gdx.files.internal("sounds/milk.ogg"));
         int x = MathUtils.random(mapWidth / CHARACTER_MOVEMENT - 1) * CHARACTER_MOVEMENT;
         int y = MathUtils.random(mapHeight / CHARACTER_MOVEMENT - 1) * CHARACTER_MOVEMENT;
         chili = new Chili(x, y);
@@ -202,6 +206,7 @@ class ChiliRoom extends SpiceIngredientRoomImplementation {
             milkAvailable = false;
             milksDrunk++;
             milkTimer = 0;
+            milkSound.play();
 
             Fire firePart = fireList.removeIndex(fireList.size-1);
             firePart.remove();
