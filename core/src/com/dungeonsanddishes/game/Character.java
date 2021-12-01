@@ -89,10 +89,11 @@ public class Character extends BaseActor {
 
         if(isMoving()==false){
             setAnimationPaused(true);
+            this.sound.StopWalk();
         }
         else{
             setAnimationPaused(false);
-            this.sound.Hurt();
+            this.sound.StartWalk();
             if(angle >= 45 && angle <= 135)
             {
                 CharAngle = 90;
@@ -129,6 +130,8 @@ class CharacterHealth extends Health {
 
     //visual heart class
     enum HeartContainerState{ FULL,HALF,EMPTY};
+    private Music damageSound;
+
     class HeartContainer extends BaseActor {
         protected HeartContainerState state;
         public HeartContainer(float x, float y) {
@@ -170,6 +173,7 @@ class CharacterHealth extends Health {
         super(hp);
         heartContainers = new ArrayList<HeartContainer>();
         max_hp=hp;
+        damageSound = Gdx.audio.newMusic(Gdx.files.internal("sounds/hit-by-enemy.ogg"));
     }
     public void updateHeartStates(){
         for(int i=0;i<max_hp/2+max_hp%2;i++){
@@ -189,6 +193,7 @@ class CharacterHealth extends Health {
     @Override
     public void takeDamage(int dmg) {
         super.takeDamage(dmg);
+        damageSound.play();
         this.updateHeartStates();
     }
 
