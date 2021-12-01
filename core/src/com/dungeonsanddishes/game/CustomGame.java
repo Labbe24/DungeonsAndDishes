@@ -10,13 +10,12 @@ public class CustomGame extends BaseGame {
         FirstMainStoryScreen first = new FirstMainStoryScreen();
         SecondMainStoryScreen second = new SecondMainStoryScreen();
         ThirdMainStoryScreen third = new ThirdMainStoryScreen();
-        FourthMainStoryScreen fourth = new FourthMainStoryScreen();
+
         LevelScreen lvlScreen = new LevelScreen();
 
         first.setNextScreen(second);
         second.setNextScreen(third);
-        third.setNextScreen(fourth);
-        fourth.setNextScreen(lvlScreen);
+        third.setNextScreen(lvlScreen);
 
         setActiveScreen(first);
     }

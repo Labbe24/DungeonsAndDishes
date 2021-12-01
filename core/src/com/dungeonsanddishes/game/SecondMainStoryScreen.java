@@ -60,7 +60,7 @@ public class SecondMainStoryScreen extends BaseScreen {
         scene.addSegment( new SceneSegment( background, SceneActions.pause() ));
         scene.addSegment( new SceneSegment( continueKey, Actions.hide() ));
         scene.addSegment( new SceneSegment( textBox, Actions.hide() ) );
-        scene.addSegment( new SceneSegment( actor1, SceneActions.moveToScreenPosition(2000, 100, 1)));
+        scene.addSegment( new SceneSegment( actor1, SceneActions.moveToScreenPosition(1500, 250, 1)));
         scene.addSegment( new SceneSegment( background, Actions.fadeOut(1) ));
         scene.start();
     }

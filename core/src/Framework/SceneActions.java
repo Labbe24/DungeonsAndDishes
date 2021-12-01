@@ -36,4 +36,8 @@ public class SceneActions extends Actions {
     public static Action moveToScreenPosition(float x, float y, float duration) {
         return Actions.moveToAligned(x, y, Align.bottom, duration);
     }
+
+    public static Action scale(float x, float y, float duration){
+        return Actions.scaleBy(x, y, duration);
+    }
 }

@@ -11,7 +11,7 @@ import Framework.Scene;
 import Framework.SceneActions;
 import Framework.SceneSegment;
 
-public class ThirdMainStoryScreen extends BaseScreen {
+public class WinnerStoryScreen extends BaseScreen {
     Scene scene;
     BaseScreen nextScreen;
     BaseActor continueKey;
@@ -19,14 +19,13 @@ public class ThirdMainStoryScreen extends BaseScreen {
     @Override
     public void initialize() {
         BaseActor background = new BaseActor(0, 0, mainStage);
-        background.loadTexture("kitchen.png");
         background.setSize(1920, 1080);
         background.setOpacity(0);
         BaseActor.setWorldBounds(background);
 
         BaseActor actor1 = new BaseActor(0, 100, mainStage);
-        actor1.loadTexture("chef_idle/chef_idle_down.png");
-        actor1.setSize(256, 512);
+        actor1.loadTexture("star.png");
+        actor1.setSize(128, 256);
         actor1.setPosition(-actor1.getWidth(), 0);
 
         TextBox textBox = new TextBox(0,0, uiStage);
@@ -47,19 +46,15 @@ public class ThirdMainStoryScreen extends BaseScreen {
         scene = new Scene();
         mainStage.addActor(scene);
         scene.addSegment( new SceneSegment( background, Actions.fadeIn(1) ));
-        scene.addSegment( new SceneSegment( actor1, SceneActions.moveToScreenPosition( 950,100,1)));
+        scene.addSegment( new SceneSegment( actor1, SceneActions.moveToScreenCenter(2)));
+        scene.addSegment(new SceneSegment( actor1, SceneActions.scale(100, 100, 3)));
         scene.addSegment( new SceneSegment( textBox, Actions.show() ));
         scene.addSegment( new SceneSegment( textBox,
-                SceneActions.setText("This is a cool kitchen!" ) ));
+                SceneActions.setText("I want to be a chef!" ) ));
         scene.addSegment( new SceneSegment( continueKey, Actions.show() ));
         scene.addSegment( new SceneSegment( background, SceneActions.pause() ));
         scene.addSegment( new SceneSegment( continueKey, Actions.hide() ));
-        scene.addSegment( new SceneSegment( textBox,
-                SceneActions.setText("Let's look for some ingredients, so I can cook a meal!" )));
-        scene.addSegment( new SceneSegment( continueKey, Actions.show() ));
-        scene.addSegment( new SceneSegment( background, SceneActions.pause() ));
-        scene.addSegment( new SceneSegment( continueKey, Actions.hide() ));
-        scene.addSegment( new SceneSegment( textBox, Actions.hide() ));
+        scene.addSegment( new SceneSegment( textBox, Actions.hide() ) );
         scene.addSegment( new SceneSegment( actor1, SceneActions.moveToScreenPosition(2000, 100, 1)));
         scene.addSegment( new SceneSegment( background, Actions.fadeOut(1) ));
         scene.start();
