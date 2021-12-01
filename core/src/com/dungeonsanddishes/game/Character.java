@@ -2,7 +2,6 @@ package com.dungeonsanddishes.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -23,6 +22,8 @@ public class Character extends BaseActor {
     private float timeSinceDmgTaken=0;
     public IMovement movement;
     private CharacterSound sound;
+    private CharacterHealth _healthBar;
+    private Recipe _recipe;
 
 
     public Character(float x, float y, Stage s) {
@@ -68,18 +69,33 @@ public class Character extends BaseActor {
     }
     public Character(float x, float y, Stage s, int health){
         this(x,y,s);
-        health_bar = new CharacterHealth(health);
+        _healthBar = new CharacterHealth(health);
+        this._recipe = new Recipe();
     }
-    private CharacterHealth health_bar;
+
     public void takeDamage(int dmg){
         if(timeSinceDmgTaken>=dmgDelay){
             timeSinceDmgTaken=0;
-            health_bar.takeDamage(dmg);
+            _healthBar.takeDamage(dmg);
         }
     }
+
     public void displayHealth(Stage s,float x,float y){
-        health_bar.displayHealthBar(s,x,y);
+        _healthBar.displayHealthBar(s,x,y);
     }
+
+    public void incrementChili() {
+        this._recipe.incrementChili();
+    }
+
+    public void incrementRice() {
+        this._recipe.incrementRice();
+    }
+
+    public void displayRecipe(Stage s,float x,float y) {
+        this._recipe.display(s, x, y);
+    }
+
     public void act(float dt){
         timeSinceDmgTaken+=dt;
         super.act(dt);
@@ -122,7 +138,7 @@ public class Character extends BaseActor {
     }
 
     public boolean isDead() {
-        return health_bar.isDead();
+        return _healthBar.isDead();
     }
 }
 

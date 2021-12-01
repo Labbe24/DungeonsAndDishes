@@ -47,7 +47,8 @@ public class LevelScreen extends BaseScreen
         //map.setRoom(mainStage);
 
         character = new Character(0,0, mainStage,6);
-        character.displayHealth(uiStage,30,1000);
+        character.displayHealth(uiStage,30,Gdx.graphics.getHeight() - 50);
+        character.displayRecipe(uiStage, 150, Gdx.graphics.getHeight() - 50);
         ArrayList<MapObject> spawn_point = map.getRectangleList("spawn_point");
         character.centerAtPosition((float)spawn_point.get(0).getProperties().get("x"),(float)spawn_point.get(0).getProperties().get("y"));
         character.setWorldBounds(Gdx.graphics.getWidth() - 350, Gdx.graphics.getHeight() - 200); // Hardcoded since they never change.
@@ -89,6 +90,11 @@ public class LevelScreen extends BaseScreen
                         break;
                     }
                 }
+            }
+
+            if (Gdx.input.isKeyPressed(Input.Keys.I)) {
+                character.incrementChili();
+                character.incrementRice();
             }
 
             dungeonMap.getCurrentRoom().dungeonRoom.update(dt,character);
