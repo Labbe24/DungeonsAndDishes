@@ -21,6 +21,7 @@ class ChiliRoom extends SpiceIngredientRoomImplementation {
     private TextBox tb;
     private Music chiliSound;
     private Music milkSound;
+    private Stage stage;
 
     private Chili chili;
     private Milk milk;
@@ -29,7 +30,6 @@ class ChiliRoom extends SpiceIngredientRoomImplementation {
     private float milkTimer = 0;
     private float MILK_TIME = 2f;
     private Array<Fire> fireList;
-    private Stage stage;
     private int milksToDrink = 5;
     private int milksDrunk = 0;
     private Boolean chiliEaten = false;
@@ -95,34 +95,18 @@ class ChiliRoom extends SpiceIngredientRoomImplementation {
                 }
             }
         }
-        // if character collides with chili
-        // remove chili
-        // check win-conditions
-        // -- if win, let the player know and set character movement to default
-        // -- if no win, spawn new milk
     }
 
     @Override
     public void setRoom(Stage stage) {
         this.stage = stage;
         stage.addActor(chili);
-
-        // dialog box
-        /*
-        tb = new TextBox(864, 464, stage);
-        tb.setText("Eat the chili!");
-        tb.setBackgroundColor(Color.WHITE);
-        tb.setFontColor(Color.BLACK);
-        tb.setDialogSize(600, 100);
-        tb.setFontScale(1f);
-        tb.alignCenter();
-        stage.addActor(tb);
-        */
     }
 
     @Override
     public void removeRoom(Stage stage) {
         chili.remove();
+        milk.remove();
     }
 
     private void moveCharacter(Character character) {
@@ -240,7 +224,7 @@ class ChiliRoom extends SpiceIngredientRoomImplementation {
 
 public class SpiceIngredientRoom extends IngredientRoom {
     public SpiceIngredientRoom(){
-        _room_impl = new ChiliRoom();;
+        _room_impl = new ChiliRoom();
         map_layout = new IngredientRoomTilemap("rooms/start_room.tmx", _room_impl);
     }
 }
