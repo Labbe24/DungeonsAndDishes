@@ -11,7 +11,7 @@ import Framework.Scene;
 import Framework.SceneActions;
 import Framework.SceneSegment;
 
-public class FirstMainStoryScreen extends BaseScreen {
+public class SecondMainStoryScreen extends BaseScreen {
     Scene scene;
     BaseScreen nextScreen;
     BaseActor continueKey;
@@ -19,7 +19,7 @@ public class FirstMainStoryScreen extends BaseScreen {
     @Override
     public void initialize() {
         BaseActor background = new BaseActor(0, 0, mainStage);
-        background.loadTexture("road-sky.png");
+        background.loadTexture("restaurante.png");
         background.setSize(1920, 1080);
         background.setOpacity(0);
         BaseActor.setWorldBounds(background);
@@ -50,12 +50,12 @@ public class FirstMainStoryScreen extends BaseScreen {
         scene.addSegment( new SceneSegment( actor1, SceneActions.moveToScreenPosition( 950,100,1)));
         scene.addSegment( new SceneSegment( textBox, Actions.show() ));
         scene.addSegment( new SceneSegment( textBox,
-                SceneActions.setText("I want to be a chef!" ) ));
+                SceneActions.setText("Look there is a restaurante for sale!" ) ));
         scene.addSegment( new SceneSegment( continueKey, Actions.show() ));
         scene.addSegment( new SceneSegment( background, SceneActions.pause() ));
         scene.addSegment( new SceneSegment( continueKey, Actions.hide() ));
         scene.addSegment( new SceneSegment( textBox,
-                SceneActions.setText("Let's find a restaurante!" ) ));
+                SceneActions.setText("Let's check it out!" ) ));
         scene.addSegment( new SceneSegment( continueKey, Actions.show() ));
         scene.addSegment( new SceneSegment( background, SceneActions.pause() ));
         scene.addSegment( new SceneSegment( continueKey, Actions.hide() ));

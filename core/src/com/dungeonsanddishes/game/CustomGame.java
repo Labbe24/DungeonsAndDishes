@@ -1,10 +1,23 @@
 package com.dungeonsanddishes.game;
 
 import Framework.BaseGame;
+import Framework.BaseScreen;
 
 public class CustomGame extends BaseGame {
     public void create() {
         super.create();
-        setActiveScreen(new FirstMainStoryScreen());
+
+        FirstMainStoryScreen first = new FirstMainStoryScreen();
+        SecondMainStoryScreen second = new SecondMainStoryScreen();
+        ThirdMainStoryScreen third = new ThirdMainStoryScreen();
+        FourthMainStoryScreen fourth = new FourthMainStoryScreen();
+        LevelScreen lvlScreen = new LevelScreen();
+
+        first.setNextScreen(second);
+        second.setNextScreen(third);
+        third.setNextScreen(fourth);
+        fourth.setNextScreen(lvlScreen);
+
+        setActiveScreen(first);
     }
 }
