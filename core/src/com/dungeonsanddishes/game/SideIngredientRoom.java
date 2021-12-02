@@ -1,8 +1,11 @@
 package com.dungeonsanddishes.game;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 import com.dungeonsanddishes.game.ChiliRoomLib.Fire;
+import com.dungeonsanddishes.game.FishRoomLib.Shark;
 import com.dungeonsanddishes.game.FishRoomLib.WaterPool;
 
 import Framework.IngredientRoomTilemap;
@@ -30,10 +33,9 @@ class FishRoom extends SideIngredientRoomImplementation {
             x = mapX;
 
             for(int j = 0; j < 5; j++) {
-                x += waterPaddleWidth;
-                WaterPool waterPool = new WaterPool(mapX, mapHeight);
+                WaterPool waterPool = new WaterPool(x, y);
                 waterPoolList.add(waterPool);
-                stage.addActor(waterPool);
+                x += waterPaddleWidth;
             }
 
             y += waterPaddleHeight;
@@ -42,12 +44,19 @@ class FishRoom extends SideIngredientRoomImplementation {
 
     @Override
     public void update(float dt, Character character) {
-
+        if(Gdx.input.isKeyPressed(Input.Keys.J)) {
+            Shark shark = new Shark(character.getX(), character.getY(), stage);
+            shark.centerAtActor(character);
+        }
     }
 
     @Override
     public void setRoom(Stage stage) {
         this.stage = stage;
+
+        for (WaterPool pool: waterPoolList) {
+            stage.addActor(pool);
+        }
     }
 
     @Override
