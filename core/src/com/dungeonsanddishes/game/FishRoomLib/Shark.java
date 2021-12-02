@@ -9,7 +9,7 @@ import Framework.BaseActor;
 public class Shark extends BaseActor {
     public Shark(float x, float y, Stage s) {
         super(x, y, s);
-        loadAnimationFromSheet("FishRoom/shark_jump_up_anim.png", 1, 10, 0.03f, false);
+        loadAnimationFromSheet("FishRoom/shark_jump_up_anim.png", 1, 10, 0.05f, false);
         Logger.getGlobal().log(Level.WARNING, "Shark ctor called");
     }
 
