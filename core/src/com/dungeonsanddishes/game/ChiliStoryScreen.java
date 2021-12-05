@@ -71,7 +71,7 @@ public class ChiliStoryScreen extends BaseScreen {
                 BaseGame.setActiveScreen(nextScreen);
             }
             else {
-                BaseGame.setActiveScreen(new LevelScreen());
+                BaseGame.setActiveScreen(new LevelScreen(null)); // TODO: argument to LevelScreen?
             }
         }
     }
