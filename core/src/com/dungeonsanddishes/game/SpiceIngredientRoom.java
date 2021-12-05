@@ -18,36 +18,35 @@ abstract class SpiceIngredientRoomImplementation extends IngredientRoomImplement
 }
 
 class ChiliRoom extends SpiceIngredientRoomImplementation {
-    private TextBox tb;
+    private Stage stage;
     private Music chiliSound;
     private Music milkSound;
 
     private Chili chili;
-    private Boolean chiliEaten = false;
 
     private Array<Fire> fireList;
+    private int firePartsAdded = 0;
 
     private Milk milk;
-    private int milkX, milkY;
-    private Boolean milkAvailable = false;
-    private float milkTimer = 0;
     private float MILK_TIME = 2f;
-    private Stage stage;
-    private int milksToDrink = 5;
+    private int milksToDrink = 15;
     private int milksDrunk = 0;
 
-    public int mapX = 192, mapY = 128, mapWidth = 1536, mapHeight = 800;
-    private Boolean gameOver = false;
+    private int mapX = 192, mapY = 128, mapWidth = 1536, mapHeight = 800;
+
     private static final float MOVE_TIME = 0.1F;
     private static final int CHARACTER_MOVEMENT = 32;
+    private static final int RIGHT = 0, LEFT = 1, UP = 2, DOWN = 3;
     private float timer = MOVE_TIME;
     private int characterX = 0, characterY = 0, prevCharacterX, prevCharacterY;
-    private static final int RIGHT = 0, LEFT = 1, UP = 2, DOWN = 3;
     private int characterDirection = UP;
-    private int firePartsAdded = 0;
+
+    private boolean gameOver = false;
 
     public ChiliRoom() {
         milkSound = Gdx.audio.newMusic(Gdx.files.internal("sounds/milk.ogg"));
+        milk = new Milk(0, 0);
+
         int x;
         int y;
 
@@ -64,19 +63,19 @@ class ChiliRoom extends SpiceIngredientRoomImplementation {
 
     @Override
     public void update(float dt, Character character) {
-        if(!chiliEaten && character.overlaps(chili)) {
+        if(!chili.eaten && character.overlaps(chili)) {
             ChiliStoryScreen screen = new ChiliStoryScreen();
             screen.setNextScreen(CustomGame.getActiveScreen());
             CustomGame.setActiveScreen(screen);
 
             chili.remove();
             character.setMovementStragety(null);
-            chiliEaten = true;
+            chili.eaten = true;
             setRandomMilk();
         }
 
         if(!gameOver) {
-            if(chiliEaten) {
+            if(chili.eaten) {
 
                 queryInput();
                 timer -= dt;
@@ -90,7 +89,7 @@ class ChiliRoom extends SpiceIngredientRoomImplementation {
                     character.setX(characterX);
                     character.setY(characterY);
 
-                    checkFireCollision();
+                    checkFireCollision(character);
                     checkForNewMilk(MOVE_TIME);
                     updateFire();
 
@@ -177,28 +176,28 @@ class ChiliRoom extends SpiceIngredientRoomImplementation {
     }
 
     private void queryInput() {
-        if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+        if(Gdx.input.isKeyPressed(Input.Keys.A) || Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
             if(characterDirection == RIGHT) {
                 gameOver = true;
                 return;
             }
             characterDirection = LEFT;
         }
-        if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+        if(Gdx.input.isKeyPressed(Input.Keys.D) || Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
             if(characterDirection == LEFT) {
                 gameOver = true;
                 return;
             }
             characterDirection = RIGHT;
         }
-        if(Gdx.input.isKeyPressed(Input.Keys.UP)) {
+        if(Gdx.input.isKeyPressed(Input.Keys.W) || Gdx.input.isKeyPressed(Input.Keys.UP)) {
             if(characterDirection == DOWN) {
                 gameOver = true;
                 return;
             }
             characterDirection = UP;
         }
-        if(Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+        if(Gdx.input.isKeyPressed(Input.Keys.S) || Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
             if(characterDirection == UP) {
                 gameOver = true;
                 return;
@@ -208,25 +207,26 @@ class ChiliRoom extends SpiceIngredientRoomImplementation {
     }
 
     private void setRandomMilk() {
-        if(!milkAvailable) {
+        if(!milk.available) {
+            int milkX, milkY;
             do {
                 milkX = MathUtils.random(mapWidth / CHARACTER_MOVEMENT - 1) * CHARACTER_MOVEMENT;
                 milkY = MathUtils.random(mapHeight / CHARACTER_MOVEMENT - 1) * CHARACTER_MOVEMENT;
             } while ((milkX < mapX || milkY < mapY)
                     || (milkX == characterX && milkY == characterY));
 
-            milk = new Milk(milkX, milkY);
+            milk.setPosition(milkX, milkY);
             stage.addActor(milk);
-            milkAvailable = true;
+            milk.available = true;
         }
     }
 
     private void checkMilkCollision() {
-        if(milkAvailable && characterX == milkX && characterY == milkY) {
+        if(milk.available && characterX == milk.getX() && characterY == milk.getY()) {
             milk.remove();
-            milkAvailable = false;
+            milk.available = false;
             milksDrunk++;
-            milkTimer = 0;
+            milk.milkTimer = 0;
             milkSound.play();
 
             Fire firePart = fireList.removeIndex(fireList.size-1);
@@ -235,12 +235,12 @@ class ChiliRoom extends SpiceIngredientRoomImplementation {
     }
 
     private void checkForNewMilk(float tick) {
-        milkTimer += tick;
-        if(milkTimer >= MILK_TIME){
+        milk.milkTimer += tick;
+        if(milk.milkTimer >= MILK_TIME){
             milk.remove();
-            milkAvailable = false;
+            milk.available = false;
             setRandomMilk();
-            milkTimer = 0;
+            milk.milkTimer = 0;
         }
     }
 
@@ -250,10 +250,11 @@ class ChiliRoom extends SpiceIngredientRoomImplementation {
         }
     }
 
-    private void checkFireCollision() {
+    private void checkFireCollision(Character character) {
         for(int i = 0; i < fireList.size; i++) {
             if(fireList.get(i).getX() == characterX
             && fireList.get(i).getY() == characterY) {
+                character.takeDamage(6);
                 gameOver = true;
                 return;
             }

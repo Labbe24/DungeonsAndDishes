@@ -15,7 +15,7 @@ abstract class SideIngredientRoomImplementation extends IngredientRoomImplementa
 }
 
 class FishRoom extends SideIngredientRoomImplementation {
-    public int mapX = 192, mapY = 128, mapWidth = 1536, mapHeight = 800;
+    private int mapX = 192, mapY = 128, mapWidth = 1536, mapHeight = 800;
 
     private Stage stage;
     private Shark shark;
