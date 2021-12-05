@@ -1,10 +1,14 @@
 package com.dungeonsanddishes.game;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
+
+import java.util.ArrayList;
 
 import Framework.BaseActor;
 
@@ -14,12 +18,18 @@ public class Character extends BaseActor {
     Animation East;
     Animation West;
     int CharAngle;
-
+    private float dmgDelay=0.3f;
+    private float timeSinceDmgTaken=0;
     public IMovement movement;
+    private CharacterSound sound;
+    private CharacterHealth _healthBar;
+    private Recipe _recipe;
+
 
     public Character(float x, float y, Stage s) {
         super(x, y, s);
         this.loadTexture("chef_idle/chef_idle_up.png");
+        this.sound = new CharacterSound();
 
         //Set animations:
         Array<TextureRegion> animation_array= new Array<TextureRegion>();
@@ -54,9 +64,40 @@ public class Character extends BaseActor {
         setAcceleration(10000);
         setMaxSpeed(300);
         setDeceleration(10000);
+
+        setBoundaryRectangle();
+    }
+    public Character(float x, float y, Stage s, int health){
+        this(x,y,s);
+        _healthBar = new CharacterHealth(health);
+        this._recipe = new Recipe();
+    }
+
+    public void takeDamage(int dmg){
+        if(timeSinceDmgTaken>=dmgDelay){
+            timeSinceDmgTaken=0;
+            _healthBar.takeDamage(dmg);
+        }
+    }
+
+    public void displayHealth(Stage s,float x,float y){
+        _healthBar.displayHealthBar(s,x,y);
+    }
+
+    public void incrementChili() {
+        this._recipe.incrementChili();
+    }
+
+    public void incrementRice() {
+        this._recipe.incrementRice();
+    }
+
+    public void displayRecipe(Stage s,float x,float y) {
+        this._recipe.display(s, x, y);
     }
 
     public void act(float dt){
+        timeSinceDmgTaken+=dt;
         super.act(dt);
         applyPhysics(dt);
         // set direction animation
@@ -64,9 +105,11 @@ public class Character extends BaseActor {
 
         if(isMoving()==false){
             setAnimationPaused(true);
+            this.sound.StopWalk();
         }
         else{
             setAnimationPaused(false);
+            this.sound.StartWalk();
             if(angle >= 45 && angle <= 135)
             {
                 CharAngle = 90;
@@ -88,9 +131,109 @@ public class Character extends BaseActor {
                 setAnimation(South);
             }
         }
-    }
 
+    }
     public void setMovementStragety(IMovement movement){
         this.movement = movement;
+    }
+
+    public boolean isDead() {
+        return _healthBar.isDead();
+    }
+}
+
+class CharacterHealth extends Health {
+
+    //visual heart class
+    enum HeartContainerState{ FULL,HALF,EMPTY};
+    private Music damageSound;
+
+    class HeartContainer extends BaseActor {
+        protected HeartContainerState state;
+        public HeartContainer(float x, float y) {
+            super(x, y);
+            this.scaleBy(2);
+            state=HeartContainerState.EMPTY;
+        }
+
+        public void setState(HeartContainerState state) {
+            this.state = state;
+        }
+
+        @Override
+         public void act(float dt){
+            switch (state){
+                case FULL:
+                    this.setTexture("hearts/full_heart.png");
+                    break;
+                case HALF:
+                    this.setTexture("hearts/half_heart.png");
+                    break;
+                case EMPTY:
+                    this.setTexture("hearts/empty_heart.png");
+                    break;
+                default:
+                    break;
+            }
+         }
+    }
+
+
+    //max hp
+    int max_hp;
+    protected float x;
+    protected float y;
+    //ArrayList of heartContainers
+    ArrayList<HeartContainer> heartContainers;
+    public CharacterHealth(int hp) {
+        super(hp);
+        heartContainers = new ArrayList<HeartContainer>();
+        max_hp=hp;
+        damageSound = Gdx.audio.newMusic(Gdx.files.internal("sounds/hit-by-enemy.ogg"));
+    }
+    public void updateHeartStates(){
+        for(int i=0;i<max_hp/2+max_hp%2;i++){
+            //problem if i=0
+            if((i+1)*2<=lives){
+                heartContainers.get(i).setState(HeartContainerState.FULL);
+            }
+            else if((i+1)*2==lives+1){
+                heartContainers.get(i).setState(HeartContainerState.HALF);
+            }
+            else{
+                heartContainers.get(i).setState(HeartContainerState.EMPTY);
+            }
+        }
+    }
+
+    @Override
+    public void takeDamage(int dmg) {
+        super.takeDamage(dmg);
+        damageSound.play();
+        this.updateHeartStates();
+    }
+
+    @Override
+    public void heal(int hp) {
+        super.heal(hp);
+        if(lives>max_hp)
+            lives=max_hp;
+        this.updateHeartStates();
+    }
+
+    public void displayHealthBar(Stage ui_stage, float x, float y){
+        this.x=x;
+        this.y=y;
+        for(int i=0;i<max_hp/2+max_hp%2;i++){
+            if(i>= heartContainers.size()){
+                //create new heart
+                heartContainers.add(new HeartContainer(x+i*40,y));
+            }
+            if(ui_stage!= heartContainers.get(i).getStage()){
+                //add to stage
+                ui_stage.addActor(heartContainers.get(i));
+            }
+        }
+        updateHeartStates();
     }
 }

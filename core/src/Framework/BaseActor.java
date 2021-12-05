@@ -36,7 +36,7 @@ public class BaseActor extends Group
     private float elapsedTime;
     private boolean animationPaused;
 
-    private Vector2 velocityVec;
+    private final Vector2 velocityVec;
     private Vector2 accelerationVec;
     private float acceleration;
     private float maxSpeed;
@@ -150,6 +150,38 @@ public class BaseActor extends Group
 
         if (boundaryPolygon == null)
             setBoundaryRectangle();
+    }
+    public void setTexture(String fileName){
+        Texture texture = new Texture( Gdx.files.internal(fileName) );
+        texture.setFilter( TextureFilter.Linear, TextureFilter.Linear );
+        setAnimation(new Animation<TextureRegion>(1,new TextureRegion(texture)));
+    }
+    public Animation<TextureRegion> setAnimationFromFiles(String[] fileNames, float frameDuration, boolean loop)
+    {
+        int fileCount = fileNames.length;
+        Array<TextureRegion> textureArray = new Array<TextureRegion>();
+
+        for (int n = 0; n < fileCount; n++)
+        {
+            String fileName = fileNames[n];
+            Texture texture = new Texture( Gdx.files.internal(fileName) );
+            texture.setFilter( TextureFilter.Linear, TextureFilter.Linear );
+            textureArray.add( new TextureRegion( texture ) );
+        }
+
+        Animation<TextureRegion> anim = new Animation<TextureRegion>(frameDuration, textureArray);
+
+        if (loop)
+            anim.setPlayMode(Animation.PlayMode.LOOP);
+        else{
+            elapsedTime=0f;
+            anim.setPlayMode(Animation.PlayMode.NORMAL);
+        }
+
+        setAnimation(anim);
+
+        return anim;
+
     }
 
     /**
@@ -332,7 +364,7 @@ public class BaseActor extends Group
      */
     public void setMotionAngle(float angle)
     {
-        velocityVec.setAngle(angle);
+        velocityVec.setAngleDeg(angle);
     }
 
     /**
@@ -343,7 +375,7 @@ public class BaseActor extends Group
      */
     public float getMotionAngle()
     {
-        return velocityVec.angle();
+        return velocityVec.angleDeg();
     }
 
     /**
@@ -356,7 +388,11 @@ public class BaseActor extends Group
     public void accelerateAtAngle(float angle)
     {
         accelerationVec.add( 
-            new Vector2(acceleration, 0).setAngle(angle) );
+            new Vector2(acceleration, 0).setAngleDeg(angle) );
+    }
+
+    public void setAccelerationVec(Vector2 accelerationVec) {
+        this.accelerationVec = accelerationVec;
     }
 
     /**
@@ -365,6 +401,11 @@ public class BaseActor extends Group
      *  @see #acceleration
      *  @see #applyPhysics
      */
+
+    public void setDestination(Vector2 vector){
+        this.moveBy(vector.x, vector.y);
+    }
+
     public void accelerateForward()
     {
         accelerateAtAngle( getRotation() );
@@ -480,6 +521,29 @@ public class BaseActor extends Group
 
         return Intersector.overlapConvexPolygons( poly1, poly2 );
     }
+    public boolean overlaps(Rectangle other)
+    {
+        float w = other.getWidth();
+        float h = other.getHeight();
+        float[] vertices = {0,0, w,0, w,h, 0,h};
+        Polygon tempPoly = new Polygon(vertices);
+        tempPoly.setPosition(other.getX(), other.getY());
+
+        Polygon poly2 = tempPoly;
+        Polygon poly1 = this.getBoundaryPolygon();
+
+        // initial test to improve performance
+        if ( !poly1.getBoundingRectangle().overlaps(poly2.getBoundingRectangle()) )
+            return false;
+
+        MinimumTranslationVector mtv = new MinimumTranslationVector();
+        boolean polygonOverlap = Intersector.overlapConvexPolygons(poly1, poly2, mtv);
+
+        if ( !polygonOverlap )
+            return false;
+
+        return true;
+    }
 
     /**
      *  Implement a "solid"-like behavior:
@@ -492,6 +556,37 @@ public class BaseActor extends Group
     {
         Polygon poly1 = this.getBoundaryPolygon();
         Polygon poly2 = other.getBoundaryPolygon();
+
+        // initial test to improve performance
+        if ( !poly1.getBoundingRectangle().overlaps(poly2.getBoundingRectangle()) )
+            return null;
+
+        MinimumTranslationVector mtv = new MinimumTranslationVector();
+        boolean polygonOverlap = Intersector.overlapConvexPolygons(poly1, poly2, mtv);
+
+        if ( !polygonOverlap )
+            return null;
+
+        this.moveBy( mtv.normal.x * mtv.depth, mtv.normal.y * mtv.depth );
+        return mtv.normal;
+    }
+    /**
+     *  Implement a "solid"-like behavior:
+     *  But for Reactangle input.
+     *  @param other Rectangle to check for overlap
+     *  @return direction vector by which actor was translated, null if no overlap
+     */
+
+    public Vector2 preventOverlapWithObject(Rectangle other)
+    {
+        float w = other.getWidth();
+        float h = other.getHeight();
+        float[] vertices = {0,0, w,0, w,h, 0,h};
+        Polygon tempPoly = new Polygon(vertices);
+        tempPoly.setPosition(other.getX(), other.getY());
+
+        Polygon poly2 = tempPoly;
+        Polygon poly1 = this.getBoundaryPolygon();
 
         // initial test to improve performance
         if ( !poly1.getBoundingRectangle().overlaps(poly2.getBoundingRectangle()) )
@@ -538,7 +633,7 @@ public class BaseActor extends Group
      */
     public static void setWorldBounds(float width, float height)
     {
-        worldBounds = new Rectangle( 0,0, width, height );
+        worldBounds = new Rectangle( 185,145, width, height );
     }   
 
     /**
@@ -565,14 +660,18 @@ public class BaseActor extends Group
      */
     public void boundToWorld()
     {
-        if (getX() < 0)
-            setX(0);
-        if (getX() + getWidth() > worldBounds.width)    
-            setX(worldBounds.width - getWidth());
-        if (getY() < 0)
-            setY(0);
-        if (getY() + getHeight() > worldBounds.height)
-            setY(worldBounds.height - getHeight());
+        // Hard coded coordinate corrections since these never change, normally always 0,0(following screen border).
+        float xCorrection = 185;
+        float yCorrection = 145;
+
+        if (getX() < xCorrection)
+            setX(xCorrection);
+        if ((getX() + getWidth()) > (worldBounds.width + xCorrection))
+            setX((worldBounds.width + xCorrection) - getWidth());
+        if (getY() < yCorrection)
+            setY(yCorrection);
+        if ((getY() + getHeight()) > (worldBounds.height + yCorrection))
+            setY((worldBounds.height + yCorrection) - getHeight());
     }
 
     /**
@@ -624,7 +723,6 @@ public class BaseActor extends Group
 
         return list;
     }
-
     /**
      *  Returns number of instances of a given class (that extends BaseActor).
      *  @param className name of a class that extends the BaseActor class

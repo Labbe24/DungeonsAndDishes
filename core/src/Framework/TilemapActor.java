@@ -12,6 +12,7 @@ import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.objects.TiledMapTileMapObject;
 import com.badlogic.gdx.maps.tiled.renderers.OrthoCachedTiledMapRenderer;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
 import java.util.ArrayList;
@@ -67,10 +68,8 @@ public class TilemapActor extends Actor{
     public ArrayList<MapObject> getRectangleList(String propertyName)
     {
         ArrayList<MapObject> list = new ArrayList<MapObject>();
-        Logger.getGlobal().log(Level.WARNING,"In Get Rectangle list");
         for ( MapLayer layer : tiledMap.getLayers() )
         {
-            Logger.getGlobal().log(Level.WARNING,"In layer:"+layer.getName());
             for ( MapObject obj : layer.getObjects() )
             {
                 if ( !(obj instanceof RectangleMapObject) )
@@ -84,6 +83,35 @@ public class TilemapActor extends Actor{
         return list;
     }
 
+    /**
+     *  Search the map layers for Rectangle Objects that contain a CUSTOM property (key) with associated value propertyName.
+     *  Typically used to store non-actor information such as SpawnPoint locations or dimensions of Solid objects.
+     *  Retrieve data as object, then cast to desired type: for example, float w = (float)obj.getProperties().get("width").
+     */
+    public ArrayList<MapObject> getCustomRectangleList(String customPropertyName)
+    {
+        ArrayList<MapObject> list = new ArrayList<MapObject>();
+        for ( MapLayer layer : tiledMap.getLayers() )
+        {
+            for ( MapObject obj : layer.getObjects() )
+            {
+                if ( !(obj instanceof RectangleMapObject) )
+                    continue;
+                MapProperties props = obj.getProperties();
+
+                Object objTemp = props.get(customPropertyName);
+                if (objTemp != null) {
+                    list.add(obj);
+                }
+            }
+        }
+        return list;
+    }
+
+    static public Rectangle convertMapObjectToRectangle(MapObject obj) {
+        MapProperties props = obj.getProperties();
+        return new Rectangle( (float)props.get("x"), (float)props.get("y"), ((float)props.get("width")), ((float)props.get("height")));
+    }
     /**
      *  Search the map layers for Tile Objects (tile-like elements of object layers)
      *  that contain a property (key) called "name" with associated value propertyName.
