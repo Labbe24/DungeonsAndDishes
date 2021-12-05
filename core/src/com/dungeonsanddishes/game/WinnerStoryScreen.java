@@ -2,7 +2,10 @@ package com.dungeonsanddishes.game;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+
+import java.util.ArrayList;
 
 import Framework.BaseActor;
 import Framework.BaseGame;
@@ -15,6 +18,7 @@ public class WinnerStoryScreen extends BaseScreen {
     Scene scene;
     BaseScreen nextScreen;
     BaseActor continueKey;
+    ArrayList<BaseActor> stars;
 
     @Override
     public void initialize() {
@@ -23,39 +27,17 @@ public class WinnerStoryScreen extends BaseScreen {
         background.setOpacity(0);
         BaseActor.setWorldBounds(background);
 
-        BaseActor actor1 = new BaseActor(0, 100, mainStage);
-        actor1.loadTexture("star.png");
-        actor1.setSize(128, 256);
-        actor1.setPosition(-actor1.getWidth(), 0);
-
-        TextBox textBox = new TextBox(0,0, uiStage);
-        textBox.setDialogSize(600, 200);
-        textBox.setBackgroundColor( new Color(0.6f, 0.6f, 0.8f, 1) );
-        textBox.setFontScale(1.5f);
-        textBox.setVisible(false);
-        textBox.alignCenter();
-        uiTable.add(textBox).expandX().expandY().bottom();
-        continueKey = new BaseActor(0,0,uiStage);
-        continueKey.loadTexture("key-blank.png");
-        continueKey.setSize(32,32);
-        continueKey.setVisible(false);
-        textBox.addActor(continueKey);
-        continueKey.setPosition( textBox.getWidth() - continueKey.getWidth(), 0 );
+        BaseActor star = new BaseActor(BaseActor.getWorldBounds().width/1, -1000, mainStage);
+        star.loadTexture("star.png");
 
         // Scene plot
         scene = new Scene();
         mainStage.addActor(scene);
         scene.addSegment( new SceneSegment( background, Actions.fadeIn(1) ));
-        scene.addSegment( new SceneSegment( actor1, SceneActions.moveToScreenCenter(2)));
-        scene.addSegment(new SceneSegment( actor1, SceneActions.scale(100, 100, 3)));
-        scene.addSegment( new SceneSegment( textBox, Actions.show() ));
-        scene.addSegment( new SceneSegment( textBox,
-                SceneActions.setText("I want to be a chef!" ) ));
-        scene.addSegment( new SceneSegment( continueKey, Actions.show() ));
-        scene.addSegment( new SceneSegment( background, SceneActions.pause() ));
-        scene.addSegment( new SceneSegment( continueKey, Actions.hide() ));
-        scene.addSegment( new SceneSegment( textBox, Actions.hide() ) );
-        scene.addSegment( new SceneSegment( actor1, SceneActions.moveToScreenPosition(2000, 100, 1)));
+
+        scene.addSegment( new SceneSegment( star, SceneActions.moveToScreenCenter(0.8f)));
+        scene.addSegment( new SceneSegment( star, SceneActions.scale(3, 3, 2)));
+
         scene.addSegment( new SceneSegment( background, Actions.fadeOut(1) ));
         scene.start();
     }

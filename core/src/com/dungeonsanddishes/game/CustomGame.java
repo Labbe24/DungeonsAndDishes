@@ -17,6 +17,8 @@ public class CustomGame extends BaseGame {
         second.setNextScreen(third);
         third.setNextScreen(lvlScreen);
 
-        setActiveScreen(first);
+        WinnerStoryScreen win = new WinnerStoryScreen();
+
+        setActiveScreen(win);
     }
 }

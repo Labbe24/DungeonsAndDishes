@@ -22,7 +22,7 @@ public class SceneActions extends Actions {
     }
 
     public static Action moveToScreenCenter(float duration) {
-        return Actions.moveToAligned(BaseActor.getWorldBounds().width / 2, 0, Align.bottom, duration);
+        return Actions.moveToAligned(BaseActor.getWorldBounds().width / 2, BaseActor.getWorldBounds().height / 2, Align.bottom, duration);
     }
 
     public static Action moveToOutsideLeft(float duration) {
