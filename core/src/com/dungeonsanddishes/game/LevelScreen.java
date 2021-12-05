@@ -107,7 +107,4 @@ public class LevelScreen extends BaseScreen
             game.setScreen( new GameOverScreen(this.game));
         }
     }
-            //check if interactible nearby
-            //if interactible is door
-            //call map.DoorEntered(door.getProperty("direction"))
 }
