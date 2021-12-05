@@ -112,6 +112,7 @@ class ChiliRoom extends SpiceIngredientRoomImplementation {
         }
 
         if(gameOver) {
+            character.takeDamage(6);
             removeFire();
             removeMilk();
             character.setMovementStragety(new BasicMovement(character));
@@ -254,7 +255,6 @@ class ChiliRoom extends SpiceIngredientRoomImplementation {
         for(int i = 0; i < fireList.size; i++) {
             if(fireList.get(i).getX() == characterX
             && fireList.get(i).getY() == characterY) {
-                character.takeDamage(6);
                 gameOver = true;
                 return;
             }
