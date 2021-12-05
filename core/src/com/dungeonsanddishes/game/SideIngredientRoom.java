@@ -1,16 +1,12 @@
 package com.dungeonsanddishes.game;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
-import com.dungeonsanddishes.game.ChiliRoomLib.Fire;
+import com.dungeonsanddishes.game.FishRoomLib.Fish;
 import com.dungeonsanddishes.game.FishRoomLib.ShadedWaterPool;
 import com.dungeonsanddishes.game.FishRoomLib.Shark;
 import com.dungeonsanddishes.game.FishRoomLib.WaterPool;
-
-import java.util.Random;
 
 import Framework.IngredientRoomTilemap;
 
@@ -22,80 +18,92 @@ class FishRoom extends SideIngredientRoomImplementation {
     public int mapX = 192, mapY = 128, mapWidth = 1536, mapHeight = 800;
 
     private Stage stage;
-    private float TIME = 2F;
-    private float SHARK_TIME = 3F;
+    private Shark shark;
+    private Fish fish;
+
+    private float TIME = 1F;
+    private float SHARK_TIME = 1.3F;
     private float timer = TIME;
     private float sharkTimer = SHARK_TIME;
     private int waterPaddleWidth = 307, waterPaddleHeight = 160;
+    private int survivedSharkAttacks = 0;
     private Array<WaterPool> waterPoolList;
     private Array<ShadedWaterPool> shadedWaterPoolsList;
 
     private boolean shadedPoolsAdded = false;
+    private boolean removeShadedPools = false;
+    private boolean attackedByShark = false;
 
     public FishRoom() {
         // place watter paddles in room
         waterPoolList = new Array<WaterPool>();
         shadedWaterPoolsList = new Array<ShadedWaterPool>();
-
-        int x, y = mapY;
-
-        // grid dimensions 5*5
-        for(int i = 0; i < 5; i++) {
-
-            x = mapX;
-
-            for(int j = 0; j < 5; j++) {
-                WaterPool waterPool = new WaterPool(x, y);
-                waterPool.hasShark = MathUtils.random(0, 1) == 1 ? true : false;
-                waterPoolList.add(waterPool);
-                x += waterPaddleWidth;
-            }
-
-            y += waterPaddleHeight;
-        }
+        addWater();
     }
 
     @Override
     public void update(float dt, Character character) {
-        if(!shadedPoolsAdded) {
-            timer -= dt;
-        }
+        if(survivedSharkAttacks >= 3 && shark.isAnimationFinished()) {
+            // player wins
+            // remove water and stop shark attacks
+            // spawn fish ingredient
 
-        if(timer <= 0) {
-            timer = TIME;
-            addShadedPools(character);
-            shadedPoolsAdded = true;
-        }
+            removeWater();
 
-        if(shadedPoolsAdded) {
-            sharkTimer -= dt;
-        }
-
-        if(sharkTimer <= 0) {
-            sharkTimer = SHARK_TIME;
-            for (WaterPool pool : waterPoolList) {
-                if(pool.hasShark) {
-                    Shark shark = new Shark(pool.getX(), pool.getY(), stage);
-                    shark.centerAtActor(pool);
-                }
-
-                if(character.overlaps(pool) && pool.hasShark) {
-                    character.remove();
-                }
+            if(fish == null) {
+                fish = new Fish((mapX+mapWidth)/2, (mapY+mapHeight)/2);
+                stage.addActor(fish);
             }
-            shufflePoolsThatHaveSharks(character);
-            removeShadedPools();
-            shadedPoolsAdded = false;
+            else if(character.overlaps(fish)) {
+                    fish.remove();
+            }
         }
 
-        // call addShadedPools and reset shadedPoolsTimer
+        else {
+            if(!shadedPoolsAdded) {
+                timer -= dt;
+            }
+            else {
+                sharkTimer -= dt;
+            }
 
-        // when shadedPoolsTimer expires
-        // make sharks jump
-        // if character overlaps with waterPool that has shark
-            // character gets eaten and player looses
-        // else
-            // update water pool that have sharks
+            if(timer <= 0) {
+                timer = TIME;
+                addShadedPools(character);
+                shadedPoolsAdded = true;
+            }
+
+            if(sharkTimer <= 0) {
+                sharkTimer = SHARK_TIME;
+                for (WaterPool pool : waterPoolList) {
+                    if(pool.hasShark) {
+                        shark = new Shark(0, 0, stage);
+                        shark.centerAtActor(pool);
+                        shark.setY(pool.getY()+pool.getHeight()/2);
+                    }
+
+                    if(character.overlaps(pool) && pool.hasShark) {
+                        attackedByShark = true;
+                    }
+                }
+
+                if(attackedByShark) {
+                    character.takeDamage(2);
+                    attackedByShark = false;
+                }
+                else {
+                    survivedSharkAttacks++;
+                }
+                shufflePoolsThatHaveSharks(character);
+                removeShadedPools = true;
+                shadedPoolsAdded = false;
+            }
+        }
+
+        if(removeShadedPools && shark.isAnimationFinished()) {
+            removeShadedPools();
+            removeShadedPools = false;
+        }
     }
 
     @Override
@@ -111,13 +119,36 @@ class FishRoom extends SideIngredientRoomImplementation {
 
     }
 
+    private void addWater() {
+        int x, y = mapY;
+
+        for(int i = 0; i < 5; i++) {
+            x = mapX;
+
+            for(int j = 0; j < 5; j++) {
+                WaterPool waterPool = new WaterPool(x, y);
+                waterPool.hasShark = MathUtils.random(0, 1) > 0 ? true : false;
+                waterPoolList.add(waterPool);
+                x += waterPaddleWidth;
+            }
+
+            y += waterPaddleHeight;
+        }
+    }
+
+    private void removeWater() {
+        for (WaterPool pool : waterPoolList) {
+            pool.remove();
+        }
+    }
+
     private void shufflePoolsThatHaveSharks(Character character) {
         for(WaterPool waterPool : waterPoolList) {
             if(character.overlaps(waterPool)) {
                 waterPool.hasShark = true;
             }
             else {
-                waterPool.hasShark = MathUtils.random(0, 1) == 1 ? true : false;
+                waterPool.hasShark = MathUtils.random(0, 1) > 0 ? true : false;
             }
         }
     }
