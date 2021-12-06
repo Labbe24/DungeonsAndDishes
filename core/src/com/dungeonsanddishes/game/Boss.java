@@ -48,7 +48,9 @@ class BossHealth extends Health{
         this.bar = new BossHealthBar(0,0);
         this.boss=boss;
     }
-
+    public void removeHealthBar(){
+        bar.remove();
+    }
     public void displayHealthBar(Stage stage) {
         stage.addActor(bar);
     }
@@ -85,5 +87,9 @@ public abstract class Boss extends BaseActor {
 
     public void displayHealthBar(Stage stage) {
         health.displayHealthBar(stage);
+    }
+
+    public void removeHealthBar() {
+        health.removeHealthBar();
     }
 }

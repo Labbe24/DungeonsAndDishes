@@ -25,7 +25,7 @@ public class DungeonRoomRepository {
         _end_rooms.add(new SideIngredientRoom());//with parameters for room?
         _end_rooms.add(new MainIngredientRoom(seed));//with parameters for room?
         _end_rooms.add(new SpiceIngredientRoom());//with parameters for room?
-        _end_rooms.add(new BossRoom());
+        _end_rooms.add(new KitchenRoom());
         Collections.shuffle(_end_rooms, new Random(seed));
         Collections.shuffle(_tunnel_rooms, new Random(seed));
 
