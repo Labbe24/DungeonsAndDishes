@@ -118,7 +118,9 @@ public class KitchenRoom extends IngredientRoom {
         Oven oven = ((KitchenRoomImplementation)_room_impl).getOven();
         if(!((KitchenRoomImplementation) _room_impl).boss_spawned)
             character.preventOverlap(oven);
-
+        if(character.finishedRecipe()){
+            oven.updateOvenOn();
+        }
         if (character.isWithinDistance(30, oven)) {
             if(!oven.hasActions()) {
                 if(Gdx.input.isKeyPressed(Input.Keys.E)){
@@ -127,8 +129,6 @@ public class KitchenRoom extends IngredientRoom {
                         oven.remove();
                         ((KitchenRoomImplementation) _room_impl).setBoss(new SushiBoss(800,600));
                         //if oven is On + Interaction => spawn boss. Current setup is for testing
-                    } else {
-                        oven.updateOvenOn();
                     }
                 }
             }
