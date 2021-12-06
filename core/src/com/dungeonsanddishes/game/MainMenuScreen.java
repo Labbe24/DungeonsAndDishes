@@ -1,7 +1,6 @@
 package com.dungeonsanddishes.game;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Event;
@@ -9,7 +8,6 @@ import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 import Framework.BaseScreen;
@@ -35,6 +33,7 @@ public class MainMenuScreen extends BaseScreen {
                 return true;
             }
         });
+        menuTable.setBackground(pngToDrawable("backgrounds/MMBG.png"));
         this.uiStage.addActor(menuTable);
     }
 
