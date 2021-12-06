@@ -118,7 +118,7 @@ public class KitchenRoom extends IngredientRoom {
         Oven oven = ((KitchenRoomImplementation)_room_impl).getOven();
         if(!((KitchenRoomImplementation) _room_impl).boss_spawned)
             character.preventOverlap(oven);
-        if(character.finishedRecipe()){
+        if(character.finishedRecipe()&&!oven.isOn){
             oven.updateOvenOn();
         }
         if (character.isWithinDistance(30, oven)) {
