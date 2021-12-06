@@ -97,16 +97,16 @@ public class BossRoom extends IngredientRoom {
         if (Gdx.input.isKeyJustPressed(Input.Keys.K))
             boss.takeDamage(1);
 
+        if (character.mainItem.hasActions()) {
+            Rectangle rect = character.getAttackBox();
+            Rectangle hitbox = new Rectangle(rect.getX() + character.getX(), rect.getY() + character.getY(), rect.width, rect.height);
+            if (boss.overlapsRectangle(hitbox)) {
+                boss.takeDamage(1);
+            }
+        }
+
         if (boss.health.isDead()) {
             character.setBossSlain(true);
-            if (character.mainItem.hasActions()) {
-                Rectangle rect = character.getAttackBox();
-                Rectangle hitbox = new Rectangle(rect.getX() + character.getX(), rect.getY() + character.getY(), rect.width, rect.height);
-
-                if (((BossRoomImplementation) _room_impl).getBoss().overlapsRectangle(hitbox)) {
-                    ((BossRoomImplementation) _room_impl).getBoss().takeDamage(1);
-                }
-            }
         }
     }
 }
