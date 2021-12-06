@@ -26,7 +26,7 @@ public class ThirdMainStoryScreen extends BaseScreen {
 
         BaseActor actor1 = new BaseActor(0, 100, mainStage);
         actor1.loadTexture("chef_idle/chef_idle_down.png");
-        actor1.setSize(256, 512);
+        actor1.setSize(128, 256);
         actor1.setPosition(-actor1.getWidth(), 0);
 
         TextBox textBox = new TextBox(0,0, uiStage);
@@ -50,12 +50,12 @@ public class ThirdMainStoryScreen extends BaseScreen {
         scene.addSegment( new SceneSegment( actor1, SceneActions.moveToScreenPosition( 950,100,1)));
         scene.addSegment( new SceneSegment( textBox, Actions.show() ));
         scene.addSegment( new SceneSegment( textBox,
-                SceneActions.setText("This is a cool kitchen!" ) ));
+                SceneActions.setText("This is a nice kitchen!" ) ));
         scene.addSegment( new SceneSegment( continueKey, Actions.show() ));
         scene.addSegment( new SceneSegment( background, SceneActions.pause() ));
         scene.addSegment( new SceneSegment( continueKey, Actions.hide() ));
         scene.addSegment( new SceneSegment( textBox,
-                SceneActions.setText("Let's look for some ingredients, so I can cook a meal!" )));
+                SceneActions.setText("Let's see if there still are some leftover ingredients somewhere!" )));
         scene.addSegment( new SceneSegment( continueKey, Actions.show() ));
         scene.addSegment( new SceneSegment( background, SceneActions.pause() ));
         scene.addSegment( new SceneSegment( continueKey, Actions.hide() ));
