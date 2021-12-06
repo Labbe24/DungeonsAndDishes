@@ -41,6 +41,7 @@ public class Character extends BaseActor {
     private boolean _boss_slain;
     private CharacterHealth _healthBar;
     private Recipe _recipe;
+    public boolean boundToWorld = true;
 
 
     public Character(float x, float y, Stage s) {
@@ -153,22 +154,32 @@ public class Character extends BaseActor {
                 setAnimation(North);
                 setMainItemCoords(itemCoordsNorth);
                 setAttackBox(attackBoxNorth);
-            } else if (angle > 135 && angle < 225) {
+            }
+            else if(angle > 135 && angle < 225)
+            {
                 CharAngle = 180;
                 setAnimation(West);
                 setMainItemCoords(itemCoordsWest);
                 setAttackBox(attackBoxWest);
-            } else if (angle >= 315 || angle <= 45) {
+            }
+            else if(angle >=315 || angle <=45)
+            {
                 CharAngle = 0;
                 setAnimation(East);
                 setMainItemCoords(itemCoordsEast);
                 setAttackBox(attackBoxEast);
-            } else {
+            }
+            else
+            {
                 CharAngle = 270;
                 setAnimation(South);
                 setMainItemCoords(itemCoordsSouth);
                 setAttackBox(attackBoxSouth);
             }
+        }
+
+        if(boundToWorld) {
+            this.boundToWorld();
         }
     }
 
@@ -189,7 +200,7 @@ public class Character extends BaseActor {
     public int getCharAngle() {
         return CharAngle;
     }
-    
+
     public void setMovementStragety(IMovement movement){
         this.movement = movement;
     }
@@ -253,6 +264,7 @@ class CharacterHealth extends Health {
 
 
     //max hp
+    int max_hp;
     protected float x;
     protected float y;
     //ArrayList of heartContainers

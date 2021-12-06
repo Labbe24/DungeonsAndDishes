@@ -40,8 +40,9 @@ public class ThirdMainStoryScreen extends BaseScreen {
         continueKey.loadTexture("key-blank.png");
         continueKey.setSize(32,32);
         continueKey.setVisible(false);
+        continueKey.setPosition( textBox.getWidth() - continueKey.getWidth(), 0);
         textBox.addActor(continueKey);
-        continueKey.setPosition( textBox.getWidth() - continueKey.getWidth(), 0 );
+
 
         // Scene plot
         scene = new Scene();
