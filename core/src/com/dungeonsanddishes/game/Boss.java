@@ -25,14 +25,20 @@ class BossHealth extends Health{
         @Override
         public void draw(Batch batch, float parentAlpha) {
             super.draw(batch, parentAlpha);
-            batch.draw(health,this.getX()+displacement_x,this.getY()+displacement_y,health.getWidth()*(max_hp/lives),health.getHeight());
+            float ratio;
+            if(BossHealth.this.lives!=0)
+                ratio=(float)(BossHealth.this.lives)/(float)(BossHealth.this.max_hp);
+            else
+                ratio=0;
+            batch.draw(health,this.getX()+displacement_x,this.getY()+displacement_y,0,0,(int)(health.getWidth()*ratio),health.getHeight());
         }
 
         @Override
         public void act(float dt) {
             super.act(dt);
             //position bar
-            setX(BossHealth.this.boss.getX());
+            float x_displacement=(BossHealth.this.boss.getWidth()-getWidth())/2;
+            setX(BossHealth.this.boss.getX()+x_displacement);
             setY(BossHealth.this.boss.getY()+BossHealth.this.boss.getHeight()+5);
         }
     }

@@ -1,10 +1,6 @@
 package com.dungeonsanddishes.game;
 
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import Framework.BaseActor;
 
@@ -33,7 +29,6 @@ public abstract class Projectile extends BaseActor {
 
 
     public void destroy(){
-        Logger.getGlobal().log(Level.INFO, "destroy projectile");
         this.remove();
     }
 }

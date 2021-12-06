@@ -2,12 +2,12 @@ package com.dungeonsanddishes.game;
 
 import static Framework.TilemapActor.convertMapObjectToRectangle;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import Framework.BaseActor;
 import Framework.IngredientRoomTilemap;
@@ -44,16 +44,12 @@ class BossRoomImplementation extends IngredientRoomImplementation{
 
     }
 
-
     @Override
     public void update(float dt, Character character) {
         //First half
-        //if player interacts with range
 
         //check for ingredients, if ingredients present, spawn according boss.
         //second half:
-        //boss fight.
-
 
     }
 }
@@ -78,7 +74,6 @@ public class BossRoom extends IngredientRoom{
         for(Projectile projectile: ((BossRoomImplementation)_room_impl).getprojectiles()){
             for (MapObject obj:map.getCustomRectangleList("Collidable")) {
                 if(projectile.overlaps(convertMapObjectToRectangle(obj))){
-                    Logger.getGlobal().log(Level.INFO, "Projectile collides with env");
                     //destroy if crashed into environment
                     projectile.destroy();
                     //dmg if hitting target
@@ -90,5 +85,7 @@ public class BossRoom extends IngredientRoom{
                 projectile.destroy();
             }
         }
+        if(Gdx.input.isKeyJustPressed(Input.Keys.K))
+            ((BossRoomImplementation) _room_impl).getBoss().takeDamage(1);
     }
 }
