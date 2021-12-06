@@ -61,15 +61,18 @@ public abstract class Boss extends BaseActor {
     protected BossHealth health;
     protected boolean character_discovered;
     //some basic health impl.?
+    private float dmg_delay;
     protected Character character;
     public Boss(float x, float y) {
         super(x, y);
         health = new BossHealth(5,this);
+        dmg_delay=0;
     }
     public void act(float dt){
         super.act(dt);
         applyPhysics(dt);
         boundToWorld();
+        dmg_delay+=dt;
 
         if(this.overlaps(character)){
             character.takeDamage(1);
@@ -84,8 +87,11 @@ public abstract class Boss extends BaseActor {
     }
 
     public void takeDamage(int dmg){
-        flicker();
-        health.takeDamage(dmg);
+        if(dmg_delay>1){
+            flicker();
+            health.takeDamage(dmg);
+            dmg_delay=0;
+        }
     }
 
     public void flicker() {
