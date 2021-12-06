@@ -52,6 +52,7 @@ class FishRoom extends SideIngredientRoomImplementation {
             }
             else if(character.overlaps(fish)) {
                     fish.remove();
+                    character.incrementFish();
             }
         }
 

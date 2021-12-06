@@ -117,6 +117,7 @@ class ChiliRoom extends SpiceIngredientRoomImplementation {
         }
 
         if(gameOver) {
+            character.incrementChili();
             removeFire();
             removeMilk();
             character.setMovementStragety(new BasicMovement(character));

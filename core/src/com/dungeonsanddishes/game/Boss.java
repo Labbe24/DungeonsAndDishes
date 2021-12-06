@@ -3,6 +3,8 @@ package com.dungeonsanddishes.game;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 
 import Framework.BaseActor;
 class BossHealth extends Health{
@@ -80,7 +82,13 @@ public abstract class Boss extends BaseActor {
     }
 
     public void takeDamage(int dmg){
+        flicker();
         health.takeDamage(dmg);
+    }
+
+    public void flicker() {
+        SequenceAction flicker = new SequenceAction(Actions.fadeOut(0.1f), Actions.fadeIn(0.1f));
+        this.addAction(Actions.repeat(2, flicker));
     }
 
     public void displayHealthBar(Stage stage) {
