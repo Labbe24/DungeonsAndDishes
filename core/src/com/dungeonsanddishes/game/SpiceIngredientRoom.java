@@ -10,7 +10,6 @@ import com.dungeonsanddishes.game.ChiliRoomLib.Chili;
 import com.dungeonsanddishes.game.ChiliRoomLib.Fire;
 import com.dungeonsanddishes.game.ChiliRoomLib.Milk;
 
-import Framework.BaseScreen;
 import Framework.IngredientRoomTilemap;
 
 abstract class SpiceIngredientRoomImplementation extends IngredientRoomImplementation{
@@ -117,7 +116,6 @@ class ChiliRoom extends SpiceIngredientRoomImplementation {
         }
 
         if(gameOver) {
-            character.incrementChili();
             removeFire();
             removeMilk();
             character.setMovementStragety(new BasicMovement(character));
