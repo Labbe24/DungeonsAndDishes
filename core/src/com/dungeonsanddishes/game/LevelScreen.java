@@ -99,7 +99,7 @@ public class LevelScreen extends BaseScreen
 
             dungeonMap.getCurrentRoom().dungeonRoom.update(dt,character);
             if(character.bossSlain()){
-                game.setScreen(new VictoryScreen(this.game));
+                game.setScreen(new WinnerStoryScreen(new VictoryScreen(this.game)));
             }
         }
         else{
