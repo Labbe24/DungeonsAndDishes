@@ -167,6 +167,10 @@ public class Character extends BaseActor {
                 setAttackBox(attackBoxSouth);
             }
         }
+
+        if(boundToWorld) {
+            this.boundToWorld();
+        }
     }
 
     private void setMainItemCoords(Coordinate coords) {
@@ -183,10 +187,6 @@ public class Character extends BaseActor {
         return attackBox;
     }
 
-        if(boundToWorld) {
-            this.boundToWorld();
-        }
-    }
     public void setMovementStragety(IMovement movement){
         this.movement = movement;
     }
