@@ -22,6 +22,7 @@ class ChiliRoom extends SpiceIngredientRoomImplementation {
     private Music milkSound;
 
     private Chili chili;
+    private Chili chiliIngredient;
 
     private Array<Fire> fireList;
     private int firePartsAdded = 0;
@@ -54,7 +55,7 @@ class ChiliRoom extends SpiceIngredientRoomImplementation {
             y = MathUtils.random(mapHeight / CHARACTER_MOVEMENT - 1) * CHARACTER_MOVEMENT;
         } while (x < mapX || y < mapY);
 
-        chili = new Chili(x, y);
+        chili = new Chili(MathUtils.random(mapX + 300, mapWidth - 300), MathUtils.random(mapY + 150, mapHeight - 150));
         fireList = new Array<Fire>();
         characterX = x;
         characterY = y;
@@ -115,10 +116,21 @@ class ChiliRoom extends SpiceIngredientRoomImplementation {
         }
 
         if(gameOver) {
-            character.incrementChili();
             removeFire();
             removeMilk();
             character.setMovementStragety(new BasicMovement(character));
+            character.boundToWorld = true;
+
+            if(chiliIngredient == null) {
+                chiliIngredient = new Chili((mapX+mapWidth)/2, (mapY+mapHeight)/2);
+                stage.addActor(chiliIngredient);
+            }
+            else {
+                if(character.overlaps(chiliIngredient)) {
+                    chiliIngredient.remove();
+                    character.incrementChili();
+                }
+            }
         }
     }
 
@@ -284,10 +296,13 @@ class ChiliRoom extends SpiceIngredientRoomImplementation {
     }
 
     private void removeFire() {
-        Fire firePart;
-        for(int i = 0; i < fireList.size; i++) {
-            firePart = fireList.removeIndex(i);
-            firePart.remove();
+        //Fire firePart;
+        //for(int i = 0; i < fireList.size; i++) {
+            //firePart = fireList.removeIndex(i);
+            //firePart.remove();
+        //}
+        if(fireList.notEmpty()) {
+            fireList.clear();
         }
     }
 }
