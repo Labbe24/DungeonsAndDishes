@@ -1,13 +1,60 @@
 package com.dungeonsanddishes.game;
 
-import Framework.BaseActor;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 
+import Framework.BaseActor;
+class BossHealth extends Health{
+    private BossHealthBar bar;
+    private  Boss boss;
+    //visual representation
+    class BossHealthBar extends BaseActor{
+        private Texture health;
+        private float displacement_x;
+        private float displacement_y;
+
+        public BossHealthBar(float x, float y) {
+            super(x, y);
+            setTexture("golden-spiral/raw/progress-bar.png");
+            health = new Texture("golden-spiral/raw/progress-bar-life.png");
+            displacement_x= (this.getHeight()-health.getHeight())/2;
+            displacement_y= (this.getWidth()-health.getWidth())/2;
+        }
+
+        @Override
+        public void draw(Batch batch, float parentAlpha) {
+            super.draw(batch, parentAlpha);
+            batch.draw(health,this.getX()+displacement_x,this.getY()+displacement_y,health.getWidth()*(max_hp/lives),health.getHeight());
+        }
+
+        @Override
+        public void act(float dt) {
+            super.act(dt);
+            //position bar
+            setX(BossHealth.this.boss.getX());
+            setY(BossHealth.this.boss.getY()+BossHealth.this.boss.getHeight()+5);
+        }
+    }
+
+    public BossHealth(int hp, Boss boss) {
+        super(hp);
+        this.bar = new BossHealthBar(0,0);
+        this.boss=boss;
+    }
+
+    public void displayHealthBar(Stage stage) {
+        stage.addActor(bar);
+    }
+}
 public abstract class Boss extends BaseActor {
+    protected BossHealth health;
     protected boolean character_discovered;
     //some basic health impl.?
     protected Character character;
     public Boss(float x, float y) {
         super(x, y);
+        health = new BossHealth(5,this);
     }
     public void act(float dt){
         super.act(dt);
@@ -26,6 +73,11 @@ public abstract class Boss extends BaseActor {
         character_discovered = true;
     }
 
-    abstract public void takeDamage(int dmg);
+    public void takeDamage(int dmg){
+        health.takeDamage(dmg);
+    }
 
+    public void displayHealthBar(Stage stage) {
+        health.displayHealthBar(stage);
+    }
 }

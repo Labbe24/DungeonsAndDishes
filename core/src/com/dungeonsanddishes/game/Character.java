@@ -1,8 +1,5 @@
 package com.dungeonsanddishes.game;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -161,7 +158,6 @@ class CharacterHealth extends Health {
 
 
     //max hp
-    int max_hp;
     protected float x;
     protected float y;
     //ArrayList of heartContainers
@@ -195,8 +191,6 @@ class CharacterHealth extends Health {
     @Override
     public void heal(int hp) {
         super.heal(hp);
-        if(lives>max_hp)
-            lives=max_hp;
         this.updateHeartStates();
     }
 

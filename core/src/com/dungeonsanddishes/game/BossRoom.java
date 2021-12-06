@@ -6,7 +6,6 @@ import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -25,6 +24,7 @@ class BossRoomImplementation extends IngredientRoomImplementation{
         //Add range in middle of room
         this.stage=stage;
         stage.addActor(boss);
+        boss.displayHealthBar(stage);
         for( BaseActor actor : BaseActor.getList(stage,"com.dungeonsanddishes.game.Character")){
             boss.discoverCharacter((Character)actor);
         }
