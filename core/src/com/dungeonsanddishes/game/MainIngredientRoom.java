@@ -32,6 +32,7 @@ class RiceRoom extends MainIngredientRoomImplementation{
         //Check for completion
         boolean complete= puzzle.IsComplete();
         if(complete){
+            character.incrementRice();
             Logger.getGlobal().log(Level.INFO,"Puzzle Complete!!");
         }
 

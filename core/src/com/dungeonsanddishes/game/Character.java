@@ -125,6 +125,10 @@ public class Character extends BaseActor {
         this._recipe.incrementRice();
     }
 
+    public void incrementFish() { this._recipe.incrementFish(); }
+
+    public boolean finishedRecipe() {return this._recipe.Finsihed(); }
+
     public void displayRecipe(Stage s,float x,float y) {
         this._recipe.display(s, x, y);
     }

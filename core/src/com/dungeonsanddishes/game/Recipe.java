@@ -17,12 +17,21 @@ public class Recipe {
     private int MAX_RICE_COUNT = 1;
     private int riceCount = 0;
 
+    private int MAX_FISH_COUNT = 1;
+    private int fishCount = 0;
+
     private ArrayList<ChiliContainer> chiliContainers;
     private ArrayList<RiceContainer> riceContainers;
+    private ArrayList<FishContainer> fishContainers;
 
     public Recipe() {
         this.chiliContainers = new ArrayList<ChiliContainer>();
         this.riceContainers = new ArrayList<RiceContainer>();
+        this.fishContainers = new ArrayList<FishContainer>();
+    }
+
+    public boolean Finsihed() {
+        return this.fishCount == MAX_FISH_COUNT && this.riceCount == MAX_RICE_COUNT && this.chiliCount == MAX_CHILI_COUNT;
     }
 
     public void incrementChili() {
@@ -36,6 +45,13 @@ public class Recipe {
         if (this.riceCount < this.MAX_RICE_COUNT) {
             this.riceContainers.get(riceCount).setState(State.FOUND);
             this.riceCount += 1;
+        }
+    }
+
+    public void incrementFish() {
+        if (this.fishCount < this.MAX_FISH_COUNT) {
+            this.fishContainers.get(fishCount).setState(State.FOUND);
+            this.fishCount += 1;
         }
     }
 
@@ -56,6 +72,14 @@ public class Recipe {
 
             if (ui_stage != this.riceContainers.get(i).getStage()) {
                 ui_stage.addActor(this.riceContainers.get(i));
+            }
+        }
+
+        for (int i = 0; i < MAX_FISH_COUNT; i++) {
+            this.fishContainers.add(new FishContainer(x + 100 + MAX_RICE_COUNT*40 + MAX_CHILI_COUNT*40 + i*40, y));
+
+            if (ui_stage != this.fishContainers.get(i).getStage()) {
+                ui_stage.addActor(this.fishContainers.get(i));
             }
         }
     }
@@ -109,5 +133,25 @@ public class Recipe {
         }
     }
 
+    class FishContainer extends BaseActor {
+        private State state;
 
+        public FishContainer(float x, float y) {
+            super(x, y);
+            setState(State.NOT_FOUND);
+        }
+
+        public void act(float dt) {
+            switch (state) {
+                case FOUND:
+                    this.setTexture("FishRoom/fish.png");
+                case NOT_FOUND:
+                    this.setTexture("FishRoom/fish_grey.png");
+            }
+        }
+
+        public void setState(State state) {
+            this.state = state;
+        }
+    }
 }
