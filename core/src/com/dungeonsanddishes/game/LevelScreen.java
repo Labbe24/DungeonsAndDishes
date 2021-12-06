@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.maps.MapObject;
+import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.dungeonsanddishes.game.StartRoomLib.Oven;
@@ -59,32 +60,31 @@ public class LevelScreen extends BaseScreen
 
     public void update(float dt)
     {
-        if(!character.isDead()){
+        if(!character.isDead()) {
             character.boundToWorld();
             if (!character.mainItem.hasActions()) {
-                for (MapObject obj:map.getCustomRectangleList("Collidable")){
-                    if ((boolean)obj.getProperties().get("Collidable")) {
-                        character.preventOverlapWithObject( convertMapObjectToRectangle(obj));
+                for (MapObject obj : map.getCustomRectangleList("Collidable")) {
+                    if ((boolean) obj.getProperties().get("Collidable")) {
+                        character.preventOverlapWithObject(convertMapObjectToRectangle(obj));
                     }
                 }
 
-            if(Gdx.input.isKeyPressed(Input.Keys.A) || Gdx.input.isKeyPressed(Input.Keys.LEFT)){
-                character.accelerateAtAngle(180);
-            }
-            if(Gdx.input.isKeyPressed(Input.Keys.D) || Gdx.input.isKeyPressed(Input.Keys.RIGHT)){
-                character.accelerateAtAngle(0);
-            }
-            if(Gdx.input.isKeyPressed(Input.Keys.W) || Gdx.input.isKeyPressed(Input.Keys.UP)){
-                character.accelerateAtAngle(90);
-            }
-            if(Gdx.input.isKeyPressed(Input.Keys.S) || Gdx.input.isKeyPressed(Input.Keys.DOWN)){
-                character.accelerateAtAngle(270);
-            }
-            if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
-
-                    for(Door door:dungeonMap.currentRoom.dungeonRoom.map_layout.getDoors()){
-                        if(character.isWithinDistance(20,door)){
-                            dungeonMap.doorEntered(door.getDirection(),character);
+                if (Gdx.input.isKeyPressed(Input.Keys.A) || Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+                    character.accelerateAtAngle(180);
+                }
+                if (Gdx.input.isKeyPressed(Input.Keys.D) || Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+                    character.accelerateAtAngle(0);
+                }
+                if (Gdx.input.isKeyPressed(Input.Keys.W) || Gdx.input.isKeyPressed(Input.Keys.UP)) {
+                    character.accelerateAtAngle(90);
+                }
+                if (Gdx.input.isKeyPressed(Input.Keys.S) || Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+                    character.accelerateAtAngle(270);
+                }
+                if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
+                    for (Door door : dungeonMap.currentRoom.dungeonRoom.map_layout.getDoors()) {
+                        if (character.isWithinDistance(20, door)) {
+                            dungeonMap.doorEntered(door.getDirection(), character);
                             break;
                         }
                     }
@@ -97,23 +97,20 @@ public class LevelScreen extends BaseScreen
                 character.incrementRice();
             }
 
+            if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) { swingKnife(); }
+
             dungeonMap.getCurrentRoom().dungeonRoom.update(dt,character);
-            if(character.bossSlain()){
+
+        if (character.bossSlain()) {
                 game.setScreen(new WinnerStoryScreen(new VictoryScreen(this.game)));
-            }
         }
-        else{
-            if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
-                swingKnife();
-            }
-        } else{
+        } else {
             //game over
             Logger.getGlobal().log(Level.WARNING,"GAME OVER!!!!");
             this.dispose();
             music.stop();
             game.setScreen( new GameOverScreen(this.game));
         }
-
         dungeonMap.getCurrentRoom().dungeonRoom.update(dt,character);
     }
 

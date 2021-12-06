@@ -107,6 +107,7 @@ public class Character extends BaseActor {
 
     public void takeDamage(int dmg){
         if(timeSinceDmgTaken>=dmgDelay){
+            flicker();
             timeSinceDmgTaken=0;
             _healthBar.takeDamage(dmg);
         }
@@ -198,7 +199,6 @@ public class Character extends BaseActor {
     }
     public void setBossSlain(boolean val){
         _boss_slain=val;
-        return health_bar.isDead();
     }
 
     public void setMainItem(Item item) {
