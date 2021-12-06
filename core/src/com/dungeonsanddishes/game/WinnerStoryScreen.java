@@ -16,7 +16,6 @@ public class WinnerStoryScreen extends BaseScreen {
     Scene scene;
     BaseScreen nextScreen;
     BaseActor continueKey;
-    ArrayList<BaseActor> stars;
 
     WinnerStoryScreen(BaseScreen nextScreen){
         this.nextScreen=nextScreen;
