@@ -114,6 +114,12 @@ public class Character extends BaseActor {
         }
     }
 
+    public void heal(int heal){
+        SequenceAction healAni = new SequenceAction(Actions.scaleBy(0.2f, 0.2f, 0.2f), Actions.scaleBy(-0.2f, -0.2f, 0.2f));
+        this.addAction(Actions.repeat(2, healAni));
+        _healthBar.heal(heal);
+    }
+
     public void displayHealth(Stage s,float x,float y){
         _healthBar.displayHealthBar(s,x,y);
     }

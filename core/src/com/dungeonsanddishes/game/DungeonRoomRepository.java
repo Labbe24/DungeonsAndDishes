@@ -1,5 +1,7 @@
 package com.dungeonsanddishes.game;
 
+import com.badlogic.gdx.math.MathUtils;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
@@ -20,7 +22,13 @@ public class DungeonRoomRepository {
                 //throw?
         }*/
         for(int i=0;i<50;i++){
-            _tunnel_rooms.add(new StartRoom());
+            int x = MathUtils.random(1);
+            if (x == 1) {
+                _tunnel_rooms.add(new MobRoom());
+            } else {
+                _tunnel_rooms.add(new HealRoom());
+            }
+
         }
         _end_rooms.add(new SideIngredientRoom());//with parameters for room?
         _end_rooms.add(new MainIngredientRoom(seed));//with parameters for room?
