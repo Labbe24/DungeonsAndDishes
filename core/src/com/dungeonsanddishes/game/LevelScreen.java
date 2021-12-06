@@ -14,10 +14,8 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
 import Framework.BaseScreen;
 import Framework.RoomTilemap;
-
 
 public class LevelScreen extends BaseScreen
 {
@@ -25,8 +23,9 @@ public class LevelScreen extends BaseScreen
     RoomTilemap map;
     DungeonMap dungeonMap;
     CustomGame game;
+    ArrayList<Rectangle> collisionRectangles;
     private Music music;
-    
+
     public LevelScreen(CustomGame game){
         super();
         this.game=game;
@@ -46,12 +45,16 @@ public class LevelScreen extends BaseScreen
         dungeonMap.createDungeon();
         DungeonRoomMeta room = dungeonMap.getCurrentRoom();
         map=(RoomTilemap) room.dungeonRoom.map_layout;
+        //map = new RoomTilemap("rooms/start_room.tmx");
+        //map.setRoom(mainStage);
+
         character = new Character(0,0, mainStage,6);
         character.displayHealth(uiStage,30,Gdx.graphics.getHeight() - 50);
         character.displayRecipe(uiStage, 150, Gdx.graphics.getHeight() - 50);
         ArrayList<MapObject> spawn_point = map.getRectangleList("spawn_point");
-         character.centerAtPosition((float)spawn_point.get(0).getProperties().get("x"),(float)spawn_point.get(0).getProperties().get("y"));
+        character.centerAtPosition((float)spawn_point.get(0).getProperties().get("x"),(float)spawn_point.get(0).getProperties().get("y"));
         character.setWorldBounds(Gdx.graphics.getWidth() - 350, Gdx.graphics.getHeight() - 200); // Hardcoded since they never change.
+        character.setMovementStragety(new BasicMovement(character));
         music.setVolume(0.05f);
         music.setLooping(true);
         music.play();
@@ -60,33 +63,24 @@ public class LevelScreen extends BaseScreen
 
     public void update(float dt)
     {
-        if(!character.isDead()) {
-            character.boundToWorld();
-            if (!character.mainItem.hasActions()) {
-                for (MapObject obj : map.getCustomRectangleList("Collidable")) {
-                    if ((boolean) obj.getProperties().get("Collidable")) {
-                        character.preventOverlapWithObject(convertMapObjectToRectangle(obj));
-                    }
-                }
+        if(!character.isDead()){
 
-                if (Gdx.input.isKeyPressed(Input.Keys.A) || Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-                    character.accelerateAtAngle(180);
+            for (MapObject obj:map.getCustomRectangleList("Collidable")){
+                if ((boolean)obj.getProperties().get("Collidable")) {
+                    character.preventOverlapWithObject( convertMapObjectToRectangle(obj));
                 }
-                if (Gdx.input.isKeyPressed(Input.Keys.D) || Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-                    character.accelerateAtAngle(0);
-                }
-                if (Gdx.input.isKeyPressed(Input.Keys.W) || Gdx.input.isKeyPressed(Input.Keys.UP)) {
-                    character.accelerateAtAngle(90);
-                }
-                if (Gdx.input.isKeyPressed(Input.Keys.S) || Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-                    character.accelerateAtAngle(270);
-                }
-                if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
-                    for (Door door : dungeonMap.currentRoom.dungeonRoom.map_layout.getDoors()) {
-                        if (character.isWithinDistance(20, door)) {
-                            dungeonMap.doorEntered(door.getDirection(), character);
-                            break;
-                        }
+            }
+
+            if(character.movement != null){
+                character.movement.handleMovement();
+            }
+
+            if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
+
+                for(Door door:dungeonMap.currentRoom.dungeonRoom.map_layout.getDoors()){
+                    if(character.isWithinDistance(20,door)){
+                        dungeonMap.doorEntered(door.getDirection(),character);
+                        break;
                     }
                 }
             }
