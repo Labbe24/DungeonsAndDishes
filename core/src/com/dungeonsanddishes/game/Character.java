@@ -148,16 +148,22 @@ public class Character extends BaseActor {
             {
                 CharAngle = 90;
                 setAnimation(North);
+                setMainItemCoords(itemCoordsNorth);
+                setAttackBox(attackBoxNorth);
             }
             else if(angle > 135 && angle < 225)
             {
                 CharAngle = 180;
                 setAnimation(West);
+                setMainItemCoords(itemCoordsWest);
+                setAttackBox(attackBoxWest);
             }
             else if(angle >=315 || angle <=45)
             {
                 CharAngle = 0;
                 setAnimation(East);
+                setMainItemCoords(itemCoordsEast);
+                setAttackBox(attackBoxEast);
             }
             else
             {
