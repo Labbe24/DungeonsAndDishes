@@ -24,6 +24,7 @@ public class Character extends BaseActor {
     private CharacterSound sound;
     private CharacterHealth _healthBar;
     private Recipe _recipe;
+    public boolean boundToWorld = true;
 
 
     public Character(float x, float y, Stage s) {
@@ -132,6 +133,9 @@ public class Character extends BaseActor {
             }
         }
 
+        if(boundToWorld) {
+            this.boundToWorld();
+        }
     }
     public void setMovementStragety(IMovement movement){
         this.movement = movement;

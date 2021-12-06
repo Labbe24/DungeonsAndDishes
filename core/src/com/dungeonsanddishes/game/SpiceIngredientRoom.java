@@ -29,7 +29,7 @@ class ChiliRoom extends SpiceIngredientRoomImplementation {
 
     private Milk milk;
     private float MILK_TIME = 2f;
-    private int milksToDrink = 15;
+    private int milksToDrink = 5;
     private int milksDrunk = 0;
 
     private int mapX = 192, mapY = 128, mapWidth = 1536, mapHeight = 800;
@@ -63,6 +63,10 @@ class ChiliRoom extends SpiceIngredientRoomImplementation {
 
     @Override
     public void update(float dt, Character character) {
+        if(character.boundToWorld) {
+            character.boundToWorld = false;
+        }
+
         if(!chili.eaten && character.overlaps(chili)) {
             ChiliStoryScreen screen = new ChiliStoryScreen();
             screen.setNextScreen(CustomGame.getActiveScreen());
@@ -77,7 +81,7 @@ class ChiliRoom extends SpiceIngredientRoomImplementation {
         if(!gameOver) {
             if(chili.eaten) {
 
-                queryInput();
+                queryInput(character);
                 timer -= dt;
 
                 if(timer <= 0) {
@@ -112,7 +116,6 @@ class ChiliRoom extends SpiceIngredientRoomImplementation {
         }
 
         if(gameOver) {
-            character.takeDamage(6);
             removeFire();
             removeMilk();
             character.setMovementStragety(new BasicMovement(character));
@@ -137,22 +140,22 @@ class ChiliRoom extends SpiceIngredientRoomImplementation {
         switch (characterDirection) {
             case RIGHT: {
                 characterX += CHARACTER_MOVEMENT;
-                character.accelerateAtAngle(0);
+                character.setTexture("chef_idle/chef_idle_right.png");
                 break;
             }
             case LEFT: {
                 characterX -= CHARACTER_MOVEMENT;
-                character.accelerateAtAngle(180);
+                character.setTexture("chef_idle/chef_idle_left.png");
                 break;
             }
             case UP: {
                 characterY += CHARACTER_MOVEMENT;
-                character.accelerateAtAngle(90);
+                character.setTexture("chef_idle/chef_idle_up.png");
                 break;
             }
             case DOWN: {
                 characterY -= CHARACTER_MOVEMENT;
-                character.accelerateAtAngle(270);
+                character.setTexture("chef_idle/chef_idle_down.png");
                 character.toFront();
                 break;
             }
@@ -176,9 +179,10 @@ class ChiliRoom extends SpiceIngredientRoomImplementation {
         }
     }
 
-    private void queryInput() {
+    private void queryInput(Character character) {
         if(Gdx.input.isKeyPressed(Input.Keys.A) || Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
             if(characterDirection == RIGHT) {
+                character.takeDamage(6);
                 gameOver = true;
                 return;
             }
@@ -186,6 +190,7 @@ class ChiliRoom extends SpiceIngredientRoomImplementation {
         }
         if(Gdx.input.isKeyPressed(Input.Keys.D) || Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
             if(characterDirection == LEFT) {
+                character.takeDamage(6);
                 gameOver = true;
                 return;
             }
@@ -193,6 +198,7 @@ class ChiliRoom extends SpiceIngredientRoomImplementation {
         }
         if(Gdx.input.isKeyPressed(Input.Keys.W) || Gdx.input.isKeyPressed(Input.Keys.UP)) {
             if(characterDirection == DOWN) {
+                character.takeDamage(6);
                 gameOver = true;
                 return;
             }
@@ -200,6 +206,7 @@ class ChiliRoom extends SpiceIngredientRoomImplementation {
         }
         if(Gdx.input.isKeyPressed(Input.Keys.S) || Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
             if(characterDirection == UP) {
+                character.takeDamage(6);
                 gameOver = true;
                 return;
             }
@@ -255,6 +262,7 @@ class ChiliRoom extends SpiceIngredientRoomImplementation {
         for(int i = 0; i < fireList.size; i++) {
             if(fireList.get(i).getX() == characterX
             && fireList.get(i).getY() == characterY) {
+                character.takeDamage(6);
                 gameOver = true;
                 return;
             }

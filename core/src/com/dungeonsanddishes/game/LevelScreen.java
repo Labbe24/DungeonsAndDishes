@@ -52,6 +52,7 @@ public class LevelScreen extends BaseScreen
         ArrayList<MapObject> spawn_point = map.getRectangleList("spawn_point");
         character.centerAtPosition((float)spawn_point.get(0).getProperties().get("x"),(float)spawn_point.get(0).getProperties().get("y"));
         character.setWorldBounds(Gdx.graphics.getWidth() - 350, Gdx.graphics.getHeight() - 200); // Hardcoded since they never change.
+        character.setMovementStragety(new BasicMovement(character));
         music.setVolume(0.05f);
         music.setLooping(true);
         music.play();
@@ -62,7 +63,6 @@ public class LevelScreen extends BaseScreen
     public void update(float dt)
     {
         if(!character.isDead()){
-            character.boundToWorld();
 
             for (MapObject obj:map.getCustomRectangleList("Collidable")){
                 if ((boolean)obj.getProperties().get("Collidable")) {
@@ -70,18 +70,10 @@ public class LevelScreen extends BaseScreen
                 }
             }
 
-            if(Gdx.input.isKeyPressed(Input.Keys.A) || Gdx.input.isKeyPressed(Input.Keys.LEFT)){
-                character.accelerateAtAngle(180);
+            if(character.movement != null){
+                character.movement.handleMovement();
             }
-            if(Gdx.input.isKeyPressed(Input.Keys.D) || Gdx.input.isKeyPressed(Input.Keys.RIGHT)){
-                character.accelerateAtAngle(0);
-            }
-            if(Gdx.input.isKeyPressed(Input.Keys.W) || Gdx.input.isKeyPressed(Input.Keys.UP)){
-                character.accelerateAtAngle(90);
-            }
-            if(Gdx.input.isKeyPressed(Input.Keys.S) || Gdx.input.isKeyPressed(Input.Keys.DOWN)){
-                character.accelerateAtAngle(270);
-            }
+
             if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
 
                 for(Door door:dungeonMap.currentRoom.dungeonRoom.map_layout.getDoors()){
