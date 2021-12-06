@@ -20,12 +20,14 @@ public class Character extends BaseActor {
     private float timeSinceDmgTaken=0;
     public IMovement movement;
     private CharacterSound sound;
+    private boolean _boss_slain;
 
 
     public Character(float x, float y, Stage s) {
         super(x, y, s);
         this.loadTexture("chef_idle/chef_idle_up.png");
         this.sound = new CharacterSound();
+        _boss_slain=false;
 
         //Set animations:
         Array<TextureRegion> animation_array= new Array<TextureRegion>();
@@ -119,6 +121,13 @@ public class Character extends BaseActor {
 
     public boolean isDead() {
         return health_bar.isDead();
+    }
+
+    public boolean bossSlain() {
+        return _boss_slain;
+    }
+    public void setBossSlain(boolean val){
+        _boss_slain=val;
     }
 }
 

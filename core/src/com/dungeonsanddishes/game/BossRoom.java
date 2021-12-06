@@ -64,10 +64,11 @@ public class BossRoom extends IngredientRoom{
     @Override
     public void update(float dt, Character character) {
         super.update(dt,character);
+        Boss boss = ((BossRoomImplementation) _room_impl).getBoss();
         RoomTilemap map =(RoomTilemap)map_layout;
         for (MapObject obj:map.getCustomRectangleList("Collidable")){
             if ((boolean)obj.getProperties().get("Collidable")) {
-                ((BossRoomImplementation)_room_impl).getBoss().preventOverlapWithObject( convertMapObjectToRectangle(obj));
+                boss.preventOverlapWithObject( convertMapObjectToRectangle(obj));
             }
         }
         //iterate projectiles
@@ -86,6 +87,10 @@ public class BossRoom extends IngredientRoom{
             }
         }
         if(Gdx.input.isKeyJustPressed(Input.Keys.K))
-            ((BossRoomImplementation) _room_impl).getBoss().takeDamage(1);
+            boss.takeDamage(1);
+
+        if(boss.health.isDead()){
+            character.setBossSlain(true);
+        }
     }
 }

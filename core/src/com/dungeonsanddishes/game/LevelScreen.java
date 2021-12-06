@@ -1,11 +1,11 @@
 package com.dungeonsanddishes.game;
 
 import static Framework.TilemapActor.convertMapObjectToRectangle;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.maps.MapObject;
-import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.math.Rectangle;
 
 import java.util.ArrayList;
@@ -92,6 +92,9 @@ public class LevelScreen extends BaseScreen
             }
 
             dungeonMap.getCurrentRoom().dungeonRoom.update(dt,character);
+            if(character.bossSlain()){
+                game.setScreen(new VictoryScreen(this.game));
+            }
         }
         else{
             //game over
