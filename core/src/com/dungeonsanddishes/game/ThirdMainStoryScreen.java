@@ -51,12 +51,12 @@ public class ThirdMainStoryScreen extends BaseScreen {
         scene.addSegment( new SceneSegment( actor1, SceneActions.moveToScreenPosition( 950,100,1)));
         scene.addSegment( new SceneSegment( textBox, Actions.show() ));
         scene.addSegment( new SceneSegment( textBox,
-                SceneActions.setText("This is a nice kitchen!" ) ));
+                SceneActions.setText("This is a nice kitchen! [PRES C TO CONTINUE]" ) ));
         scene.addSegment( new SceneSegment( continueKey, Actions.show() ));
         scene.addSegment( new SceneSegment( background, SceneActions.pause() ));
         scene.addSegment( new SceneSegment( continueKey, Actions.hide() ));
         scene.addSegment( new SceneSegment( textBox,
-                SceneActions.setText("Let's see if there still are some leftover ingredients somewhere!" )));
+                SceneActions.setText("Let's see if there still are some leftover ingredients somewhere! [PRES C TO CONTINUE]" )));
         scene.addSegment( new SceneSegment( continueKey, Actions.show() ));
         scene.addSegment( new SceneSegment( background, SceneActions.pause() ));
         scene.addSegment( new SceneSegment( continueKey, Actions.hide() ));

@@ -50,12 +50,12 @@ public class FirstMainStoryScreen extends BaseScreen {
         scene.addSegment( new SceneSegment( actor1, SceneActions.moveToScreenPosition( 950,100,1)));
         scene.addSegment( new SceneSegment( textBox, Actions.show() ));
         scene.addSegment( new SceneSegment( textBox,
-                SceneActions.setText("I want to be a chef!" ) ));
+                SceneActions.setText("I want to be a chef! [PRES C TO CONTINUE]" ) ));
         scene.addSegment( new SceneSegment( continueKey, Actions.show() ));
         scene.addSegment( new SceneSegment( background, SceneActions.pause() ));
         scene.addSegment( new SceneSegment( continueKey, Actions.hide() ));
         scene.addSegment( new SceneSegment( textBox,
-                SceneActions.setText("Let's find a restaurante!" ) ));
+                SceneActions.setText("Let's find a restaurante! [PRES C TO CONTINUE]" ) ));
         scene.addSegment( new SceneSegment( continueKey, Actions.show() ));
         scene.addSegment( new SceneSegment( background, SceneActions.pause() ));
         scene.addSegment( new SceneSegment( continueKey, Actions.hide() ));

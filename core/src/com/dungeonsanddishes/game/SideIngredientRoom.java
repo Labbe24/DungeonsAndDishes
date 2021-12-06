@@ -48,6 +48,7 @@ class FishRoom extends SideIngredientRoomImplementation {
 
             if(fish == null) {
                 fish = new Fish((mapX+mapWidth)/2, (mapY+mapHeight)/2);
+                fish.preventOverlap(character);
                 stage.addActor(fish);
             }
             else if(character.overlaps(fish)) {
