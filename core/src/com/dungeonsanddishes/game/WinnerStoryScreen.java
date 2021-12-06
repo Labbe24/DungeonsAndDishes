@@ -28,7 +28,7 @@ public class WinnerStoryScreen extends BaseScreen {
         BaseActor.setWorldBounds(background);
 
         BaseActor star = new BaseActor(BaseActor.getWorldBounds().width/1, -1000, mainStage);
-        star.loadTexture("star.png");
+        star.loadTexture("michelinstar.png");
 
         // Scene plot
         scene = new Scene();
