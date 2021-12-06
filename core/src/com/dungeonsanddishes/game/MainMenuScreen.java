@@ -3,11 +3,11 @@ package com.dungeonsanddishes.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.Event;
-import com.badlogic.gdx.scenes.scene2d.EventListener;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 import Framework.BaseScreen;
@@ -25,12 +25,11 @@ public class MainMenuScreen extends BaseScreen {
         menuTable.setFillParent(true);
         TextButton playButton = new TextButton("Play!",skin );
         menuTable.add(playButton);
-        playButton.addListener(new EventListener() {
+        playButton.addListener(new ClickListener(){
             @Override
-            public boolean handle(Event event) {
+            public void clicked(InputEvent event, float x, float y) {
                 game.setScreen(new LevelScreen(game));
                 MainMenuScreen.this.dispose();
-                return true;
             }
         });
         menuTable.setBackground(pngToDrawable("backgrounds/MMBG.png"));
