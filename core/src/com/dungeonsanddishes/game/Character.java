@@ -57,10 +57,10 @@ public class Character extends BaseActor {
         itemCoordsWest = new Coordinate(40,63);
 
         //Set Attack Boxes:
-        attackBoxNorth = new Rectangle(32, 128, 64, 32);
-        attackBoxSouth = new Rectangle(32, -32, 64, 64);
-        attackBoxEast = new Rectangle(64, 64, 32, 64);
-        attackBoxWest = new Rectangle(-32, 64, 64, 64);
+        attackBoxNorth = new Rectangle(32, 128, 64, 64);
+        attackBoxSouth = new Rectangle(32, -32, 64, 128);
+        attackBoxEast = new Rectangle(64, 64, 64, 64);
+        attackBoxWest = new Rectangle(-32, 64, 128, 64);
 
         //Set animations:
         Array<TextureRegion> animation_array= new Array<TextureRegion>();
