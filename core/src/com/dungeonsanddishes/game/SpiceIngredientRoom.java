@@ -2,7 +2,7 @@ package com.dungeonsanddishes.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
@@ -17,33 +17,43 @@ abstract class SpiceIngredientRoomImplementation extends IngredientRoomImplement
 }
 
 class ChiliRoom extends SpiceIngredientRoomImplementation {
-    private TextBox tb;
+    private Stage stage;
+    private Music chiliSound;
+    private Music milkSound;
 
     private Chili chili;
-    private Milk milk;
-    private int milkX, milkY;
-    private Boolean milkAvailable = false;
-    private float milkTimer = 0;
-    private float MILK_TIME = 2f;
-    private Array<Fire> fireList;
-    private Stage stage;
-    private int milksToDrink = 5;
-    private int milksDrunk = 0;
-    private Boolean chiliEaten = false;
 
-    public int mapX = 192, mapY = 128, mapWidth = 1536, mapHeight = 800;
-    private Boolean gameOver = false;
-    private static final float MOVE_TIME = 0.1F;
-    private static final int CHARACTER_MOVEMENT = 32;
-    private float timer = MOVE_TIME;
-    private int characterX = 0, characterY = 0, prevCharacterX, prevCharacterY;
-    private static final int RIGHT = 0, LEFT = 1, UP = 2, DOWN = 3;
-    private int characterDirection = UP;
+    private Array<Fire> fireList;
     private int firePartsAdded = 0;
 
+    private Milk milk;
+    private float MILK_TIME = 3f;
+    private int milksToDrink = 5;
+    private int milksDrunk = 0;
+
+    private int mapX = 192, mapY = 128, mapWidth = 1536, mapHeight = 800;
+
+    private static final float MOVE_TIME = 0.1F;
+    private static final int CHARACTER_MOVEMENT = 32;
+    private static final int RIGHT = 0, LEFT = 1, UP = 2, DOWN = 3;
+    private float timer = MOVE_TIME;
+    private int characterX = 0, characterY = 0, prevCharacterX, prevCharacterY;
+    private int characterDirection = UP;
+
+    private boolean gameOver = false;
+
     public ChiliRoom() {
-        int x = MathUtils.random(mapWidth / CHARACTER_MOVEMENT - 1) * CHARACTER_MOVEMENT;
-        int y = MathUtils.random(mapHeight / CHARACTER_MOVEMENT - 1) * CHARACTER_MOVEMENT;
+        milkSound = Gdx.audio.newMusic(Gdx.files.internal("sounds/milk.ogg"));
+        milk = new Milk(0, 0);
+
+        int x;
+        int y;
+
+        do {
+            x = MathUtils.random(mapWidth / CHARACTER_MOVEMENT - 1) * CHARACTER_MOVEMENT;
+            y = MathUtils.random(mapHeight / CHARACTER_MOVEMENT - 1) * CHARACTER_MOVEMENT;
+        } while (x < mapX || y < mapY);
+
         chili = new Chili(x, y);
         fireList = new Array<Fire>();
         characterX = x;
@@ -52,27 +62,35 @@ class ChiliRoom extends SpiceIngredientRoomImplementation {
 
     @Override
     public void update(float dt, Character character) {
-        if(!chiliEaten && character.overlaps(chili)) {
+        if(!chili.eaten && character.overlaps(chili)) {
+            ChiliStoryScreen screen = new ChiliStoryScreen();
+            screen.setNextScreen(CustomGame.getActiveScreen());
+            CustomGame.setActiveScreen(screen);
+
             chili.remove();
             character.setMovementStragety(null);
-            chiliEaten = true;
+            chili.eaten = true;
             setRandomMilk();
         }
 
         if(!gameOver) {
-            if(chiliEaten) {
+            if(chili.eaten) {
 
                 queryInput();
                 timer -= dt;
 
                 if(timer <= 0) {
                     timer = MOVE_TIME;
-                    checkForNewMilk(MOVE_TIME);
+
                     moveCharacter(character);
                     checkForMapBoundaries();
-                    updateFire();
+
                     character.setX(characterX);
                     character.setY(characterY);
+
+                    checkFireCollision(character);
+                    checkForNewMilk(MOVE_TIME);
+                    updateFire();
 
                     if(firePartsAdded < milksToDrink) {
                         addFire();
@@ -87,33 +105,22 @@ class ChiliRoom extends SpiceIngredientRoomImplementation {
                 }
                 else if (milksDrunk >= milksToDrink) {
                     character.setMovementStragety(new BasicMovement(character));
-                    gameOver = true;
                 }
             }
         }
-        // if character collides with chili
-        // remove chili
-        // check win-conditions
-        // -- if win, let the player know and set character movement to default
-        // -- if no win, spawn new milk
+
+        if(gameOver) {
+            character.takeDamage(6);
+            removeFire();
+            removeMilk();
+            character.setMovementStragety(new BasicMovement(character));
+        }
     }
 
     @Override
     public void setRoom(Stage stage) {
         this.stage = stage;
         stage.addActor(chili);
-
-        // dialog box
-        /*
-        tb = new TextBox(864, 464, stage);
-        tb.setText("Eat the chili!");
-        tb.setBackgroundColor(Color.WHITE);
-        tb.setFontColor(Color.BLACK);
-        tb.setDialogSize(600, 100);
-        tb.setFontScale(1f);
-        tb.alignCenter();
-        stage.addActor(tb);
-        */
     }
 
     @Override
@@ -168,40 +175,58 @@ class ChiliRoom extends SpiceIngredientRoomImplementation {
     }
 
     private void queryInput() {
-        if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+        if(Gdx.input.isKeyPressed(Input.Keys.A) || Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+            if(characterDirection == RIGHT) {
+                gameOver = true;
+                return;
+            }
             characterDirection = LEFT;
         }
-        if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+        if(Gdx.input.isKeyPressed(Input.Keys.D) || Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+            if(characterDirection == LEFT) {
+                gameOver = true;
+                return;
+            }
             characterDirection = RIGHT;
         }
-        if(Gdx.input.isKeyPressed(Input.Keys.UP)) {
+        if(Gdx.input.isKeyPressed(Input.Keys.W) || Gdx.input.isKeyPressed(Input.Keys.UP)) {
+            if(characterDirection == DOWN) {
+                gameOver = true;
+                return;
+            }
             characterDirection = UP;
         }
-        if(Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+        if(Gdx.input.isKeyPressed(Input.Keys.S) || Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+            if(characterDirection == UP) {
+                gameOver = true;
+                return;
+            }
             characterDirection = DOWN;
         }
     }
 
     private void setRandomMilk() {
-        if(!milkAvailable) {
+        if(!milk.available) {
+            int milkX, milkY;
             do {
                 milkX = MathUtils.random(mapWidth / CHARACTER_MOVEMENT - 1) * CHARACTER_MOVEMENT;
                 milkY = MathUtils.random(mapHeight / CHARACTER_MOVEMENT - 1) * CHARACTER_MOVEMENT;
             } while ((milkX < mapX || milkY < mapY)
                     || (milkX == characterX && milkY == characterY));
 
-            milk = new Milk(milkX, milkY);
+            milk.setPosition(milkX, milkY);
             stage.addActor(milk);
-            milkAvailable = true;
+            milk.available = true;
         }
     }
 
     private void checkMilkCollision() {
-        if(milkAvailable && characterX == milkX && characterY == milkY) {
+        if(milk.available && characterX == milk.getX() && characterY == milk.getY()) {
             milk.remove();
-            milkAvailable = false;
+            milk.available = false;
             milksDrunk++;
-            milkTimer = 0;
+            milk.milkTimer = 0;
+            milkSound.play();
 
             Fire firePart = fireList.removeIndex(fireList.size-1);
             firePart.remove();
@@ -209,12 +234,28 @@ class ChiliRoom extends SpiceIngredientRoomImplementation {
     }
 
     private void checkForNewMilk(float tick) {
-        milkTimer += tick;
-        if(milkTimer >= MILK_TIME){
+        milk.milkTimer += tick;
+        if(milk.milkTimer >= MILK_TIME){
             milk.remove();
-            milkAvailable = false;
+            milk.available = false;
             setRandomMilk();
-            milkTimer = 0;
+            milk.milkTimer = 0;
+        }
+    }
+
+    private void removeMilk() {
+        if(milk != null) {
+            milk.remove();
+        }
+    }
+
+    private void checkFireCollision(Character character) {
+        for(int i = 0; i < fireList.size; i++) {
+            if(fireList.get(i).getX() == characterX
+            && fireList.get(i).getY() == characterY) {
+                gameOver = true;
+                return;
+            }
         }
     }
 
@@ -227,9 +268,17 @@ class ChiliRoom extends SpiceIngredientRoomImplementation {
     }
 
     private void addFire() {
-        Fire fire = new Fire(characterX, characterY);
+        Fire fire = new Fire(prevCharacterX, prevCharacterY);
         fireList.insert(0, fire);
         stage.addActor(fire);
+    }
+
+    private void removeFire() {
+        Fire firePart;
+        for(int i = 0; i < fireList.size; i++) {
+            firePart = fireList.removeIndex(i);
+            firePart.remove();
+        }
     }
 }
 

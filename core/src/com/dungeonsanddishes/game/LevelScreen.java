@@ -38,7 +38,7 @@ public class LevelScreen extends BaseScreen
      */
     public void initialize() 
     {
-        this.music = Gdx.audio.newMusic(Gdx.files.internal("sounds/war.wav"));
+        this.music = Gdx.audio.newMusic(Gdx.files.internal("sounds/level-music.ogg"));
         dungeonMap = new DungeonMap(new RandomWalker(new DungeonRoomRepository(1, 7)),mainStage );
         dungeonMap.createDungeon();
         DungeonRoomMeta room = dungeonMap.getCurrentRoom();
@@ -47,11 +47,12 @@ public class LevelScreen extends BaseScreen
         //map.setRoom(mainStage);
 
         character = new Character(0,0, mainStage,6);
-        character.displayHealth(uiStage,30,1000);
+        character.displayHealth(uiStage,30,Gdx.graphics.getHeight() - 50);
+        character.displayRecipe(uiStage, 150, Gdx.graphics.getHeight() - 50);
         ArrayList<MapObject> spawn_point = map.getRectangleList("spawn_point");
         character.centerAtPosition((float)spawn_point.get(0).getProperties().get("x"),(float)spawn_point.get(0).getProperties().get("y"));
         character.setWorldBounds(Gdx.graphics.getWidth() - 350, Gdx.graphics.getHeight() - 200); // Hardcoded since they never change.
-        music.setVolume(0.1f);
+        music.setVolume(0.05f);
         music.setLooping(true);
         music.play();
 
@@ -91,6 +92,11 @@ public class LevelScreen extends BaseScreen
                 }
             }
 
+            if (Gdx.input.isKeyPressed(Input.Keys.I)) {
+                character.incrementChili();
+                character.incrementRice();
+            }
+
             dungeonMap.getCurrentRoom().dungeonRoom.update(dt,character);
             if(character.bossSlain()){
                 game.setScreen(new VictoryScreen(this.game));
@@ -100,10 +106,8 @@ public class LevelScreen extends BaseScreen
             //game over
             Logger.getGlobal().log(Level.WARNING,"GAME OVER!!!!");
             this.dispose();
+            music.stop();
             game.setScreen( new GameOverScreen(this.game));
         }
     }
-            //check if interactible nearby
-            //if interactible is door
-            //call map.DoorEntered(door.getProperty("direction"))
 }

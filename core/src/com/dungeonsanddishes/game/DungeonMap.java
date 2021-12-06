@@ -21,7 +21,7 @@ public class DungeonMap {
 
     public void createDungeon(){
         x=9;y=9;
-        dungeon = dungeonGenerator.createDungeonMap(4, 3, 3, new String[]{"Room1", "Room2", "Room3", "Room4"});
+        dungeon = dungeonGenerator.createDungeonMap(4, 3, 1, new String[]{"Room1", "Room2", "Room3", "Room4"});
         dungeon[9][9].dungeonRoom.map_layout.setRoom(mainStage);
         currentRoom=dungeon[9][9];
         x_n=(float)((RoomTilemap)currentRoom.dungeonRoom.map_layout).getRectangleList("door_spawn_north").get(0).getProperties().get("x");
