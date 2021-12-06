@@ -7,6 +7,8 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.dungeonsanddishes.game.StartRoomLib.Oven;
 
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -56,8 +58,7 @@ public class LevelScreen extends BaseScreen
         music.setVolume(0.05f);
         music.setLooping(true);
         music.play();
-
-
+        character.setMainItem(new Item(0,0,mainStage));
     }
 
     public void update(float dt)
@@ -83,20 +84,59 @@ public class LevelScreen extends BaseScreen
                     }
                 }
             }
+            character.mainItem.centerAtActorMainItem(character);
 
             if (Gdx.input.isKeyPressed(Input.Keys.I)) {
                 character.incrementChili();
                 character.incrementRice();
             }
 
+            if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) { swingKnife(); }
+
             dungeonMap.getCurrentRoom().dungeonRoom.update(dt,character);
+
+        if (character.bossSlain()) {
+                game.setScreen(new WinnerStoryScreen(new VictoryScreen(this.game)));
         }
-        else{
+        } else {
             //game over
             Logger.getGlobal().log(Level.WARNING,"GAME OVER!!!!");
             this.dispose();
             music.stop();
             game.setScreen( new GameOverScreen(this.game));
         }
+        dungeonMap.getCurrentRoom().dungeonRoom.update(dt,character);
+    }
+
+    public Rectangle convertMapObjectToRectangle(MapObject obj) {
+        MapProperties props = obj.getProperties();
+        return new Rectangle( (float)props.get("x"), (float)props.get("y"), ((float)props.get("width")), ((float)props.get("height")));
+    }
+
+    public void swingKnife()
+    {
+        character.setSpeed(0);
+        float facingAngle = character.CharAngle;
+        float knifeArc = 180;
+        if (facingAngle == 0)
+            character.mainItem.addAction( Actions.sequence(
+                    Actions.rotateBy(-knifeArc, 0.15f),
+                    Actions.rotateBy(knifeArc, 0.15f))
+            );
+        else if (facingAngle == 90)
+            character.mainItem.addAction( Actions.sequence(
+                    Actions.rotateBy(-knifeArc, 0.15f),
+                    Actions.rotateBy(knifeArc, 0.15f))
+            );
+        else if (facingAngle == 180)
+            character.mainItem.addAction( Actions.sequence(
+                    Actions.rotateBy(knifeArc, 0.15f),
+                    Actions.rotateBy(-knifeArc, 0.15f))
+            );
+        else // facingAngle == 270
+            character.mainItem.addAction( Actions.sequence(
+                    Actions.rotateBy(knifeArc, 0.15f),
+                    Actions.rotateBy(-knifeArc, 0.15f))
+            );
     }
 }

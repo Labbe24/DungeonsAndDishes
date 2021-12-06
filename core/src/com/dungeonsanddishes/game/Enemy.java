@@ -18,19 +18,19 @@ public class Enemy extends BaseActor {
     public Enemy(float x, float y, Stage s) {
         super(x, y, s);
 
-    this.loadTexture("chef_idle/chef_idle_up.png");
+    this.loadTexture("Enemies/DummyTester/devil.png");
 
 
     //Set animations:
     Array<TextureRegion> animation_array= new Array<>();
-        animation_array.add(new TextureRegion(new Texture("chef_walk/chef_walk_right1.png")));
-        animation_array.add(new TextureRegion(new Texture("chef_walk/chef_walk_right2.png")));
+        animation_array.add(new TextureRegion(new Texture("Enemies/DummyTester/devil.png")));
+        animation_array.add(new TextureRegion(new Texture("Enemies/DummyTester/devil.png")));
 
     East = new Animation<>(0.2f,animation_array, Animation.PlayMode.LOOP);
 
         animation_array.clear();
-        animation_array.add(new TextureRegion(new Texture("chef_walk/chef_walk_right1.png")));
-        animation_array.add(new TextureRegion(new Texture("chef_walk/chef_walk_right2.png")));
+        animation_array.add(new TextureRegion(new Texture("Enemies/DummyTester/devil.png")));
+        animation_array.add(new TextureRegion(new Texture("Enemies/DummyTester/devil.png")));
         for( TextureRegion anim :animation_array){
         anim.flip(true,false);
     }
@@ -38,13 +38,13 @@ public class Enemy extends BaseActor {
     West = new Animation<>(0.2f,animation_array,Animation.PlayMode.LOOP);
 
         animation_array.clear();
-        animation_array.add(new TextureRegion(new Texture("chef_walk/chef_walk_down1.png")));
-        animation_array.add(new TextureRegion(new Texture("chef_walk/chef_walk_down2.png")));
+        animation_array.add(new TextureRegion(new Texture("Enemies/DummyTester/devil.png")));
+        animation_array.add(new TextureRegion(new Texture("Enemies/DummyTester/devil.png")));
     South= new Animation<>(0.2f,animation_array,Animation.PlayMode.LOOP);
 
         animation_array.clear();
-        animation_array.add(new TextureRegion(new Texture("chef_walk/chef_walk_up1.png")));
-        animation_array.add(new TextureRegion(new Texture("chef_walk/chef_walk_up2.png")));
+        animation_array.add(new TextureRegion(new Texture("Enemies/DummyTester/devil.png")));
+        animation_array.add(new TextureRegion(new Texture("Enemies/DummyTester/devil.png")));
     North= new Animation<>(0.2f,animation_array,Animation.PlayMode.LOOP);
 
     setAnimation(South);

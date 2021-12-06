@@ -3,7 +3,6 @@ package com.dungeonsanddishes.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
@@ -28,7 +27,7 @@ class ChiliRoom extends SpiceIngredientRoomImplementation {
     private int firePartsAdded = 0;
 
     private Milk milk;
-    private float MILK_TIME = 2f;
+    private float MILK_TIME = 3f;
     private int milksToDrink = 5;
     private int milksDrunk = 0;
 

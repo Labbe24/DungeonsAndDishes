@@ -545,6 +545,24 @@ public class BaseActor extends Group
         return true;
     }
 
+    public boolean overlapsRectangle(Rectangle other)
+    {
+        float w = other.getWidth();
+        float h = other.getHeight();
+        float[] vertices = {0,0, w,0, w,h, 0,h};
+        Polygon tempPoly = new Polygon(vertices);
+        tempPoly.setPosition(other.getX(), other.getY());
+
+        Polygon poly1 = this.getBoundaryPolygon();
+        Polygon poly2 = tempPoly;
+
+        // initial test to improve performance
+        if ( !poly1.getBoundingRectangle().overlaps(poly2.getBoundingRectangle()) )
+            return false;
+
+        return Intersector.overlapConvexPolygons( poly1, poly2 );
+    }
+
     /**
      *  Implement a "solid"-like behavior:
      *  when there is overlap, move this BaseActor away from other BaseActor
@@ -661,8 +679,8 @@ public class BaseActor extends Group
     public void boundToWorld()
     {
         // Hard coded coordinate corrections since these never change, normally always 0,0(following screen border).
-        float xCorrection = 185;
-        float yCorrection = 145;
+        float xCorrection = 192;
+        float yCorrection = 138;
 
         if (getX() < xCorrection)
             setX(xCorrection);

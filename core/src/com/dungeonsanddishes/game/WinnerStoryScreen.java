@@ -1,8 +1,6 @@
 package com.dungeonsanddishes.game;
 
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 
 import java.util.ArrayList;
@@ -20,6 +18,9 @@ public class WinnerStoryScreen extends BaseScreen {
     BaseActor continueKey;
     ArrayList<BaseActor> stars;
 
+    WinnerStoryScreen(BaseScreen nextScreen){
+        this.nextScreen=nextScreen;
+    }
     @Override
     public void initialize() {
         BaseActor background = new BaseActor(0, 0, mainStage);

@@ -5,7 +5,10 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.utils.Array;
 
 import java.util.ArrayList;
@@ -20,8 +23,22 @@ public class Character extends BaseActor {
     int CharAngle;
     private float dmgDelay=0.3f;
     private float timeSinceDmgTaken=0;
+    Coordinate itemCoordsNorth;
+    Coordinate itemCoordsSouth;
+    Coordinate itemCoordsEast;
+    Coordinate itemCoordsWest;
+    Coordinate mainItemCoords;
+    Rectangle attackBoxNorth;
+    Rectangle attackBoxSouth;
+    Rectangle attackBoxEast;
+    Rectangle attackBoxWest;
+    Rectangle attackBox;
+
+    Item mainItem = null;
+
     public IMovement movement;
     private CharacterSound sound;
+    private boolean _boss_slain;
     private CharacterHealth _healthBar;
     private Recipe _recipe;
     public boolean boundToWorld = true;
@@ -31,6 +48,19 @@ public class Character extends BaseActor {
         super(x, y, s);
         this.loadTexture("chef_idle/chef_idle_up.png");
         this.sound = new CharacterSound();
+        mainItemCoords = new Coordinate(x,y);
+
+        //Set Item coordinates:
+        itemCoordsNorth = new Coordinate(61,73);
+        itemCoordsSouth = new Coordinate(8,68);
+        itemCoordsEast = new Coordinate(39,55);
+        itemCoordsWest = new Coordinate(40,63);
+
+        //Set Attack Boxes:
+        attackBoxNorth = new Rectangle(32, 128, 64, 32);
+        attackBoxSouth = new Rectangle(32, -32, 64, 64);
+        attackBoxEast = new Rectangle(64, 64, 32, 64);
+        attackBoxWest = new Rectangle(-32, 64, 64, 64);
 
         //Set animations:
         Array<TextureRegion> animation_array= new Array<TextureRegion>();
@@ -60,6 +90,8 @@ public class Character extends BaseActor {
 
         setAnimation(South);
         CharAngle = 270;
+        setMainItemCoords(itemCoordsSouth);
+        setAttackBox(attackBoxSouth);
 
         //set movement parameter values:
         setAcceleration(10000);
@@ -76,6 +108,7 @@ public class Character extends BaseActor {
 
     public void takeDamage(int dmg){
         if(timeSinceDmgTaken>=dmgDelay){
+            flicker();
             timeSinceDmgTaken=0;
             _healthBar.takeDamage(dmg);
         }
@@ -104,7 +137,7 @@ public class Character extends BaseActor {
         // set direction animation
         float angle = getMotionAngle();
 
-        if(isMoving()==false){
+        if (isMoving() == false) {
             setAnimationPaused(true);
             this.sound.StopWalk();
         }
@@ -130,8 +163,25 @@ public class Character extends BaseActor {
             {
                 CharAngle = 270;
                 setAnimation(South);
+                setMainItemCoords(itemCoordsSouth);
+                setAttackBox(attackBoxSouth);
             }
         }
+    }
+
+    private void setMainItemCoords(Coordinate coords) {
+        mainItemCoords = coords;
+    }
+    public void setAttackBox(Rectangle rectangle) {
+        attackBox = rectangle;
+    }
+
+    public Coordinate getMainItemCoords() {
+        return mainItemCoords;
+    }
+    public Rectangle getAttackBox() {
+        return attackBox;
+    }
 
         if(boundToWorld) {
             this.boundToWorld();
@@ -143,6 +193,22 @@ public class Character extends BaseActor {
 
     public boolean isDead() {
         return _healthBar.isDead();
+    }
+
+    public boolean bossSlain() {
+        return _boss_slain;
+    }
+    public void setBossSlain(boolean val){
+        _boss_slain=val;
+    }
+
+    public void setMainItem(Item item) {
+        mainItem = item;
+    }
+
+    public void flicker() {
+        SequenceAction flicker = new SequenceAction(Actions.fadeOut(0.1f), Actions.fadeIn(0.1f));
+        this.addAction(Actions.repeat(2, flicker));
     }
 }
 
@@ -220,8 +286,6 @@ class CharacterHealth extends Health {
     @Override
     public void heal(int hp) {
         super.heal(hp);
-        if(lives>max_hp)
-            lives=max_hp;
         this.updateHeartStates();
     }
 

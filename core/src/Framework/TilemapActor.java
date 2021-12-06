@@ -26,7 +26,7 @@ import java.util.logging.Logger;
 public class TilemapActor extends Actor{
     // window dimensions
     public static int windowWidth  = 1920;
-    public static int windowHeight = 1080;
+    public static int windowHeight = 1056;//1080;
    
     protected TiledMap tiledMap;
     protected OrthographicCamera tiledCamera;
