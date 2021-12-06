@@ -5,8 +5,6 @@ import static java.lang.Math.abs;
 import com.badlogic.gdx.math.Vector2;
 
 import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import Framework.BaseActor;
 
@@ -26,7 +24,6 @@ class SushiMovement extends Seeker{
 
         Vector2 vec = char_vec.sub(enemy_vec);
         float angle = vec.angleDeg();
-        Logger.getGlobal().log(Level.INFO, "rolling at angle: "+angle+"Char vec is : "+char_vec.x+","+char_vec.y+" Enemy vec is: "+enemy_vec.x+","+enemy_vec.y);
         return angle;
     }
 
@@ -84,12 +81,6 @@ public class SushiBoss extends Boss{
         super.discoverCharacter(actor);
         sushiMovement=new SushiMovement(character,this,2000);
     }
-
-    @Override
-    public void takeDamage(int dmg) {
-
-    }
-
     public void act(float dt){
         super.act(dt);
         remainingActionTime-=dt;

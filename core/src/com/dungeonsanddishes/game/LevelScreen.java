@@ -5,7 +5,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.maps.MapObject;
-import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.dungeonsanddishes.game.StartRoomLib.Oven;
@@ -41,17 +40,18 @@ public class LevelScreen extends BaseScreen
      */
     public void initialize() 
     {
-        this.music = Gdx.audio.newMusic(Gdx.files.internal("sounds/war.wav"));
+        this.music = Gdx.audio.newMusic(Gdx.files.internal("sounds/level-music.ogg"));
         dungeonMap = new DungeonMap(new RandomWalker(new DungeonRoomRepository(1, 7)),mainStage );
         dungeonMap.createDungeon();
         DungeonRoomMeta room = dungeonMap.getCurrentRoom();
         map=(RoomTilemap) room.dungeonRoom.map_layout;
         character = new Character(0,0, mainStage,6);
-        character.displayHealth(uiStage,30,1000);
+        character.displayHealth(uiStage,30,Gdx.graphics.getHeight() - 50);
+        character.displayRecipe(uiStage, 150, Gdx.graphics.getHeight() - 50);
         ArrayList<MapObject> spawn_point = map.getRectangleList("spawn_point");
          character.centerAtPosition((float)spawn_point.get(0).getProperties().get("x"),(float)spawn_point.get(0).getProperties().get("y"));
         character.setWorldBounds(Gdx.graphics.getWidth() - 350, Gdx.graphics.getHeight() - 200); // Hardcoded since they never change.
-        music.setVolume(0.1f);
+        music.setVolume(0.05f);
         music.setLooping(true);
         music.play();
         character.setMainItem(new Item(0,0,mainStage));
@@ -68,19 +68,19 @@ public class LevelScreen extends BaseScreen
                     }
                 }
 
-                if(Gdx.input.isKeyPressed(Input.Keys.A) || Gdx.input.isKeyPressed(Input.Keys.LEFT)){
-                    character.accelerateAtAngle(180);
-                }
-                if(Gdx.input.isKeyPressed(Input.Keys.D) || Gdx.input.isKeyPressed(Input.Keys.RIGHT)){
-                    character.accelerateAtAngle(0);
-                }
-                if(Gdx.input.isKeyPressed(Input.Keys.W) || Gdx.input.isKeyPressed(Input.Keys.UP)){
-                    character.accelerateAtAngle(90);
-                }
-                if(Gdx.input.isKeyPressed(Input.Keys.S) || Gdx.input.isKeyPressed(Input.Keys.DOWN)){
-                    character.accelerateAtAngle(270);
-                }
-                if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
+            if(Gdx.input.isKeyPressed(Input.Keys.A) || Gdx.input.isKeyPressed(Input.Keys.LEFT)){
+                character.accelerateAtAngle(180);
+            }
+            if(Gdx.input.isKeyPressed(Input.Keys.D) || Gdx.input.isKeyPressed(Input.Keys.RIGHT)){
+                character.accelerateAtAngle(0);
+            }
+            if(Gdx.input.isKeyPressed(Input.Keys.W) || Gdx.input.isKeyPressed(Input.Keys.UP)){
+                character.accelerateAtAngle(90);
+            }
+            if(Gdx.input.isKeyPressed(Input.Keys.S) || Gdx.input.isKeyPressed(Input.Keys.DOWN)){
+                character.accelerateAtAngle(270);
+            }
+            if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
 
                     for(Door door:dungeonMap.currentRoom.dungeonRoom.map_layout.getDoors()){
                         if(character.isWithinDistance(20,door)){
@@ -92,6 +92,17 @@ public class LevelScreen extends BaseScreen
             }
             character.mainItem.centerAtActorMainItem(character);
 
+            if (Gdx.input.isKeyPressed(Input.Keys.I)) {
+                character.incrementChili();
+                character.incrementRice();
+            }
+
+            dungeonMap.getCurrentRoom().dungeonRoom.update(dt,character);
+            if(character.bossSlain()){
+                game.setScreen(new WinnerStoryScreen(new VictoryScreen(this.game)));
+            }
+        }
+        else{
             if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
                 swingKnife();
             }
@@ -99,6 +110,7 @@ public class LevelScreen extends BaseScreen
             //game over
             Logger.getGlobal().log(Level.WARNING,"GAME OVER!!!!");
             this.dispose();
+            music.stop();
             game.setScreen( new GameOverScreen(this.game));
         }
 

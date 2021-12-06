@@ -1,11 +1,10 @@
 package com.dungeonsanddishes.game;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 public class Health {
+    protected int max_hp;
     protected int lives;
     public Health(int hp){
+        max_hp = hp;
         lives=hp;
     }
 
@@ -18,5 +17,8 @@ public class Health {
     }
     public void heal(int hp){
         lives+=hp;
+        if(lives>max_hp){
+            lives=max_hp;
+        }
     }
 }
