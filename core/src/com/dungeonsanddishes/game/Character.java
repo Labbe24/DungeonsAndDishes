@@ -8,6 +8,8 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.utils.Array;
 
 import java.util.ArrayList;
@@ -33,6 +35,7 @@ public class Character extends BaseActor {
     Rectangle attackBoxWest;
     Rectangle attackBox;
 
+    Item mainItem = null;
 
     public IMovement movement;
     private CharacterSound sound;
@@ -43,7 +46,6 @@ public class Character extends BaseActor {
         this.loadTexture("chef_idle/chef_idle_up.png");
         this.sound = new CharacterSound();
         mainItemCoords = new Coordinate(x,y);
-        //attackBox = new Rectangle(0,0,64,64);
 
         //Set Item coordinates:
         itemCoordsNorth = new Coordinate(61,73);
@@ -104,6 +106,7 @@ public class Character extends BaseActor {
         if(timeSinceDmgTaken>=dmgDelay){
             timeSinceDmgTaken=0;
             health_bar.takeDamage(dmg);
+            flicker();
         }
     }
     public void displayHealth(Stage s,float x,float y){
@@ -149,8 +152,6 @@ public class Character extends BaseActor {
         mainItemCoords = coords;
     }
     public void setAttackBox(Rectangle rectangle) {
-       //rectangle.x = getX() + rectangle.x;
-       //rectangle.y = getY() + rectangle.y;
         attackBox = rectangle;
     }
 
@@ -171,6 +172,15 @@ public class Character extends BaseActor {
 
     public boolean isDead() {
         return health_bar.isDead();
+    }
+
+    public void setMainItem(Item item) {
+        mainItem = item;
+    }
+
+    public void flicker() {
+        SequenceAction flicker = new SequenceAction(Actions.fadeOut(0.1f), Actions.fadeIn(0.1f));
+        this.addAction(Actions.repeat(2, flicker));
     }
 }
 

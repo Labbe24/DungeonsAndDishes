@@ -65,7 +65,6 @@ public class DungeonMap {
         currentRoom=next_room;
         currentRoom.dungeonRoom.map_layout.setRoom(mainStage);
         character.toFront();
-
-
+        character.mainItem.toFront();
     }
 }

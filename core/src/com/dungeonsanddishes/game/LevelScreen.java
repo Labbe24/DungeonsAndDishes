@@ -8,6 +8,7 @@ import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.dungeonsanddishes.game.StartRoomLib.Oven;
 
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -21,16 +22,11 @@ import Framework.RoomTilemap;
 public class LevelScreen extends BaseScreen
 {
     Character character;
-    //Enemy devil, devil2, devil3;
-    //ArrayList<Enemy> enemies;
     RoomTilemap map;
     DungeonMap dungeonMap;
     CustomGame game;
-    ArrayList<Rectangle> collisionRectangles;
     private Music music;
-    Item knife;
-
-
+    
     public LevelScreen(CustomGame game){
         super();
         this.game=game;
@@ -50,39 +46,22 @@ public class LevelScreen extends BaseScreen
         dungeonMap.createDungeon();
         DungeonRoomMeta room = dungeonMap.getCurrentRoom();
         map=(RoomTilemap) room.dungeonRoom.map_layout;
-        //map = new RoomTilemap("rooms/start_room.tmx");
-        //map.setRoom(mainStage);
-
         character = new Character(0,0, mainStage,6);
         character.displayHealth(uiStage,30,1000);
         ArrayList<MapObject> spawn_point = map.getRectangleList("spawn_point");
-        character.centerAtPosition((float)spawn_point.get(0).getProperties().get("x"),(float)spawn_point.get(0).getProperties().get("y"));
+         character.centerAtPosition((float)spawn_point.get(0).getProperties().get("x"),(float)spawn_point.get(0).getProperties().get("y"));
         character.setWorldBounds(Gdx.graphics.getWidth() - 350, Gdx.graphics.getHeight() - 200); // Hardcoded since they never change.
         music.setVolume(0.1f);
         music.setLooping(true);
         music.play();
-
-        knife = new Item(0,0,mainStage); // Must be initialized after char to be drawn over
-
-       /* devil = new Enemy(300, 400, mainStage);
-        devil2 = new Enemy(1200, 200, mainStage);
-        devil3 = new Enemy(550, 500, mainStage);
-        enemies = new ArrayList<Enemy>();
-        enemies.add(devil);
-        enemies.add(devil2);
-        enemies.add(devil3);*/
-
-        //ArrayList<MapObject> spawn_point = map.getRectangleList("spawn_point");
-        //character.centerAtPosition((float)spawn_point.get(0).getProperties().get("x"),(float)spawn_point.get(0).getProperties().get("y"));
-
-        //character.setWorldBounds(1536, 778); // Hardcoded since they never change.
+        character.setMainItem(new Item(0,0,mainStage));
     }
 
     public void update(float dt)
     {
         if(!character.isDead()){
             character.boundToWorld();
-            if (!knife.hasActions()) {
+            if (!character.mainItem.hasActions()) {
                 for (MapObject obj:map.getCustomRectangleList("Collidable")){
                     if ((boolean)obj.getProperties().get("Collidable")) {
                         character.preventOverlapWithObject( convertMapObjectToRectangle(obj));
@@ -101,12 +80,6 @@ public class LevelScreen extends BaseScreen
                 if(Gdx.input.isKeyPressed(Input.Keys.S) || Gdx.input.isKeyPressed(Input.Keys.DOWN)){
                     character.accelerateAtAngle(270);
                 }
-                /*if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
-                    character.health_bar.takeDamage(1);
-                }*/
-                if (Gdx.input.isKeyJustPressed(Input.Keys.H)){
-                    character.health_bar.heal(1);
-                }
                 if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
 
                     for(Door door:dungeonMap.currentRoom.dungeonRoom.map_layout.getDoors()){
@@ -117,18 +90,10 @@ public class LevelScreen extends BaseScreen
                     }
                 }
             }
-            knife.centerAtActorMainItem(character);
-
+            character.mainItem.centerAtActorMainItem(character);
 
             if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
                 swingKnife();
-            /*Rectangle rect = character.getAttackBox();
-            Rectangle hitbox = new Rectangle(rect.getX() + character.getX(), rect.getY() + character.getY(), rect.width, rect.height);
-
-            for(Enemy x : enemies) {
-                if (x.overlapsRectangle(hitbox)) {
-                    x.remove();
-                }*/
             }
         } else{
             //game over
@@ -139,10 +104,6 @@ public class LevelScreen extends BaseScreen
 
         dungeonMap.getCurrentRoom().dungeonRoom.update(dt,character);
     }
-            //check if interactible nearby
-            //if interactible is door
-            //call map.DoorEntered(door.getProperty("direction"))
-
 
     public Rectangle convertMapObjectToRectangle(MapObject obj) {
         MapProperties props = obj.getProperties();
@@ -155,22 +116,22 @@ public class LevelScreen extends BaseScreen
         float facingAngle = character.CharAngle;
         float knifeArc = 180;
         if (facingAngle == 0)
-            knife.addAction( Actions.sequence(
+            character.mainItem.addAction( Actions.sequence(
                     Actions.rotateBy(-knifeArc, 0.15f),
                     Actions.rotateBy(knifeArc, 0.15f))
             );
         else if (facingAngle == 90)
-            knife.addAction( Actions.sequence(
+            character.mainItem.addAction( Actions.sequence(
                     Actions.rotateBy(-knifeArc, 0.15f),
                     Actions.rotateBy(knifeArc, 0.15f))
             );
         else if (facingAngle == 180)
-            knife.addAction( Actions.sequence(
+            character.mainItem.addAction( Actions.sequence(
                     Actions.rotateBy(knifeArc, 0.15f),
                     Actions.rotateBy(-knifeArc, 0.15f))
             );
         else // facingAngle == 270
-            knife.addAction( Actions.sequence(
+            character.mainItem.addAction( Actions.sequence(
                     Actions.rotateBy(knifeArc, 0.15f),
                     Actions.rotateBy(-knifeArc, 0.15f))
             );

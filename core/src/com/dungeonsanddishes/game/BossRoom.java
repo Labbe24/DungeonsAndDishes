@@ -3,6 +3,7 @@ package com.dungeonsanddishes.game;
 import static Framework.TilemapActor.convertMapObjectToRectangle;
 
 import com.badlogic.gdx.maps.MapObject;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
 import java.util.ArrayList;
@@ -88,6 +89,14 @@ public class BossRoom extends IngredientRoom{
             if(projectile.targetType== Projectile.TargetType.CHARACTER && projectile.overlaps(character)){
                 character.takeDamage(projectile.damage());
                 projectile.destroy();
+            }
+        }
+        if (character.mainItem.hasActions()) {
+            Rectangle rect = character.getAttackBox();
+            Rectangle hitbox = new Rectangle(rect.getX() + character.getX(), rect.getY() + character.getY(), rect.width, rect.height);
+
+            if (((BossRoomImplementation)_room_impl).getBoss().overlapsRectangle(hitbox)) {
+                ((BossRoomImplementation)_room_impl).getBoss().takeDamage(1);
             }
         }
     }
