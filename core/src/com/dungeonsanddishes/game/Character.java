@@ -187,6 +187,10 @@ public class Character extends BaseActor {
         return attackBox;
     }
 
+    public int getCharAngle() {
+        return CharAngle;
+    }
+
     public void setMovementStragety(IMovement movement){
         this.movement = movement;
     }
