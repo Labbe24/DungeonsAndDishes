@@ -21,11 +21,11 @@ class FishRoom extends SideIngredientRoomImplementation {
     private Shark shark;
     private Fish fish;
 
-    private float TIME = 1F;
-    private float SHARK_TIME = 1.3F;
+    private float TIME = 2F;
+    private float SHARK_TIME = 2.3F;
     private float timer = TIME;
     private float sharkTimer = SHARK_TIME;
-    private int waterPaddleWidth = 307, waterPaddleHeight = 160;
+    private int waterPoolWidth = 307, waterPoolHeight = 160;
     private int survivedSharkAttacks = 0;
     private Array<WaterPool> waterPoolList;
     private Array<ShadedWaterPool> shadedWaterPoolsList;
@@ -44,10 +44,6 @@ class FishRoom extends SideIngredientRoomImplementation {
     @Override
     public void update(float dt, Character character) {
         if(survivedSharkAttacks >= 3 && shark.isAnimationFinished()) {
-            // player wins
-            // remove water and stop shark attacks
-            // spawn fish ingredient
-
             removeWater();
 
             if(fish == null) {
@@ -83,9 +79,15 @@ class FishRoom extends SideIngredientRoomImplementation {
                         shark.setY(pool.getY()+pool.getHeight()/2);
                     }
 
-                    if(character.overlaps(pool) && pool.hasShark) {
+                    if(character.getX() > pool.getX() && character.getX() < pool.getX() + pool.getWidth()
+                    && character.getY() > pool.getY() && character.getY() < pool.getY() + pool.getHeight()
+                    && pool.hasShark) {
                         attackedByShark = true;
                     }
+
+                    //if(character.overlaps(pool) && pool.hasShark) {
+                        //attackedByShark = true;
+                    //}
                 }
 
                 if(attackedByShark) {
@@ -130,10 +132,10 @@ class FishRoom extends SideIngredientRoomImplementation {
                 WaterPool waterPool = new WaterPool(x, y);
                 waterPool.hasShark = MathUtils.random(0, 1) > 0 ? true : false;
                 waterPoolList.add(waterPool);
-                x += waterPaddleWidth;
+                x += waterPoolWidth;
             }
 
-            y += waterPaddleHeight;
+            y += waterPoolHeight;
         }
     }
 
