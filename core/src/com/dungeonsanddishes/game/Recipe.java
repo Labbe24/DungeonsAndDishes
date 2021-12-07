@@ -145,8 +145,10 @@ public class Recipe {
             switch (state) {
                 case FOUND:
                     this.setTexture("FishRoom/fish.png");
+                    break;
                 case NOT_FOUND:
                     this.setTexture("FishRoom/fish_grey.png");
+                    break;
             }
         }
 

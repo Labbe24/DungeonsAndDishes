@@ -68,7 +68,7 @@ public class Enemy extends BaseActor {
         if (dist > _detectRange) {
             return;
         }
-        if (collided) {
+        if (this.overlaps(_character)) {
             _character.takeDamage(1);
             return;
         }

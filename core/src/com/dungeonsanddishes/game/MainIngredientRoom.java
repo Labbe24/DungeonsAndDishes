@@ -59,6 +59,12 @@ class RiceRoom extends MainIngredientRoomImplementation{
                 }
             }
         }
+        if(Gdx.input.isKeyJustPressed(Input.Keys.P)){
+            rice.setVisible(false);
+            rice.remove();
+            character.incrementRice();
+            rice_eaten=true;
+        }
     }
 
     @Override
